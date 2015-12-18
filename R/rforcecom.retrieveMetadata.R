@@ -4,16 +4,17 @@
 #' as a package XML files that can be modified and later
 #' deployed into an environment 
 #' 
-#' @usage rforcecom.retrieveMetadata(session)
+#' @usage rforcecom.retrieveMetadata(session, retrieveRequest, verbose=FALSE)
 #' @concept retrieve metadata salesforce api
 #' @importFrom plyr llply ldply
 #' @importFrom XML newXMLNode
 #' @include rforcecom.utils.R
-#' @references \url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/}
+#' @references \url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_retrieve.htm}
 #' @param session a named character vector defining parameters of the api connection as 
 #' returned by \link{rforcecom.login}
 #' @param retrieveRequest a \code{list} of parameters defining what XML file representations
 #' should be returned
+#' @param verbose a boolean indicating whether to print the XML request used
 #' @return A \code{list} of details from the created retrieve request
 #' @note See the Salesforce documentation for the proper arguments to create a 
 #' retrieveRequest. Here is a link to that documentation: 
@@ -23,13 +24,13 @@
 #' 
 #' retrieveRequest <- list(unpackaged=list(types=list(members='*', name='CustomObject')))
 #' 
-#' metadata_info <- rforcecom.retrieveMetadata(session, retrieveRequest)
+#' retrieve_info <- rforcecom.retrieveMetadata(session, retrieveRequest)
 #' 
 #' }
 #' @export
-rforcecom.retrieveMetadata <- function(session, retrieveRequest){
+rforcecom.retrieveMetadata <- function(session, retrieveRequest, verbose=FALSE){
   
-  # create XML for retrieveMetadata node
+  # create XML for retrieve node
   root <- newXMLNode("retrieve", 
                      namespaceDefinitions=c('http://soap.sforce.com/2006/04/metadata'))
   request_root <- newXMLNode('retrieveRequest', attrs = c(`xsi:type`='RetrieveRequest'), suppressNamespaceWarning=T)
@@ -53,7 +54,7 @@ rforcecom.retrieveMetadata <- function(session, retrieveRequest){
   # HTTP POST
   h <- basicHeaderGatherer()
   t <- basicTextGatherer()
-  httpHeader <- c("SOAPAction"="retrieveMetadata", 'Content-Type'="text/xml")
+  httpHeader <- c("SOAPAction"="retrieve", 'Content-Type'="text/xml")
   curlPerform(url=paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion'])), 
               postfields=soapBody, httpheader=httpHeader, headerfunction = h$update, writefunction = t$update, ssl.verifypeer=F)
   
@@ -102,7 +103,7 @@ rforcecom.retrieveMetadata <- function(session, retrieveRequest){
 #' @importFrom plyr llply ldply
 #' @importFrom RCurl base64Decode
 #' @include rforcecom.utils.R
-#' @references \url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/}
+#' @references \url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_checkretrievestatus.htm}
 #' @param session a named character vector defining parameters of the api connection as 
 #' returned by \link{rforcecom.login}
 #' @param id a character string id returned from \link{rforcecom.retrieveMetadata}
@@ -118,10 +119,10 @@ rforcecom.retrieveMetadata <- function(session, retrieveRequest){
 #' \dontrun{
 #' 
 #' retrieveRequest <- list(unpackaged=list(types=list(members='*', name='CustomObject')))
-#' retrieve_request <- rforcecom.retrieveMetadata(session, retrieveRequest)
+#' retrieve_info <- rforcecom.retrieveMetadata(session, retrieveRequest)
 #' 
 #' # check on status, this will automatically download the contents to package.zip if they are ready
-#' retrieve_status <- rforcecom.checkRetrieveStatusMetadata(session, retrieve_request$id)
+#' retrieve_status <- rforcecom.checkRetrieveStatusMetadata(session, retrieve_info$id)
 #' 
 #' }
 #' @export
@@ -132,11 +133,14 @@ rforcecom.checkRetrieveStatusMetadata <- function(session,
   
   stopifnot(grepl('\\.zip$', filename))
   
-  # create XML for retrieveMetadata node
+  # default to true if not provided since that is salesforce default
+  includeZip <- match.arg(includeZip)
+  
+  # create XML for checkRetrieveStatus node
   root <- newXMLNode("checkRetrieveStatus", 
                      namespaceDefinitions=c('http://soap.sforce.com/2006/04/metadata'))
-  addChildren(root, newXMLNode('asyncProcessId', retrieve_request$id))
-  addChildren(root, newXMLNode('includeZip', 'true'))
+  addChildren(root, newXMLNode('asyncProcessId', id))
+  addChildren(root, newXMLNode('includeZip', includeZip))
   
   #build soapBody
   soapBody <- paste0('<?xml version="1.0" encoding="UTF-8"?>
@@ -204,7 +208,9 @@ rforcecom.checkRetrieveStatusMetadata <- function(session,
   
   if(summary$done=='true' & 
      summary$status=='Succeeded' & 
-     summary$success=='true' & xmlValue(response$result[['zipFile']])!=''){
+     summary$success=='true' & 
+     xmlValue(response$result[['zipFile']])!='' & 
+     includeZip == 'true'){
     # save the zip file
     decoded_dat <- base64Decode(xmlValue(response$result[['zipFile']]), "raw")
     writeBin(decoded_dat, filename)

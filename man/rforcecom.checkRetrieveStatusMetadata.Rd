@@ -34,15 +34,15 @@ and saves the results into a zip file
 \dontrun{
 
 retrieveRequest <- list(unpackaged=list(types=list(members='*', name='CustomObject')))
-retrieve_request <- rforcecom.retrieveMetadata(session, retrieveRequest)
+retrieve_info <- rforcecom.retrieveMetadata(session, retrieveRequest)
 
 # check on status, this will automatically download the contents to package.zip if they are ready
-retrieve_status <- rforcecom.checkRetrieveStatusMetadata(session, retrieve_request$id)
+retrieve_status <- rforcecom.checkRetrieveStatusMetadata(session, retrieve_info$id)
 
 }
 }
 \references{
-\url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/}
+\url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_checkretrievestatus.htm}
 }
 \concept{
 retrieve metadata salesforce api

@@ -4,7 +4,7 @@
 \alias{rforcecom.retrieveMetadata}
 \title{Make A Request to Retrieve the Metadata}
 \usage{
-rforcecom.retrieveMetadata(session)
+rforcecom.retrieveMetadata(session, retrieveRequest, verbose=FALSE)
 }
 \arguments{
 \item{session}{a named character vector defining parameters of the api connection as 
@@ -12,6 +12,8 @@ returned by \link{rforcecom.login}}
 
 \item{retrieveRequest}{a \code{list} of parameters defining what XML file representations
 should be returned}
+
+\item{verbose}{a boolean indicating whether to print the XML request used}
 }
 \value{
 A \code{list} of details from the created retrieve request
@@ -31,12 +33,12 @@ retrieveRequest. Here is a link to that documentation:
 
 retrieveRequest <- list(unpackaged=list(types=list(members='*', name='CustomObject')))
 
-metadata_info <- rforcecom.retrieveMetadata(session, retrieveRequest)
+retrieve_info <- rforcecom.retrieveMetadata(session, retrieveRequest)
 
 }
 }
 \references{
-\url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/}
+\url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_retrieve.htm}
 }
 \concept{
 retrieve metadata salesforce api
