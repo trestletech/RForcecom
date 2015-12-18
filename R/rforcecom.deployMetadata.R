@@ -326,3 +326,99 @@ rforcecom.cancelDeployMetadata <- function(session, id) {
   
   return(result_body)
 }
+
+
+#' ReDeploy a Prior Call to Deploy Metadata
+#' 
+#' This function redeploys a deployment of metadata 
+#' to production in less time by skipping the execution of Apex tests.
+#' 
+#' @usage rforcecom.deployRecentValidation(session, id)
+#' @concept deploy recent metadata salesforce api
+#' @importFrom plyr ldply
+#' @importFrom XML newXMLNode
+#' @include rforcecom.utils.R
+#' @references \url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deployRecentValidation.htm}
+#' @param session a named character vector defining parameters of the api connection as 
+#' returned by \link{rforcecom.login}
+#' @param validationID a character string id returned from \link{rforcecom.deployMetadata}
+#' @note Before you call this function your organization must have a validation that was 
+#' recently run. You can run a validation on a set of components by calling \link{rforcecom.deployMetadata} 
+#' with the checkOnly property of the deployOptions parameter set to true. 
+#' @examples
+#' \dontrun{
+#' 
+#' # Before you call rforcecom.deployRecentValidation(), your organization must have a validation that was 
+#' # recently run. You can run a validation on a set of components by calling rforcecom.deployMetadata() 
+#' # with the checkOnly property of the deployOptions parameter set to true. 
+#' deployOptions <- list(allowMissingFiles='true', checkOnly='true', performRetrieve='false')
+#' deploy_info <- rforcecom.deployMetadata(session, 'package.zip', deployOptions)
+#' 
+#' # redeploy deployment
+#' redeploy_info <- rforcecom.deployRecentValidation(session, deploy_info$id)
+#' 
+#' }
+#' @export
+rforcecom.deployRecentValidation <- function(session, validationID) {
+  
+  stopifnot(is.character(validationID), nchar(validationID)=='18')
+  
+  if(as.numeric(session['apiVersion']) < 33) stop("Only available in API version 33.0 and later")
+  
+  # create XML for deploy node
+  root <- newXMLNode("deployRecentValidation", 
+                     namespaceDefinitions=c('http://soap.sforce.com/2006/04/metadata'))
+  addChildren(root, newXMLNode('validationID', validationID))
+  
+  #build soapBody
+  soapBody <- paste0('<?xml version="1.0" encoding="UTF-8"?>
+                     <env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                     <env:Header>
+                     <SessionHeader xmlns="http://soap.sforce.com/2006/04/metadata">
+                     <sessionId>', session['sessionID'], '</sessionId>
+                     </SessionHeader>
+                     </env:Header>
+                     <env:Body>',
+                     as(root, 'character'),
+                     '</env:Body>
+                     </env:Envelope>')
+  
+  # perform request
+  # HTTP POST
+  h <- basicHeaderGatherer()
+  t <- basicTextGatherer()
+  httpHeader <- c("SOAPAction"="deployRecentValidation", 'Content-Type'="text/xml")
+  curlPerform(url=paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion'])), 
+              postfields=soapBody, httpheader=httpHeader, headerfunction = h$update, writefunction = t$update, ssl.verifypeer=F)
+  
+  # BEGIN DEBUG
+  if(exists("rforcecom.debug") && rforcecom.debug){ message(URL) }
+  if(exists("rforcecom.debug") && rforcecom.debug){ message(x.root) }
+  # END DEBUG
+  
+  x.root <- xmlRoot(xmlInternalTreeParse(t$value(), asText=T))
+  
+  # Check whether it success or not
+  errorcode <- NA
+  errormessage <- NA
+  
+  # check for api fault
+  response <- xmlChildren(xmlChildren(xmlRoot(x.root))$Body)
+  try(errorcode <- iconv(xmlValue(response$Fault[['faultcode']]), from="UTF-8", to=""), TRUE)
+  try(errormessage <- iconv(xmlValue(response$Fault[['faultstring']]), from="UTF-8", to=""), TRUE)
+  if(!is.na(errorcode) && !is.na(errormessage)){
+    stop(paste(errorcode, errormessage, sep=": "))
+  }
+  
+  # check for request fault
+  response <- xmlChildren(xmlChildren(xmlChildren(xmlRoot(x.root))$Body)[['deployRecentValidationResponse']])
+  try(errorcode <- iconv(xmlValue(response$result[['errors']][['statusCode']]), from="UTF-8", to=""), TRUE)
+  try(errormessage <- iconv(xmlValue(response$result[['errors']][['message']]), from="UTF-8", to=""), TRUE)
+  if(!is.na(errorcode) && !is.na(errormessage)){
+    stop(paste(errorcode, errormessage, sep=": "))
+  }
+  
+  summary <- xmlToList(response$result)
+  
+  return(summary)
+}
