@@ -9,6 +9,7 @@
 #'                               verbose=FALSE)
 #' @concept list metadata salesforce api
 #' @importFrom plyr ldply
+#' @importFrom XML newXMLNode
 #' @include rforcecom.utils.R
 #' @references \url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/}
 #' @param session a named character vector defining parameters of the api connection as returned by \link{rforcecom.login}

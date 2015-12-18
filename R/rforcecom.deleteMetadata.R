@@ -8,6 +8,7 @@
 #'                               object_names, 
 #'                               verbose=FALSE)
 #' @concept delete metadata salesforce api
+#' @importFrom plyr ldply
 #' @references \url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/}
 #' @param session a named character vector defining parameters of the api connection as returned by \link{rforcecom.login}
 #' @param metadata_type a character string on what type of metadata that is being read
@@ -18,9 +19,9 @@
 #' @examples
 #' \dontrun{
 #' 
-metadata_info <- rforcecom.deleteMetadata(session, 
-                                          metadata_type='CustomObject', 
-                                          object_names=c('Custom_Account23__c'))
+#' metadata_info <- rforcecom.deleteMetadata(session, 
+#'                                           metadata_type='CustomObject', 
+#'                                           object_names=c('Custom_Account23__c'))
 #' }
 #' @export
 rforcecom.deleteMetadata <- 

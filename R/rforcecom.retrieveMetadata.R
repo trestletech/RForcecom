@@ -7,6 +7,7 @@
 #' @usage rforcecom.retrieveMetadata(session)
 #' @concept retrieve metadata salesforce api
 #' @importFrom plyr llply ldply
+#' @importFrom XML newXMLNode
 #' @include rforcecom.utils.R
 #' @references \url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/}
 #' @param session a named character vector defining parameters of the api connection as 
