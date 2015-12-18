@@ -1,8 +1,8 @@
 ##################################
-# Function to parse response from rforcecom.query
 # * Internal Use Only 
 ##################################
 
+# Function to parse response from rforcecom.query
 query_parser <- function(root){
   top <- xpathApply(root, "records", xmlToList)
   # if no subelements are lists, then proceed normally and assume not nested
@@ -48,4 +48,23 @@ query_parser <- function(root){
     final_recordset <- do.call('rbind.fill', all_parent_recs)
   }
   return(final_recordset)
+}
+
+
+# Helper function that converts a list of metadata to XML
+metadataListToXML <- function(root, sublist, metatype=NULL){
+  for(i in 1:length(sublist)){
+    if (!is.null(metatype)){
+      this <- newXMLNode("Metadata", attrs = c(`xsi:type`=metatype), parent=root, suppressNamespaceWarning=T)
+    } else {
+      this <- newXMLNode(names(sublist)[i], parent=root)
+    }
+    if (typeof(sublist[[i]]) == "list"){
+      metadataListToXML (this, sublist[[i]], metatype=NULL)
+    }
+    else{
+      xmlValue(this) <- sublist[[i]]
+    }
+  }
+  return(root)
 }

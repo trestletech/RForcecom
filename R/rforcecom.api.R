@@ -7,6 +7,14 @@ rforcecom.api.getSoapEndpoint <- function(apiVersion){
  return(paste("services/Soap/u/", apiVersion, sep=""))
 }
 
+rforcecom.api.getMetadataEndpoint <- function(apiVersion){
+  return(paste("services/Soap/m/", apiVersion, sep=""))
+}
+
+rforcecom.api.getBulkEndpoint <- function(apiVersion){
+  return(paste("services/async/", apiVersion, sep=""))
+}
+
 rforcecom.api.getRestEndpoint <- function(apiVersion){
  return(paste("services/data/v", apiVersion, sep=""))
 }
@@ -55,8 +63,3 @@ rforcecom.api.getExternalIdFieldEndpoint <- function(apiVersion, objectName, fie
  id <- gsub(" ", "%20", id)
  return(paste("services/data/v", apiVersion, "/sobjects/", objectName, "/", field, "/", id, "/", sep=""))
 }
-
-rforcecom.api.getBulkEndpoint <- function(apiVersion){
-  return(paste("services/async/", apiVersion, sep=""))
-}
-
