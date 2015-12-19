@@ -48,7 +48,8 @@
 #'                                               metadata_type='CustomObject', 
 #'                                               metadata=custom_metadata)
 #' 
-#' # adding custom fields (list format)
+#' # adding custom fields 
+#' # input formatted as a list
 #' custom_fields <- list(list(fullName='Custom_Account23__c.CustomField88__c',
 #'                            label='CustomField88',
 #'                            length=100,
@@ -57,7 +58,7 @@
 #'                            label='CustomField99',
 #'                            length=100,
 #'                            type='Text'))
-#' # data.frame format
+#' # formatted as a data.frame
 #' custom_fields <- data.frame(fullName=c('Custom_Account23__c.CustomField8877__c', 
 #'                                        'Custom_Account23__c.CustomField9977__c'), 
 #'                             label=c('Test Field1', 'Test Field2'), 
@@ -76,21 +77,19 @@ rforcecom.createMetadata <-
            metadata_type=c('CustomObject', 'CustomField'), 
            metadata, verbose=FALSE){
     
-    stopifnot(length(metadata) > 0)
-    stopifnot(is.list(metadata) | is.data.frame(metadata))
+    # run some basic validation on the metadata to see if it conforms to WSDL standards
+    metadata <- rforcecom.metadata_type_validator(obj_type=metadata_type, obj_data=metadata)
     
-    # convert data.frame inputs to list
-    if(is.data.frame(metadata)){
-      metadata <- split(metadata, seq(nrow(metadata)))
-    }
-  
-    #construct XML
+    # construct XML root node
     root <- newXMLNode("createMetadata", 
                        namespaceDefinitions=c('http://soap.sforce.com/2006/04/metadata'))
-    if(typeof(metadata[[1]]) != "list"){
-      metadata <- list(metadata)
-    }
+    # add the metadata to it
     metadataListToXML(root=root, sublist=metadata, metatype=metadata_type)
+    
+    if(verbose) {
+      print(paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion'])))
+      print(root)
+    }
     
     #build soapBody
     soapBody <- paste0('<?xml version="1.0" encoding="UTF-8"?>
@@ -110,7 +109,7 @@ rforcecom.createMetadata <-
     h <- basicHeaderGatherer()
     t <- basicTextGatherer()
     httpHeader <- c("SOAPAction"="createMetadata", 'Content-Type'="text/xml")
-    curlPerform(url=paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(apiVersion)), 
+    curlPerform(url=paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion'])), 
                 postfields=soapBody, httpheader=httpHeader, headerfunction = h$update, writefunction = t$update, ssl.verifypeer=F)
     
     x.root <- xmlRoot(xmlInternalTreeParse(t$value(), asText=T))

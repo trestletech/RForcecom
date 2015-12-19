@@ -70,21 +70,19 @@ rforcecom.upsertMetadata <-
            metadata_type=c('CustomObject', 'CustomField'), 
            metadata, verbose=FALSE){
     
-    stopifnot(length(metadata) > 0)
-    stopifnot(is.list(metadata) | is.data.frame(metadata))
+    # run some basic validation on the metadata to see if it conforms to WSDL standards
+    metadata <- rforcecom.metadata_type_validator(obj_type=metadata_type, obj_data=metadata)
     
-    # convert data.frame inputs to list
-    if(is.data.frame(metadata)){
-      metadata <- split(metadata, seq(nrow(metadata)))
-    }
-    
-    #construct XML
+    # construct XML root node
     root <- newXMLNode("upsertMetadata", 
                        namespaceDefinitions=c('http://soap.sforce.com/2006/04/metadata'))
-    if(typeof(metadata[[1]]) != "list"){
-      metadata <- list(metadata)
-    }
+    # add the metadata to it
     metadataListToXML(root=root, sublist=metadata, metatype=metadata_type)
+    
+    if(verbose) {
+      print(paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion'])))
+      print(root)
+    }
     
     #build soapBody
     soapBody <- paste0('<?xml version="1.0" encoding="UTF-8"?>

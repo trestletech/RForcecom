@@ -56,7 +56,8 @@ new_custom_object <- rforcecom.createMetadata(session,
                                               metadata_type='CustomObject', 
                                               metadata=custom_metadata)
 
-# adding custom fields (list format)
+# adding custom fields 
+# input formatted as a list
 custom_fields <- list(list(fullName='Custom_Account23__c.CustomField88__c',
                            label='CustomField88',
                            length=100,
@@ -65,7 +66,7 @@ custom_fields <- list(list(fullName='Custom_Account23__c.CustomField88__c',
                            label='CustomField99',
                            length=100,
                            type='Text'))
-# data.frame format
+# formatted as a data.frame
 custom_fields <- data.frame(fullName=c('Custom_Account23__c.CustomField8877__c', 
                                        'Custom_Account23__c.CustomField9977__c'), 
                             label=c('Test Field1', 'Test Field2'), 

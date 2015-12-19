@@ -25,6 +25,7 @@ Repository: CRAN
 Date: 2015-10-12
 Collate:
     'RForcecom.R'
+    'data.R'
     'rforcecom.abortBulkJob.R'
     'rforcecom.api.R'
     'rforcecom.closeBulkJob.R'

@@ -68,3 +68,8232 @@ metadataListToXML <- function(root, sublist, metatype=NULL){
   }
   return(root)
 }
+
+
+
+#' Metadata Data Type Validator
+#' 
+#' A function to create a variety of objects that are part of the Metadata API service
+#' Below is a list of objects and their required components to be created with this function:
+#' 
+#' \strong{AccessMapping}
+#' 
+#' 
+#' \describe{
+#'  \item{accessLevel}{a character}
+#'  \item{object}{a character}
+#'  \item{objectField}{a character}
+#'  \item{userField}{a character}
+#' }
+#' 
+#' \strong{AccountSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_accountsettings.htm}{Salesforce Documentation for AccountSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{enableAccountOwnerReport}{a character either 'true' or 'false'}
+#'  \item{enableAccountTeams}{a character either 'true' or 'false'}
+#'  \item{enableSharedContacts}{a character either 'true' or 'false'}
+#'  \item{showViewHierarchyLink}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{AccountSharingRuleSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{caseAccessLevel}{a character}
+#'  \item{contactAccessLevel}{a character}
+#'  \item{opportunityAccessLevel}{a character}
+#' }
+#' 
+#' \strong{ActionLinkGroupTemplate}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_actionlinkgrouptemplate.htm}{Salesforce Documentation for ActionLinkGroupTemplate}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{actionLinkTemplates}{a ActionLinkTemplate}
+#'  \item{category}{a PlatformActionGroupCategory - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Primary}
+#'      \item{Overflow}
+#'    }
+#'   }
+#'  \item{executionsAllowed}{a ActionLinkExecutionsAllowed - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Once}
+#'      \item{OncePerUser}
+#'      \item{Unlimited}
+#'    }
+#'   }
+#'  \item{hoursUntilExpiration}{a integer}
+#'  \item{isPublished}{a character either 'true' or 'false'}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{ActionLinkTemplate}
+#' 
+#' 
+#' \describe{
+#'  \item{actionUrl}{a character}
+#'  \item{headers}{a character}
+#'  \item{isConfirmationRequired}{a character either 'true' or 'false'}
+#'  \item{isGroupDefault}{a character either 'true' or 'false'}
+#'  \item{label}{a character}
+#'  \item{labelKey}{a character}
+#'  \item{linkType}{a ActionLinkType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{API}
+#'      \item{APIAsync}
+#'      \item{Download}
+#'      \item{UI}
+#'    }
+#'   }
+#'  \item{method}{a ActionLinkHttpMethod - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{HttpDelete}
+#'      \item{HttpHead}
+#'      \item{HttpGet}
+#'      \item{HttpPatch}
+#'      \item{HttpPost}
+#'      \item{HttpPut}
+#'    }
+#'   }
+#'  \item{position}{a integer}
+#'  \item{requestBody}{a character}
+#'  \item{userAlias}{a character}
+#'  \item{userVisibility}{a ActionLinkUserVisibility - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Creator}
+#'      \item{Everyone}
+#'      \item{EveryoneButCreator}
+#'      \item{Manager}
+#'      \item{CustomUser}
+#'      \item{CustomExcludedUser}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{ActionOverride}
+#' 
+#' 
+#' \describe{
+#'  \item{actionName}{a character}
+#'  \item{comment}{a character}
+#'  \item{content}{a character}
+#'  \item{skipRecordTypeSelect}{a character either 'true' or 'false'}
+#'  \item{type}{a ActionOverrideType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Default}
+#'      \item{Standard}
+#'      \item{Scontrol}
+#'      \item{Visualforce}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{ActivitiesSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_activitiessettings.htm}{Salesforce Documentation for ActivitiesSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{allowUsersToRelateMultipleContactsToTasksAndEvents}{a character either 'true' or 'false'}
+#'  \item{enableActivityReminders}{a character either 'true' or 'false'}
+#'  \item{enableClickCreateEvents}{a character either 'true' or 'false'}
+#'  \item{enableDragAndDropScheduling}{a character either 'true' or 'false'}
+#'  \item{enableEmailTracking}{a character either 'true' or 'false'}
+#'  \item{enableGroupTasks}{a character either 'true' or 'false'}
+#'  \item{enableListViewScheduling}{a character either 'true' or 'false'}
+#'  \item{enableLogNote}{a character either 'true' or 'false'}
+#'  \item{enableMultidayEvents}{a character either 'true' or 'false'}
+#'  \item{enableRecurringEvents}{a character either 'true' or 'false'}
+#'  \item{enableRecurringTasks}{a character either 'true' or 'false'}
+#'  \item{enableSidebarCalendarShortcut}{a character either 'true' or 'false'}
+#'  \item{enableSimpleTaskCreateUI}{a character either 'true' or 'false'}
+#'  \item{enableUNSTaskDelegatedToNotifications}{a character either 'true' or 'false'}
+#'  \item{meetingRequestsLogo}{a character}
+#'  \item{showCustomLogoMeetingRequests}{a character either 'true' or 'false'}
+#'  \item{showEventDetailsMultiUserCalendar}{a character either 'true' or 'false'}
+#'  \item{showHomePageHoverLinksForEvents}{a character either 'true' or 'false'}
+#'  \item{showMyTasksHoverLinks}{a character either 'true' or 'false'}
+#'  \item{showRequestedMeetingsOnHomePage}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{AddressSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_addresssettings.htm}{Salesforce Documentation for AddressSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{countriesAndStates}{a CountriesAndStates}
+#' }
+#' 
+#' \strong{AdjustmentsSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{enableAdjustments}{a character either 'true' or 'false'}
+#'  \item{enableOwnerAdjustments}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{AgentConfigAssignments}
+#' 
+#' 
+#' \describe{
+#'  \item{profiles}{a AgentConfigProfileAssignments}
+#'  \item{users}{a AgentConfigUserAssignments}
+#' }
+#' 
+#' \strong{AgentConfigButtons}
+#' 
+#' 
+#' \describe{
+#'  \item{button}{a character}
+#' }
+#' 
+#' \strong{AgentConfigProfileAssignments}
+#' 
+#' 
+#' \describe{
+#'  \item{profile}{a character}
+#' }
+#' 
+#' \strong{AgentConfigSkills}
+#' 
+#' 
+#' \describe{
+#'  \item{skill}{a character}
+#' }
+#' 
+#' \strong{AgentConfigUserAssignments}
+#' 
+#' 
+#' \describe{
+#'  \item{user}{a character}
+#' }
+#' 
+#' \strong{AnalyticsCloudComponentLayoutItem}
+#' 
+#' 
+#' \describe{
+#'  \item{assetType}{a character}
+#'  \item{devName}{a character}
+#'  \item{error}{a character}
+#'  \item{filter}{a character}
+#'  \item{height}{a integer}
+#'  \item{hideOnError}{a character either 'true' or 'false'}
+#'  \item{showTitle}{a character either 'true' or 'false'}
+#'  \item{width}{a character}
+#' }
+#' 
+#' \strong{AnalyticSnapshot}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_analyticsnapshot.htm}{Salesforce Documentation for AnalyticSnapshot}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{description}{a character}
+#'  \item{groupColumn}{a character}
+#'  \item{mappings}{a AnalyticSnapshotMapping}
+#'  \item{name}{a character}
+#'  \item{runningUser}{a character}
+#'  \item{sourceReport}{a character}
+#'  \item{targetObject}{a character}
+#' }
+#' 
+#' \strong{AnalyticSnapshotMapping}
+#' 
+#' 
+#' \describe{
+#'  \item{aggregateType}{a ReportSummaryType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Sum}
+#'      \item{Average}
+#'      \item{Maximum}
+#'      \item{Minimum}
+#'      \item{None}
+#'    }
+#'   }
+#'  \item{sourceField}{a character}
+#'  \item{sourceType}{a ReportJobSourceTypes - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{tabular}
+#'      \item{summary}
+#'      \item{snapshot}
+#'    }
+#'   }
+#'  \item{targetField}{a character}
+#' }
+#' 
+#' \strong{ApexClass}
+#' 
+#' 
+#' \describe{
+#'  \item{content}{a character formed using RCurl::base64Encode (inherited from MetadataWithContent)}
+#'  \item{apiVersion}{a numeric}
+#'  \item{packageVersions}{a PackageVersion}
+#'  \item{status}{a ApexCodeUnitStatus - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Inactive}
+#'      \item{Active}
+#'      \item{Deleted}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{ApexComponent}
+#' 
+#' 
+#' \describe{
+#'  \item{content}{a character formed using RCurl::base64Encode (inherited from MetadataWithContent)}
+#'  \item{apiVersion}{a numeric}
+#'  \item{description}{a character}
+#'  \item{label}{a character}
+#'  \item{packageVersions}{a PackageVersion}
+#' }
+#' 
+#' \strong{ApexPage}
+#' 
+#' 
+#' \describe{
+#'  \item{content}{a character formed using RCurl::base64Encode (inherited from MetadataWithContent)}
+#'  \item{apiVersion}{a numeric}
+#'  \item{availableInTouch}{a character either 'true' or 'false'}
+#'  \item{confirmationTokenRequired}{a character either 'true' or 'false'}
+#'  \item{description}{a character}
+#'  \item{label}{a character}
+#'  \item{packageVersions}{a PackageVersion}
+#' }
+#' 
+#' \strong{ApexTrigger}
+#' 
+#' 
+#' \describe{
+#'  \item{content}{a character formed using RCurl::base64Encode (inherited from MetadataWithContent)}
+#'  \item{apiVersion}{a numeric}
+#'  \item{packageVersions}{a PackageVersion}
+#'  \item{status}{a ApexCodeUnitStatus - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Inactive}
+#'      \item{Active}
+#'      \item{Deleted}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{AppMenu}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_appmenu.htm}{Salesforce Documentation for AppMenu}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{appMenuItems}{a AppMenuItem}
+#' }
+#' 
+#' \strong{AppMenuItem}
+#' 
+#' 
+#' \describe{
+#'  \item{name}{a character}
+#'  \item{type}{a character}
+#' }
+#' 
+#' \strong{ApprovalAction}
+#' 
+#' 
+#' \describe{
+#'  \item{action}{a WorkflowActionReference}
+#' }
+#' 
+#' \strong{ApprovalEntryCriteria}
+#' 
+#' 
+#' \describe{
+#'  \item{booleanFilter}{a character}
+#'  \item{criteriaItems}{a FilterItem}
+#'  \item{formula}{a character}
+#' }
+#' 
+#' \strong{ApprovalPageField}
+#' 
+#' 
+#' \describe{
+#'  \item{field}{a character}
+#' }
+#' 
+#' \strong{ApprovalProcess}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_approvalprocess.htm}{Salesforce Documentation for ApprovalProcess}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{allowRecall}{a character either 'true' or 'false'}
+#'  \item{allowedSubmitters}{a ApprovalSubmitter}
+#'  \item{approvalPageFields}{a ApprovalPageField}
+#'  \item{approvalStep}{a ApprovalStep}
+#'  \item{description}{a character}
+#'  \item{emailTemplate}{a character}
+#'  \item{enableMobileDeviceAccess}{a character either 'true' or 'false'}
+#'  \item{entryCriteria}{a ApprovalEntryCriteria}
+#'  \item{finalApprovalActions}{a ApprovalAction}
+#'  \item{finalApprovalRecordLock}{a character either 'true' or 'false'}
+#'  \item{finalRejectionActions}{a ApprovalAction}
+#'  \item{finalRejectionRecordLock}{a character either 'true' or 'false'}
+#'  \item{initialSubmissionActions}{a ApprovalAction}
+#'  \item{label}{a character}
+#'  \item{nextAutomatedApprover}{a NextAutomatedApprover}
+#'  \item{postTemplate}{a character}
+#'  \item{recallActions}{a ApprovalAction}
+#'  \item{recordEditability}{a RecordEditabilityType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{AdminOnly}
+#'      \item{AdminOrCurrentApprover}
+#'    }
+#'   }
+#'  \item{showApprovalHistory}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{ApprovalStep}
+#' 
+#' 
+#' \describe{
+#'  \item{allowDelegate}{a character either 'true' or 'false'}
+#'  \item{approvalActions}{a ApprovalAction}
+#'  \item{assignedApprover}{a ApprovalStepApprover}
+#'  \item{description}{a character}
+#'  \item{entryCriteria}{a ApprovalEntryCriteria}
+#'  \item{ifCriteriaNotMet}{a StepCriteriaNotMetType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{ApproveRecord}
+#'      \item{RejectRecord}
+#'      \item{GotoNextStep}
+#'    }
+#'   }
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#'  \item{rejectBehavior}{a ApprovalStepRejectBehavior}
+#'  \item{rejectionActions}{a ApprovalAction}
+#' }
+#' 
+#' \strong{ApprovalStepApprover}
+#' 
+#' 
+#' \describe{
+#'  \item{approver}{a Approver}
+#'  \item{whenMultipleApprovers}{a RoutingType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Unanimous}
+#'      \item{FirstResponse}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{ApprovalStepRejectBehavior}
+#' 
+#' 
+#' \describe{
+#'  \item{type}{a StepRejectBehaviorType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{RejectRequest}
+#'      \item{BackToPrevious}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{ApprovalSubmitter}
+#' 
+#' 
+#' \describe{
+#'  \item{submitter}{a character}
+#'  \item{type}{a ProcessSubmitterType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{group}
+#'      \item{role}
+#'      \item{user}
+#'      \item{roleSubordinates}
+#'      \item{roleSubordinatesInternal}
+#'      \item{owner}
+#'      \item{creator}
+#'      \item{partnerUser}
+#'      \item{customerPortalUser}
+#'      \item{portalRole}
+#'      \item{portalRoleSubordinates}
+#'      \item{allInternalUsers}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{Approver}
+#' 
+#' 
+#' \describe{
+#'  \item{name}{a character}
+#'  \item{type}{a NextOwnerType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{adhoc}
+#'      \item{user}
+#'      \item{userHierarchyField}
+#'      \item{relatedUserField}
+#'      \item{queue}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{ArticleTypeChannelDisplay}
+#' 
+#' 
+#' \describe{
+#'  \item{articleTypeTemplates}{a ArticleTypeTemplate}
+#' }
+#' 
+#' \strong{ArticleTypeTemplate}
+#' 
+#' 
+#' \describe{
+#'  \item{channel}{a Channel - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{AllChannels}
+#'      \item{App}
+#'      \item{Pkb}
+#'      \item{Csp}
+#'      \item{Prm}
+#'    }
+#'   }
+#'  \item{page}{a character}
+#'  \item{template}{a Template - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Page}
+#'      \item{Tab}
+#'      \item{Toc}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{AssignmentRule}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_assignmentrule.htm}{Salesforce Documentation for AssignmentRule}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{ruleEntry}{a RuleEntry}
+#' }
+#' 
+#' \strong{AssignmentRules}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{assignmentRule}{a AssignmentRule}
+#' }
+#' 
+#' \strong{Attachment}
+#' 
+#' 
+#' \describe{
+#'  \item{content}{a character formed using RCurl::base64Encode}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{AuraDefinitionBundle}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_auradefinitionbundle.htm}{Salesforce Documentation for AuraDefinitionBundle}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{SVGContent}{a character formed using RCurl::base64Encode}
+#'  \item{apiVersion}{a numeric}
+#'  \item{controllerContent}{a character formed using RCurl::base64Encode}
+#'  \item{description}{a character}
+#'  \item{designContent}{a character formed using RCurl::base64Encode}
+#'  \item{documentationContent}{a character formed using RCurl::base64Encode}
+#'  \item{helperContent}{a character formed using RCurl::base64Encode}
+#'  \item{markup}{a character formed using RCurl::base64Encode}
+#'  \item{modelContent}{a character formed using RCurl::base64Encode}
+#'  \item{packageVersions}{a PackageVersion}
+#'  \item{rendererContent}{a character formed using RCurl::base64Encode}
+#'  \item{styleContent}{a character formed using RCurl::base64Encode}
+#'  \item{testsuiteContent}{a character formed using RCurl::base64Encode}
+#'  \item{type}{a AuraBundleType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Application}
+#'      \item{Component}
+#'      \item{Event}
+#'      \item{Interface}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{AuthProvider}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{authorizeUrl}{a character}
+#'  \item{consumerKey}{a character}
+#'  \item{consumerSecret}{a character}
+#'  \item{defaultScopes}{a character}
+#'  \item{errorUrl}{a character}
+#'  \item{executionUser}{a character}
+#'  \item{friendlyName}{a character}
+#'  \item{iconUrl}{a character}
+#'  \item{idTokenIssuer}{a character}
+#'  \item{includeOrgIdInIdentifier}{a character either 'true' or 'false'}
+#'  \item{logoutUrl}{a character}
+#'  \item{portal}{a character}
+#'  \item{providerType}{a AuthProviderType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Facebook}
+#'      \item{Janrain}
+#'      \item{Salesforce}
+#'      \item{OpenIdConnect}
+#'      \item{MicrosoftACS}
+#'      \item{LinkedIn}
+#'      \item{Twitter}
+#'      \item{Google}
+#'      \item{GitHub}
+#'    }
+#'   }
+#'  \item{registrationHandler}{a character}
+#'  \item{sendAccessTokenInHeader}{a character either 'true' or 'false'}
+#'  \item{sendClientCredentialsInHeader}{a character either 'true' or 'false'}
+#'  \item{tokenUrl}{a character}
+#'  \item{userInfoUrl}{a character}
+#' }
+#' 
+#' \strong{AutoResponseRule}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{ruleEntry}{a RuleEntry}
+#' }
+#' 
+#' \strong{AutoResponseRules}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_autoresponserules.htm}{Salesforce Documentation for AutoResponseRules}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{autoResponseRule}{a AutoResponseRule}
+#' }
+#' 
+#' \strong{Branding}
+#' 
+#' 
+#' \describe{
+#'  \item{loginFooterText}{a character}
+#'  \item{loginLogo}{a character}
+#'  \item{pageFooter}{a character}
+#'  \item{pageHeader}{a character}
+#'  \item{primaryColor}{a character}
+#'  \item{primaryComplementColor}{a character}
+#'  \item{quaternaryColor}{a character}
+#'  \item{quaternaryComplementColor}{a character}
+#'  \item{secondaryColor}{a character}
+#'  \item{tertiaryColor}{a character}
+#'  \item{tertiaryComplementColor}{a character}
+#'  \item{zeronaryColor}{a character}
+#'  \item{zeronaryComplementColor}{a character}
+#' }
+#' 
+#' \strong{BusinessHoursEntry}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{default}{a character either 'true' or 'false'}
+#'  \item{fridayEndTime}{a character formatted as 'hh:mm:ssZ}
+#'  \item{fridayStartTime}{a character formatted as 'hh:mm:ssZ}
+#'  \item{mondayEndTime}{a character formatted as 'hh:mm:ssZ}
+#'  \item{mondayStartTime}{a character formatted as 'hh:mm:ssZ}
+#'  \item{name}{a character}
+#'  \item{saturdayEndTime}{a character formatted as 'hh:mm:ssZ}
+#'  \item{saturdayStartTime}{a character formatted as 'hh:mm:ssZ}
+#'  \item{sundayEndTime}{a character formatted as 'hh:mm:ssZ}
+#'  \item{sundayStartTime}{a character formatted as 'hh:mm:ssZ}
+#'  \item{thursdayEndTime}{a character formatted as 'hh:mm:ssZ}
+#'  \item{thursdayStartTime}{a character formatted as 'hh:mm:ssZ}
+#'  \item{timeZoneId}{a character}
+#'  \item{tuesdayEndTime}{a character formatted as 'hh:mm:ssZ}
+#'  \item{tuesdayStartTime}{a character formatted as 'hh:mm:ssZ}
+#'  \item{wednesdayEndTime}{a character formatted as 'hh:mm:ssZ}
+#'  \item{wednesdayStartTime}{a character formatted as 'hh:mm:ssZ}
+#' }
+#' 
+#' \strong{BusinessHoursSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_businesshourssettings.htm}{Salesforce Documentation for BusinessHoursSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{businessHours}{a BusinessHoursEntry}
+#'  \item{holidays}{a Holiday}
+#' }
+#' 
+#' \strong{BusinessProcess}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_businessprocess.htm}{Salesforce Documentation for BusinessProcess}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{description}{a character}
+#'  \item{isActive}{a character either 'true' or 'false'}
+#'  \item{values}{a PicklistValue}
+#' }
+#' 
+#' \strong{CallCenter}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_callcenter.htm}{Salesforce Documentation for CallCenter}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{adapterUrl}{a character}
+#'  \item{customSettings}{a character}
+#'  \item{displayName}{a character}
+#'  \item{displayNameLabel}{a character}
+#'  \item{internalNameLabel}{a character}
+#'  \item{sections}{a CallCenterSection}
+#'  \item{version}{a character}
+#' }
+#' 
+#' \strong{CallCenterItem}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#'  \item{value}{a character}
+#' }
+#' 
+#' \strong{CallCenterSection}
+#' 
+#' 
+#' \describe{
+#'  \item{items}{a CallCenterItem}
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{CaseSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_casesettings.htm}{Salesforce Documentation for CaseSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{caseAssignNotificationTemplate}{a character}
+#'  \item{caseCloseNotificationTemplate}{a character}
+#'  \item{caseCommentNotificationTemplate}{a character}
+#'  \item{caseCreateNotificationTemplate}{a character}
+#'  \item{caseFeedItemSettings}{a FeedItemSettings}
+#'  \item{closeCaseThroughStatusChange}{a character either 'true' or 'false'}
+#'  \item{defaultCaseOwner}{a character}
+#'  \item{defaultCaseOwnerType}{a character}
+#'  \item{defaultCaseUser}{a character}
+#'  \item{emailActionDefaultsHandlerClass}{a character}
+#'  \item{emailToCase}{a EmailToCaseSettings}
+#'  \item{enableCaseFeed}{a character either 'true' or 'false'}
+#'  \item{enableDraftEmails}{a character either 'true' or 'false'}
+#'  \item{enableEarlyEscalationRuleTriggers}{a character either 'true' or 'false'}
+#'  \item{enableEmailActionDefaultsHandler}{a character either 'true' or 'false'}
+#'  \item{enableSuggestedArticlesApplication}{a character either 'true' or 'false'}
+#'  \item{enableSuggestedArticlesCustomerPortal}{a character either 'true' or 'false'}
+#'  \item{enableSuggestedArticlesPartnerPortal}{a character either 'true' or 'false'}
+#'  \item{enableSuggestedSolutions}{a character either 'true' or 'false'}
+#'  \item{keepRecordTypeOnAssignmentRule}{a character either 'true' or 'false'}
+#'  \item{notifyContactOnCaseComment}{a character either 'true' or 'false'}
+#'  \item{notifyDefaultCaseOwner}{a character either 'true' or 'false'}
+#'  \item{notifyOwnerOnCaseComment}{a character either 'true' or 'false'}
+#'  \item{notifyOwnerOnCaseOwnerChange}{a character either 'true' or 'false'}
+#'  \item{showFewerCloseActions}{a character either 'true' or 'false'}
+#'  \item{useSystemEmailAddress}{a character either 'true' or 'false'}
+#'  \item{webToCase}{a WebToCaseSettings}
+#' }
+#' 
+#' \strong{ChannelLayout}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{enabledChannels}{a character}
+#'  \item{label}{a character}
+#'  \item{layoutItems}{a ChannelLayoutItem}
+#' }
+#' 
+#' \strong{ChannelLayoutItem}
+#' 
+#' 
+#' \describe{
+#'  \item{field}{a character}
+#' }
+#' 
+#' \strong{ChartSummary}
+#' 
+#' 
+#' \describe{
+#'  \item{aggregate}{a ReportSummaryType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Sum}
+#'      \item{Average}
+#'      \item{Maximum}
+#'      \item{Minimum}
+#'      \item{None}
+#'    }
+#'   }
+#'  \item{axisBinding}{a ChartAxis - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{x}
+#'      \item{y}
+#'      \item{y2}
+#'      \item{r}
+#'    }
+#'   }
+#'  \item{column}{a character}
+#' }
+#' 
+#' \strong{ChatterAnswersReputationLevel}
+#' 
+#' 
+#' \describe{
+#'  \item{name}{a character}
+#'  \item{value}{a integer}
+#' }
+#' 
+#' \strong{ChatterAnswersSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_chatteranswerssettings.htm}{Salesforce Documentation for ChatterAnswersSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{emailFollowersOnBestAnswer}{a character either 'true' or 'false'}
+#'  \item{emailFollowersOnReply}{a character either 'true' or 'false'}
+#'  \item{emailOwnerOnPrivateReply}{a character either 'true' or 'false'}
+#'  \item{emailOwnerOnReply}{a character either 'true' or 'false'}
+#'  \item{enableAnswerViaEmail}{a character either 'true' or 'false'}
+#'  \item{enableChatterAnswers}{a character either 'true' or 'false'}
+#'  \item{enableFacebookSSO}{a character either 'true' or 'false'}
+#'  \item{enableInlinePublisher}{a character either 'true' or 'false'}
+#'  \item{enableReputation}{a character either 'true' or 'false'}
+#'  \item{enableRichTextEditor}{a character either 'true' or 'false'}
+#'  \item{facebookAuthProvider}{a character}
+#'  \item{showInPortals}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{ChatterMobileSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{enablePushNotifications}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{CodeLocation}
+#' 
+#' 
+#' \describe{
+#'  \item{column}{a integer}
+#'  \item{line}{a integer}
+#'  \item{numExecutions}{a integer}
+#'  \item{time}{a numeric}
+#' }
+#' 
+#' \strong{Community}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_community.htm}{Salesforce Documentation for Community}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{communityFeedPage}{a character}
+#'  \item{description}{a character}
+#'  \item{emailFooterDocument}{a character}
+#'  \item{emailHeaderDocument}{a character}
+#'  \item{emailNotificationUrl}{a character}
+#'  \item{enableChatterAnswers}{a character either 'true' or 'false'}
+#'  \item{enablePrivateQuestions}{a character either 'true' or 'false'}
+#'  \item{expertsGroup}{a character}
+#'  \item{portal}{a character}
+#'  \item{reputationLevels}{a ReputationLevels}
+#'  \item{showInPortal}{a character either 'true' or 'false'}
+#'  \item{site}{a character}
+#' }
+#' 
+#' \strong{CompactLayout}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_compactlayout.htm}{Salesforce Documentation for CompactLayout}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{fields}{a character}
+#'  \item{label}{a character}
+#' }
+#' 
+#' \strong{CompanySettings}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{fiscalYear}{a FiscalYearSettings}
+#' }
+#' 
+#' \strong{ComponentInstance}
+#' 
+#' 
+#' \describe{
+#'  \item{componentInstanceProperties}{a ComponentInstanceProperty}
+#'  \item{componentName}{a character}
+#' }
+#' 
+#' \strong{ComponentInstanceProperty}
+#' 
+#' 
+#' \describe{
+#'  \item{name}{a character}
+#'  \item{value}{a character}
+#' }
+#' 
+#' \strong{ConnectedApp}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_connectedapp.htm}{Salesforce Documentation for ConnectedApp}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{attributes}{a ConnectedAppAttribute}
+#'  \item{canvasConfig}{a ConnectedAppCanvasConfig}
+#'  \item{contactEmail}{a character}
+#'  \item{contactPhone}{a character}
+#'  \item{description}{a character}
+#'  \item{iconUrl}{a character}
+#'  \item{infoUrl}{a character}
+#'  \item{ipRanges}{a ConnectedAppIpRange}
+#'  \item{label}{a character}
+#'  \item{logoUrl}{a character}
+#'  \item{mobileAppConfig}{a ConnectedAppMobileDetailConfig}
+#'  \item{mobileStartUrl}{a character}
+#'  \item{oauthConfig}{a ConnectedAppOauthConfig}
+#'  \item{plugin}{a character}
+#'  \item{samlConfig}{a ConnectedAppSamlConfig}
+#'  \item{startUrl}{a character}
+#' }
+#' 
+#' \strong{ConnectedAppAttribute}
+#' 
+#' 
+#' \describe{
+#'  \item{formula}{a character}
+#'  \item{key}{a character}
+#' }
+#' 
+#' \strong{ConnectedAppCanvasConfig}
+#' 
+#' 
+#' \describe{
+#'  \item{accessMethod}{a AccessMethod - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Get}
+#'      \item{Post}
+#'    }
+#'   }
+#'  \item{canvasUrl}{a character}
+#'  \item{lifecycleClass}{a character}
+#'  \item{locations}{a CanvasLocationOptions - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{None}
+#'      \item{Chatter}
+#'      \item{UserProfile}
+#'      \item{Visualforce}
+#'      \item{Aura}
+#'      \item{Publisher}
+#'      \item{ChatterFeed}
+#'      \item{ServiceDesk}
+#'      \item{OpenCTI}
+#'      \item{AppLauncher}
+#'      \item{MobileNav}
+#'      \item{PageLayout}
+#'    }
+#'   }
+#'  \item{options}{a CanvasOptions - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{HideShare}
+#'      \item{HideHeader}
+#'      \item{PersonalEnabled}
+#'    }
+#'   }
+#'  \item{samlInitiationMethod}{a SamlInitiationMethod - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{None}
+#'      \item{IdpInitiated}
+#'      \item{SpInitiated}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{ConnectedAppIpRange}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character}
+#'  \item{end}{a character}
+#'  \item{start}{a character}
+#' }
+#' 
+#' \strong{ConnectedAppMobileDetailConfig}
+#' 
+#' 
+#' \describe{
+#'  \item{applicationBinaryFile}{a character formed using RCurl::base64Encode}
+#'  \item{applicationBinaryFileName}{a character}
+#'  \item{applicationBundleIdentifier}{a character}
+#'  \item{applicationFileLength}{a integer}
+#'  \item{applicationIconFile}{a character}
+#'  \item{applicationIconFileName}{a character}
+#'  \item{applicationInstallUrl}{a character}
+#'  \item{devicePlatform}{a DevicePlatformType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{ios}
+#'      \item{android}
+#'    }
+#'   }
+#'  \item{deviceType}{a DeviceType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{phone}
+#'      \item{tablet}
+#'      \item{minitablet}
+#'    }
+#'   }
+#'  \item{minimumOsVersion}{a character}
+#'  \item{privateApp}{a character either 'true' or 'false'}
+#'  \item{version}{a character}
+#' }
+#' 
+#' \strong{ConnectedAppOauthConfig}
+#' 
+#' 
+#' \describe{
+#'  \item{callbackUrl}{a character}
+#'  \item{certificate}{a character}
+#'  \item{consumerKey}{a character}
+#'  \item{consumerSecret}{a character}
+#'  \item{scopes}{a ConnectedAppOauthAccessScope - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Basic}
+#'      \item{Api}
+#'      \item{Web}
+#'      \item{Full}
+#'      \item{Chatter}
+#'      \item{CustomApplications}
+#'      \item{RefreshToken}
+#'      \item{OpenID}
+#'      \item{Profile}
+#'      \item{Email}
+#'      \item{Address}
+#'      \item{Phone}
+#'      \item{OfflineAccess}
+#'      \item{CustomPermissions}
+#'      \item{Wave}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{ConnectedAppSamlConfig}
+#' 
+#' 
+#' \describe{
+#'  \item{acsUrl}{a character}
+#'  \item{certificate}{a character}
+#'  \item{encryptionCertificate}{a character}
+#'  \item{encryptionType}{a SamlEncryptionType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{AES_128}
+#'      \item{AES_256}
+#'      \item{Triple_Des}
+#'    }
+#'   }
+#'  \item{entityUrl}{a character}
+#'  \item{issuer}{a character}
+#'  \item{samlNameIdFormat}{a SamlNameIdFormatType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Unspecified}
+#'      \item{EmailAddress}
+#'      \item{Persistent}
+#'      \item{Transient}
+#'    }
+#'   }
+#'  \item{samlSubjectCustomAttr}{a character}
+#'  \item{samlSubjectType}{a SamlSubjectType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Username}
+#'      \item{FederationId}
+#'      \item{UserId}
+#'      \item{SpokeId}
+#'      \item{CustomAttribute}
+#'      \item{PersistentId}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{Container}
+#' 
+#' 
+#' \describe{
+#'  \item{height}{a integer}
+#'  \item{isContainerAutoSizeEnabled}{a character either 'true' or 'false'}
+#'  \item{region}{a character}
+#'  \item{sidebarComponents}{a SidebarComponent}
+#'  \item{style}{a character}
+#'  \item{unit}{a character}
+#'  \item{width}{a integer}
+#' }
+#' 
+#' \strong{ContractSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_contractsettings.htm}{Salesforce Documentation for ContractSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{autoCalculateEndDate}{a character either 'true' or 'false'}
+#'  \item{autoExpirationDelay}{a character}
+#'  \item{autoExpirationRecipient}{a character}
+#'  \item{autoExpireContracts}{a character either 'true' or 'false'}
+#'  \item{enableContractHistoryTracking}{a character either 'true' or 'false'}
+#'  \item{notifyOwnersOnContractExpiration}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{CorsWhitelistOrigin}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_corswhitelistorigin.htm}{Salesforce Documentation for CorsWhitelistOrigin}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{urlPattern}{a character}
+#' }
+#' 
+#' \strong{CountriesAndStates}
+#' 
+#' 
+#' \describe{
+#'  \item{countries}{a Country}
+#' }
+#' 
+#' \strong{Country}
+#' 
+#' 
+#' \describe{
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{integrationValue}{a character}
+#'  \item{isoCode}{a character}
+#'  \item{label}{a character}
+#'  \item{orgDefault}{a character either 'true' or 'false'}
+#'  \item{standard}{a character either 'true' or 'false'}
+#'  \item{states}{a State}
+#'  \item{visible}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{CustomApplication}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_customapplication.htm}{Salesforce Documentation for CustomApplication}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{customApplicationComponents}{a CustomApplicationComponents}
+#'  \item{defaultLandingTab}{a character}
+#'  \item{description}{a character}
+#'  \item{detailPageRefreshMethod}{a character}
+#'  \item{domainWhitelist}{a DomainWhitelist}
+#'  \item{enableCustomizeMyTabs}{a character either 'true' or 'false'}
+#'  \item{enableKeyboardShortcuts}{a character either 'true' or 'false'}
+#'  \item{enableListViewReskin}{a character either 'true' or 'false'}
+#'  \item{enableMultiMonitorComponents}{a character either 'true' or 'false'}
+#'  \item{enablePinTabs}{a character either 'true' or 'false'}
+#'  \item{footerColor}{a character}
+#'  \item{headerColor}{a character}
+#'  \item{isServiceCloudConsole}{a character either 'true' or 'false'}
+#'  \item{keyboardShortcuts}{a KeyboardShortcuts}
+#'  \item{label}{a character}
+#'  \item{listPlacement}{a ListPlacement}
+#'  \item{listRefreshMethod}{a character}
+#'  \item{liveAgentConfig}{a LiveAgentConfig}
+#'  \item{logo}{a character}
+#'  \item{primaryTabColor}{a character}
+#'  \item{pushNotifications}{a PushNotifications}
+#'  \item{saveUserSessions}{a character either 'true' or 'false'}
+#'  \item{tab}{a character}
+#'  \item{workspaceMappings}{a WorkspaceMappings}
+#' }
+#' 
+#' \strong{CustomApplicationComponent}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_customapplicationcomponent.htm}{Salesforce Documentation for CustomApplicationComponent}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{buttonIconUrl}{a character}
+#'  \item{buttonStyle}{a character}
+#'  \item{buttonText}{a character}
+#'  \item{buttonWidth}{a integer}
+#'  \item{height}{a integer}
+#'  \item{isHeightFixed}{a character either 'true' or 'false'}
+#'  \item{isHidden}{a character either 'true' or 'false'}
+#'  \item{isWidthFixed}{a character either 'true' or 'false'}
+#'  \item{visualforcePage}{a character}
+#'  \item{width}{a integer}
+#' }
+#' 
+#' \strong{CustomApplicationComponents}
+#' 
+#' 
+#' \describe{
+#'  \item{alignment}{a character}
+#'  \item{customApplicationComponent}{a character}
+#' }
+#' 
+#' \strong{CustomApplicationTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{CustomConsoleComponents}
+#' 
+#' 
+#' \describe{
+#'  \item{primaryTabComponents}{a PrimaryTabComponents}
+#'  \item{subtabComponents}{a SubtabComponents}
+#' }
+#' 
+#' \strong{CustomDataType}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{customDataTypeComponents}{a CustomDataTypeComponent}
+#'  \item{description}{a character}
+#'  \item{displayFormula}{a character}
+#'  \item{editComponentsOnSeparateLines}{a character either 'true' or 'false'}
+#'  \item{label}{a character}
+#'  \item{rightAligned}{a character either 'true' or 'false'}
+#'  \item{supportComponentsInReports}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{CustomDataTypeComponent}
+#' 
+#' 
+#' \describe{
+#'  \item{developerSuffix}{a character}
+#'  \item{enforceFieldRequiredness}{a character either 'true' or 'false'}
+#'  \item{label}{a character}
+#'  \item{length}{a integer}
+#'  \item{precision}{a integer}
+#'  \item{scale}{a integer}
+#'  \item{sortOrder}{a SortOrder - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Asc}
+#'      \item{Desc}
+#'    }
+#'   }
+#'  \item{sortPriority}{a integer}
+#'  \item{type}{a FieldType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{AutoNumber}
+#'      \item{Lookup}
+#'      \item{MasterDetail}
+#'      \item{Checkbox}
+#'      \item{Currency}
+#'      \item{Date}
+#'      \item{DateTime}
+#'      \item{Email}
+#'      \item{Number}
+#'      \item{Percent}
+#'      \item{Phone}
+#'      \item{Picklist}
+#'      \item{MultiselectPicklist}
+#'      \item{Text}
+#'      \item{TextArea}
+#'      \item{LongTextArea}
+#'      \item{Html}
+#'      \item{Url}
+#'      \item{EncryptedText}
+#'      \item{Summary}
+#'      \item{Hierarchy}
+#'      \item{File}
+#'      \item{ExternalLookup}
+#'      \item{IndirectLookup}
+#'      \item{CustomDataType}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{CustomDataTypeComponentTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{developerSuffix}{a character}
+#'  \item{label}{a character}
+#' }
+#' 
+#' \strong{CustomDataTypeTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{components}{a CustomDataTypeComponentTranslation}
+#'  \item{customDataTypeName}{a character}
+#'  \item{description}{a character}
+#'  \item{label}{a character}
+#' }
+#' 
+#' \strong{CustomFeedFilter}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_customfeedfilter.htm}{Salesforce Documentation for CustomFeedFilter}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{criteria}{a FeedFilterCriterion}
+#'  \item{description}{a character}
+#'  \item{isProtected}{a character either 'true' or 'false'}
+#'  \item{label}{a character}
+#' }
+#' 
+#' \strong{CustomField}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{caseSensitive}{a character either 'true' or 'false'}
+#'  \item{customDataType}{a character}
+#'  \item{defaultValue}{a character}
+#'  \item{deleteConstraint}{a DeleteConstraint - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Cascade}
+#'      \item{Restrict}
+#'      \item{SetNull}
+#'    }
+#'   }
+#'  \item{deprecated}{a character either 'true' or 'false'}
+#'  \item{description}{a character}
+#'  \item{displayFormat}{a character}
+#'  \item{encrypted}{a character either 'true' or 'false'}
+#'  \item{escapeMarkup}{a character either 'true' or 'false'}
+#'  \item{externalDeveloperName}{a character}
+#'  \item{externalId}{a character either 'true' or 'false'}
+#'  \item{fieldManageability}{a FieldManageability - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{DeveloperControlled}
+#'      \item{SubscriberControlled}
+#'      \item{Locked}
+#'    }
+#'   }
+#'  \item{formula}{a character}
+#'  \item{formulaTreatBlanksAs}{a TreatBlanksAs - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{BlankAsBlank}
+#'      \item{BlankAsZero}
+#'    }
+#'   }
+#'  \item{inlineHelpText}{a character}
+#'  \item{isConvertLeadDisabled}{a character either 'true' or 'false'}
+#'  \item{isFilteringDisabled}{a character either 'true' or 'false'}
+#'  \item{isNameField}{a character either 'true' or 'false'}
+#'  \item{isSortingDisabled}{a character either 'true' or 'false'}
+#'  \item{label}{a character}
+#'  \item{length}{a integer}
+#'  \item{lookupFilter}{a LookupFilter}
+#'  \item{maskChar}{a EncryptedFieldMaskChar - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{asterisk}
+#'      \item{X}
+#'    }
+#'   }
+#'  \item{maskType}{a EncryptedFieldMaskType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{all}
+#'      \item{creditCard}
+#'      \item{ssn}
+#'      \item{lastFour}
+#'      \item{sin}
+#'      \item{nino}
+#'    }
+#'   }
+#'  \item{picklist}{a Picklist}
+#'  \item{populateExistingRows}{a character either 'true' or 'false'}
+#'  \item{precision}{a integer}
+#'  \item{referenceTargetField}{a character}
+#'  \item{referenceTo}{a character}
+#'  \item{relationshipLabel}{a character}
+#'  \item{relationshipName}{a character}
+#'  \item{relationshipOrder}{a integer}
+#'  \item{reparentableMasterDetail}{a character either 'true' or 'false'}
+#'  \item{required}{a character either 'true' or 'false'}
+#'  \item{restrictedAdminField}{a character either 'true' or 'false'}
+#'  \item{scale}{a integer}
+#'  \item{startingNumber}{a integer}
+#'  \item{stripMarkup}{a character either 'true' or 'false'}
+#'  \item{summarizedField}{a character}
+#'  \item{summaryFilterItems}{a FilterItem}
+#'  \item{summaryForeignKey}{a character}
+#'  \item{summaryOperation}{a SummaryOperations - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{count}
+#'      \item{sum}
+#'      \item{min}
+#'      \item{max}
+#'    }
+#'   }
+#'  \item{trackFeedHistory}{a character either 'true' or 'false'}
+#'  \item{trackHistory}{a character either 'true' or 'false'}
+#'  \item{trackTrending}{a character either 'true' or 'false'}
+#'  \item{type}{a FieldType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{AutoNumber}
+#'      \item{Lookup}
+#'      \item{MasterDetail}
+#'      \item{Checkbox}
+#'      \item{Currency}
+#'      \item{Date}
+#'      \item{DateTime}
+#'      \item{Email}
+#'      \item{Number}
+#'      \item{Percent}
+#'      \item{Phone}
+#'      \item{Picklist}
+#'      \item{MultiselectPicklist}
+#'      \item{Text}
+#'      \item{TextArea}
+#'      \item{LongTextArea}
+#'      \item{Html}
+#'      \item{Url}
+#'      \item{EncryptedText}
+#'      \item{Summary}
+#'      \item{Hierarchy}
+#'      \item{File}
+#'      \item{ExternalLookup}
+#'      \item{IndirectLookup}
+#'      \item{CustomDataType}
+#'    }
+#'   }
+#'  \item{unique}{a character either 'true' or 'false'}
+#'  \item{visibleLines}{a integer}
+#'  \item{writeRequiresMasterRead}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{CustomFieldTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{caseValues}{a ObjectNameCaseValue}
+#'  \item{gender}{a Gender - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Neuter}
+#'      \item{Masculine}
+#'      \item{Feminine}
+#'      \item{AnimateMasculine}
+#'    }
+#'   }
+#'  \item{help}{a character}
+#'  \item{label}{a character}
+#'  \item{lookupFilter}{a LookupFilterTranslation}
+#'  \item{name}{a character}
+#'  \item{picklistValues}{a PicklistValueTranslation}
+#'  \item{relationshipLabel}{a character}
+#'  \item{startsWith}{a StartsWith - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Consonant}
+#'      \item{Vowel}
+#'      \item{Special}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{CustomLabel}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{categories}{a character}
+#'  \item{language}{a character}
+#'  \item{protected}{a character either 'true' or 'false'}
+#'  \item{shortDescription}{a character}
+#'  \item{value}{a character}
+#' }
+#' 
+#' \strong{CustomLabels}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_customlabels.htm}{Salesforce Documentation for CustomLabels}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{labels}{a CustomLabel}
+#' }
+#' 
+#' \strong{CustomLabelTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{CustomMetadata}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_custommetadata.htm}{Salesforce Documentation for CustomMetadata}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{description}{a character}
+#'  \item{label}{a character}
+#'  \item{protected}{a character either 'true' or 'false'}
+#'  \item{values}{a CustomMetadataValue}
+#' }
+#' 
+#' \strong{CustomMetadataValue}
+#' 
+#' 
+#' \describe{
+#'  \item{field}{a character}
+#'  \item{value}{a character that appears similar to any of the other accepted types (integer, numeric, date, datetime, boolean)}
+#' }
+#' 
+#' \strong{CustomObject}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{actionOverrides}{a ActionOverride}
+#'  \item{allowInChatterGroups}{a character either 'true' or 'false'}
+#'  \item{articleTypeChannelDisplay}{a ArticleTypeChannelDisplay}
+#'  \item{businessProcesses}{a BusinessProcess}
+#'  \item{compactLayoutAssignment}{a character}
+#'  \item{compactLayouts}{a CompactLayout}
+#'  \item{customHelp}{a character}
+#'  \item{customHelpPage}{a character}
+#'  \item{customSettingsType}{a CustomSettingsType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{List}
+#'      \item{Hierarchy}
+#'    }
+#'   }
+#'  \item{deploymentStatus}{a DeploymentStatus - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{InDevelopment}
+#'      \item{Deployed}
+#'    }
+#'   }
+#'  \item{deprecated}{a character either 'true' or 'false'}
+#'  \item{description}{a character}
+#'  \item{enableActivities}{a character either 'true' or 'false'}
+#'  \item{enableBulkApi}{a character either 'true' or 'false'}
+#'  \item{enableDivisions}{a character either 'true' or 'false'}
+#'  \item{enableEnhancedLookup}{a character either 'true' or 'false'}
+#'  \item{enableFeeds}{a character either 'true' or 'false'}
+#'  \item{enableHistory}{a character either 'true' or 'false'}
+#'  \item{enableReports}{a character either 'true' or 'false'}
+#'  \item{enableSearch}{a character either 'true' or 'false'}
+#'  \item{enableSharing}{a character either 'true' or 'false'}
+#'  \item{enableStreamingApi}{a character either 'true' or 'false'}
+#'  \item{externalDataSource}{a character}
+#'  \item{externalName}{a character}
+#'  \item{externalRepository}{a character}
+#'  \item{externalSharingModel}{a SharingModel - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Private}
+#'      \item{Read}
+#'      \item{ReadSelect}
+#'      \item{ReadWrite}
+#'      \item{ReadWriteTransfer}
+#'      \item{FullAccess}
+#'      \item{ControlledByParent}
+#'    }
+#'   }
+#'  \item{fieldSets}{a FieldSet}
+#'  \item{fields}{a CustomField}
+#'  \item{gender}{a Gender - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Neuter}
+#'      \item{Masculine}
+#'      \item{Feminine}
+#'      \item{AnimateMasculine}
+#'    }
+#'   }
+#'  \item{historyRetentionPolicy}{a HistoryRetentionPolicy}
+#'  \item{household}{a character either 'true' or 'false'}
+#'  \item{label}{a character}
+#'  \item{listViews}{a ListView}
+#'  \item{nameField}{a CustomField}
+#'  \item{pluralLabel}{a character}
+#'  \item{recordTypeTrackFeedHistory}{a character either 'true' or 'false'}
+#'  \item{recordTypeTrackHistory}{a character either 'true' or 'false'}
+#'  \item{recordTypes}{a RecordType}
+#'  \item{searchLayouts}{a SearchLayouts}
+#'  \item{sharingModel}{a SharingModel - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Private}
+#'      \item{Read}
+#'      \item{ReadSelect}
+#'      \item{ReadWrite}
+#'      \item{ReadWriteTransfer}
+#'      \item{FullAccess}
+#'      \item{ControlledByParent}
+#'    }
+#'   }
+#'  \item{sharingReasons}{a SharingReason}
+#'  \item{sharingRecalculations}{a SharingRecalculation}
+#'  \item{startsWith}{a StartsWith - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Consonant}
+#'      \item{Vowel}
+#'      \item{Special}
+#'    }
+#'   }
+#'  \item{validationRules}{a ValidationRule}
+#'  \item{visibility}{a SetupObjectVisibility - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Protected}
+#'      \item{Public}
+#'    }
+#'   }
+#'  \item{webLinks}{a WebLink}
+#' }
+#' 
+#' \strong{CustomObjectTranslation}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_customobjecttranslation.htm}{Salesforce Documentation for CustomObjectTranslation}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{caseValues}{a ObjectNameCaseValue}
+#'  \item{fields}{a CustomFieldTranslation}
+#'  \item{gender}{a Gender - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Neuter}
+#'      \item{Masculine}
+#'      \item{Feminine}
+#'      \item{AnimateMasculine}
+#'    }
+#'   }
+#'  \item{layouts}{a LayoutTranslation}
+#'  \item{nameFieldLabel}{a character}
+#'  \item{quickActions}{a QuickActionTranslation}
+#'  \item{recordTypes}{a RecordTypeTranslation}
+#'  \item{sharingReasons}{a SharingReasonTranslation}
+#'  \item{standardFields}{a StandardFieldTranslation}
+#'  \item{startsWith}{a StartsWith - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Consonant}
+#'      \item{Vowel}
+#'      \item{Special}
+#'    }
+#'   }
+#'  \item{validationRules}{a ValidationRuleTranslation}
+#'  \item{webLinks}{a WebLinkTranslation}
+#'  \item{workflowTasks}{a WorkflowTaskTranslation}
+#' }
+#' 
+#' \strong{CustomPageWebLink}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{availability}{a WebLinkAvailability - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{online}
+#'      \item{offline}
+#'    }
+#'   }
+#'  \item{description}{a character}
+#'  \item{displayType}{a WebLinkDisplayType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{link}
+#'      \item{button}
+#'      \item{massActionButton}
+#'    }
+#'   }
+#'  \item{encodingKey}{a Encoding - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{UTF-8}
+#'      \item{ISO-8859-1}
+#'      \item{Shift_JIS}
+#'      \item{ISO-2022-JP}
+#'      \item{EUC-JP}
+#'      \item{ks_c_5601-1987}
+#'      \item{Big5}
+#'      \item{GB2312}
+#'      \item{Big5-HKSCS}
+#'      \item{x-SJIS_0213}
+#'    }
+#'   }
+#'  \item{hasMenubar}{a character either 'true' or 'false'}
+#'  \item{hasScrollbars}{a character either 'true' or 'false'}
+#'  \item{hasToolbar}{a character either 'true' or 'false'}
+#'  \item{height}{a integer}
+#'  \item{isResizable}{a character either 'true' or 'false'}
+#'  \item{linkType}{a WebLinkType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{url}
+#'      \item{sControl}
+#'      \item{javascript}
+#'      \item{page}
+#'      \item{flow}
+#'    }
+#'   }
+#'  \item{masterLabel}{a character}
+#'  \item{openType}{a WebLinkWindowType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{newWindow}
+#'      \item{sidebar}
+#'      \item{noSidebar}
+#'      \item{replace}
+#'      \item{onClickJavaScript}
+#'    }
+#'   }
+#'  \item{page}{a character}
+#'  \item{position}{a WebLinkPosition - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{fullScreen}
+#'      \item{none}
+#'      \item{topLeft}
+#'    }
+#'   }
+#'  \item{protected}{a character either 'true' or 'false'}
+#'  \item{requireRowSelection}{a character either 'true' or 'false'}
+#'  \item{scontrol}{a character}
+#'  \item{showsLocation}{a character either 'true' or 'false'}
+#'  \item{showsStatus}{a character either 'true' or 'false'}
+#'  \item{url}{a character}
+#'  \item{width}{a integer}
+#' }
+#' 
+#' \strong{CustomPageWebLinkTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{CustomPermission}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_custompermission.htm}{Salesforce Documentation for CustomPermission}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{connectedApp}{a character}
+#'  \item{description}{a character}
+#'  \item{label}{a character}
+#'  \item{requiredPermission}{a CustomPermissionDependencyRequired}
+#' }
+#' 
+#' \strong{CustomPermissionDependencyRequired}
+#' 
+#' 
+#' \describe{
+#'  \item{customPermission}{a character}
+#'  \item{dependency}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{CustomShortcut}
+#' 
+#' 
+#' \describe{
+#'  \item{action}{a character (inherited from DefaultShortcut)}
+#'  \item{active}{a character either 'true' or 'false' (inherited from DefaultShortcut)}
+#'  \item{keyCommand}{a character (inherited from DefaultShortcut)}
+#'  \item{description}{a character}
+#'  \item{eventName}{a character}
+#' }
+#' 
+#' \strong{CustomSite}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{allowHomePage}{a character either 'true' or 'false'}
+#'  \item{allowStandardAnswersPages}{a character either 'true' or 'false'}
+#'  \item{allowStandardIdeasPages}{a character either 'true' or 'false'}
+#'  \item{allowStandardLookups}{a character either 'true' or 'false'}
+#'  \item{allowStandardSearch}{a character either 'true' or 'false'}
+#'  \item{analyticsTrackingCode}{a character}
+#'  \item{authorizationRequiredPage}{a character}
+#'  \item{bandwidthExceededPage}{a character}
+#'  \item{changePasswordPage}{a character}
+#'  \item{chatterAnswersForgotPasswordConfirmPage}{a character}
+#'  \item{chatterAnswersForgotPasswordPage}{a character}
+#'  \item{chatterAnswersHelpPage}{a character}
+#'  \item{chatterAnswersLoginPage}{a character}
+#'  \item{chatterAnswersRegistrationPage}{a character}
+#'  \item{clickjackProtectionLevel}{a SiteClickjackProtectionLevel - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{AllowAllFraming}
+#'      \item{SameOriginOnly}
+#'      \item{NoFraming}
+#'    }
+#'   }
+#'  \item{customWebAddresses}{a SiteWebAddress}
+#'  \item{description}{a character}
+#'  \item{favoriteIcon}{a character}
+#'  \item{fileNotFoundPage}{a character}
+#'  \item{forgotPasswordPage}{a character}
+#'  \item{genericErrorPage}{a character}
+#'  \item{guestProfile}{a character}
+#'  \item{inMaintenancePage}{a character}
+#'  \item{inactiveIndexPage}{a character}
+#'  \item{indexPage}{a character}
+#'  \item{masterLabel}{a character}
+#'  \item{myProfilePage}{a character}
+#'  \item{portal}{a character}
+#'  \item{requireHttps}{a character either 'true' or 'false'}
+#'  \item{requireInsecurePortalAccess}{a character either 'true' or 'false'}
+#'  \item{robotsTxtPage}{a character}
+#'  \item{rootComponent}{a character}
+#'  \item{selfRegPage}{a character}
+#'  \item{serverIsDown}{a character}
+#'  \item{siteAdmin}{a character}
+#'  \item{siteRedirectMappings}{a SiteRedirectMapping}
+#'  \item{siteTemplate}{a character}
+#'  \item{siteType}{a SiteType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Siteforce}
+#'      \item{Visualforce}
+#'      \item{User}
+#'    }
+#'   }
+#'  \item{subdomain}{a character}
+#'  \item{urlPathPrefix}{a character}
+#' }
+#' 
+#' \strong{CustomTab}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{auraComponent}{a character}
+#'  \item{customObject}{a character either 'true' or 'false'}
+#'  \item{description}{a character}
+#'  \item{flexiPage}{a character}
+#'  \item{frameHeight}{a integer}
+#'  \item{hasSidebar}{a character either 'true' or 'false'}
+#'  \item{icon}{a character}
+#'  \item{label}{a character}
+#'  \item{mobileReady}{a character either 'true' or 'false'}
+#'  \item{motif}{a character}
+#'  \item{page}{a character}
+#'  \item{scontrol}{a character}
+#'  \item{splashPageLink}{a character}
+#'  \item{url}{a character}
+#'  \item{urlEncodingKey}{a Encoding - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{UTF-8}
+#'      \item{ISO-8859-1}
+#'      \item{Shift_JIS}
+#'      \item{ISO-2022-JP}
+#'      \item{EUC-JP}
+#'      \item{ks_c_5601-1987}
+#'      \item{Big5}
+#'      \item{GB2312}
+#'      \item{Big5-HKSCS}
+#'      \item{x-SJIS_0213}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{CustomTabTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{Dashboard}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_dashboard.htm}{Salesforce Documentation for Dashboard}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{backgroundEndColor}{a character}
+#'  \item{backgroundFadeDirection}{a ChartBackgroundDirection - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{TopToBottom}
+#'      \item{LeftToRight}
+#'      \item{Diagonal}
+#'    }
+#'   }
+#'  \item{backgroundStartColor}{a character}
+#'  \item{dashboardFilters}{a DashboardFilter}
+#'  \item{dashboardGridLayout}{a DashboardGridLayout}
+#'  \item{dashboardResultRefreshedDate}{a character}
+#'  \item{dashboardResultRunningUser}{a character}
+#'  \item{dashboardType}{a DashboardType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{SpecifiedUser}
+#'      \item{LoggedInUser}
+#'      \item{MyTeamUser}
+#'    }
+#'   }
+#'  \item{description}{a character}
+#'  \item{folderName}{a character}
+#'  \item{isGridLayout}{a character either 'true' or 'false'}
+#'  \item{leftSection}{a DashboardComponentSection}
+#'  \item{middleSection}{a DashboardComponentSection}
+#'  \item{rightSection}{a DashboardComponentSection}
+#'  \item{runningUser}{a character}
+#'  \item{textColor}{a character}
+#'  \item{title}{a character}
+#'  \item{titleColor}{a character}
+#'  \item{titleSize}{a integer}
+#' }
+#' 
+#' \strong{DashboardComponent}
+#' 
+#' 
+#' \describe{
+#'  \item{autoselectColumnsFromReport}{a character either 'true' or 'false'}
+#'  \item{chartAxisRange}{a ChartRangeType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Auto}
+#'      \item{Manual}
+#'    }
+#'   }
+#'  \item{chartAxisRangeMax}{a numeric}
+#'  \item{chartAxisRangeMin}{a numeric}
+#'  \item{chartSummary}{a ChartSummary}
+#'  \item{componentType}{a DashboardComponentType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Bar}
+#'      \item{BarGrouped}
+#'      \item{BarStacked}
+#'      \item{BarStacked100}
+#'      \item{Column}
+#'      \item{ColumnGrouped}
+#'      \item{ColumnStacked}
+#'      \item{ColumnStacked100}
+#'      \item{Line}
+#'      \item{LineGrouped}
+#'      \item{Pie}
+#'      \item{Table}
+#'      \item{Metric}
+#'      \item{Gauge}
+#'      \item{LineCumulative}
+#'      \item{LineGroupedCumulative}
+#'      \item{Scontrol}
+#'      \item{VisualforcePage}
+#'      \item{Donut}
+#'      \item{Funnel}
+#'      \item{ColumnLine}
+#'      \item{ColumnLineGrouped}
+#'      \item{ColumnLineStacked}
+#'      \item{ColumnLineStacked100}
+#'      \item{Scatter}
+#'      \item{ScatterGrouped}
+#'    }
+#'   }
+#'  \item{dashboardFilterColumns}{a DashboardFilterColumn}
+#'  \item{dashboardTableColumn}{a DashboardTableColumn}
+#'  \item{displayUnits}{a ChartUnits - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Auto}
+#'      \item{Integer}
+#'      \item{Hundreds}
+#'      \item{Thousands}
+#'      \item{Millions}
+#'      \item{Billions}
+#'      \item{Trillions}
+#'    }
+#'   }
+#'  \item{drillDownUrl}{a character}
+#'  \item{drillEnabled}{a character either 'true' or 'false'}
+#'  \item{drillToDetailEnabled}{a character either 'true' or 'false'}
+#'  \item{enableHover}{a character either 'true' or 'false'}
+#'  \item{expandOthers}{a character either 'true' or 'false'}
+#'  \item{footer}{a character}
+#'  \item{gaugeMax}{a numeric}
+#'  \item{gaugeMin}{a numeric}
+#'  \item{groupingColumn}{a character}
+#'  \item{header}{a character}
+#'  \item{indicatorBreakpoint1}{a numeric}
+#'  \item{indicatorBreakpoint2}{a numeric}
+#'  \item{indicatorHighColor}{a character}
+#'  \item{indicatorLowColor}{a character}
+#'  \item{indicatorMiddleColor}{a character}
+#'  \item{legendPosition}{a ChartLegendPosition - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Right}
+#'      \item{Bottom}
+#'      \item{OnChart}
+#'    }
+#'   }
+#'  \item{maxValuesDisplayed}{a integer}
+#'  \item{metricLabel}{a character}
+#'  \item{page}{a character}
+#'  \item{pageHeightInPixels}{a integer}
+#'  \item{report}{a character}
+#'  \item{scontrol}{a character}
+#'  \item{scontrolHeightInPixels}{a integer}
+#'  \item{showPercentage}{a character either 'true' or 'false'}
+#'  \item{showPicturesOnCharts}{a character either 'true' or 'false'}
+#'  \item{showPicturesOnTables}{a character either 'true' or 'false'}
+#'  \item{showTotal}{a character either 'true' or 'false'}
+#'  \item{showValues}{a character either 'true' or 'false'}
+#'  \item{sortBy}{a DashboardComponentFilter - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{RowLabelAscending}
+#'      \item{RowLabelDescending}
+#'      \item{RowValueAscending}
+#'      \item{RowValueDescending}
+#'    }
+#'   }
+#'  \item{title}{a character}
+#'  \item{useReportChart}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{DashboardComponentSection}
+#' 
+#' 
+#' \describe{
+#'  \item{columnSize}{a DashboardComponentSize - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Narrow}
+#'      \item{Medium}
+#'      \item{Wide}
+#'    }
+#'   }
+#'  \item{components}{a DashboardComponent}
+#' }
+#' 
+#' \strong{DashboardFilter}
+#' 
+#' 
+#' \describe{
+#'  \item{dashboardFilterOptions}{a DashboardFilterOption}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{DashboardFilterColumn}
+#' 
+#' 
+#' \describe{
+#'  \item{column}{a character}
+#' }
+#' 
+#' \strong{DashboardFilterOption}
+#' 
+#' 
+#' \describe{
+#'  \item{operator}{a DashboardFilterOperation - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{equals}
+#'      \item{notEqual}
+#'      \item{lessThan}
+#'      \item{greaterThan}
+#'      \item{lessOrEqual}
+#'      \item{greaterOrEqual}
+#'      \item{contains}
+#'      \item{notContain}
+#'      \item{startsWith}
+#'      \item{includes}
+#'      \item{excludes}
+#'      \item{between}
+#'    }
+#'   }
+#'  \item{values}{a character}
+#' }
+#' 
+#' \strong{DashboardFolder}
+#' 
+#' 
+#' \describe{
+#'  \item{accessType}{a FolderAccessTypes (inherited from Folder)}
+#'  \item{folderShares}{a FolderShare (inherited from Folder)}
+#'  \item{name}{a character (inherited from Folder)}
+#'  \item{publicFolderAccess}{a PublicFolderAccess (inherited from Folder)}
+#'  \item{sharedTo}{a SharedTo (inherited from Folder)}
+#' }
+#' 
+#' \strong{DashboardGridComponent}
+#' 
+#' 
+#' \describe{
+#'  \item{colSpan}{a integer}
+#'  \item{columnIndex}{a integer}
+#'  \item{dashboardComponent}{a DashboardComponent}
+#'  \item{rowIndex}{a integer}
+#'  \item{rowSpan}{a integer}
+#' }
+#' 
+#' \strong{DashboardGridLayout}
+#' 
+#' 
+#' \describe{
+#'  \item{dashboardGridComponents}{a DashboardGridComponent}
+#'  \item{numberOfColumns}{a integer}
+#'  \item{rowHeight}{a integer}
+#' }
+#' 
+#' \strong{DashboardMobileSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{enableDashboardIPadApp}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{DashboardTableColumn}
+#' 
+#' 
+#' \describe{
+#'  \item{aggregateType}{a ReportSummaryType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Sum}
+#'      \item{Average}
+#'      \item{Maximum}
+#'      \item{Minimum}
+#'      \item{None}
+#'    }
+#'   }
+#'  \item{calculatePercent}{a character either 'true' or 'false'}
+#'  \item{column}{a character}
+#'  \item{decimalPlaces}{a integer}
+#'  \item{showTotal}{a character either 'true' or 'false'}
+#'  \item{sortBy}{a DashboardComponentFilter - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{RowLabelAscending}
+#'      \item{RowLabelDescending}
+#'      \item{RowValueAscending}
+#'      \item{RowValueDescending}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{DataCategory}
+#' 
+#' 
+#' \describe{
+#'  \item{dataCategory}{a DataCategory}
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{DataCategoryGroup}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_datacategorygroup.htm}{Salesforce Documentation for DataCategoryGroup}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{dataCategory}{a DataCategory}
+#'  \item{description}{a character}
+#'  \item{label}{a character}
+#'  \item{objectUsage}{a ObjectUsage}
+#' }
+#' 
+#' \strong{DataPipeline}
+#' 
+#' 
+#' \describe{
+#'  \item{content}{a character formed using RCurl::base64Encode (inherited from MetadataWithContent)}
+#'  \item{apiVersion}{a numeric}
+#'  \item{label}{a character}
+#'  \item{scriptType}{a DataPipelineType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Pig}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{DefaultShortcut}
+#' 
+#' 
+#' \describe{
+#'  \item{action}{a character}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{keyCommand}{a character}
+#' }
+#' 
+#' \strong{DeployDetails}
+#' 
+#' 
+#' \describe{
+#'  \item{componentFailures}{a DeployMessage}
+#'  \item{componentSuccesses}{a DeployMessage}
+#'  \item{retrieveResult}{a RetrieveResult}
+#'  \item{runTestResult}{a RunTestsResult}
+#' }
+#' 
+#' \strong{DeployOptions}
+#' 
+#' 
+#' \describe{
+#'  \item{allowMissingFiles}{a character either 'true' or 'false'}
+#'  \item{autoUpdatePackage}{a character either 'true' or 'false'}
+#'  \item{checkOnly}{a character either 'true' or 'false'}
+#'  \item{ignoreWarnings}{a character either 'true' or 'false'}
+#'  \item{performRetrieve}{a character either 'true' or 'false'}
+#'  \item{purgeOnDelete}{a character either 'true' or 'false'}
+#'  \item{rollbackOnError}{a character either 'true' or 'false'}
+#'  \item{runTests}{a character}
+#'  \item{singlePackage}{a character either 'true' or 'false'}
+#'  \item{testLevel}{a TestLevel - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{NoTestRun}
+#'      \item{RunSpecifiedTests}
+#'      \item{RunLocalTests}
+#'      \item{RunAllTestsInOrg}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{DescribeMetadataObject}
+#' 
+#' 
+#' \describe{
+#'  \item{childXmlNames}{a character}
+#'  \item{directoryName}{a character}
+#'  \item{inFolder}{a character either 'true' or 'false'}
+#'  \item{metaFile}{a character either 'true' or 'false'}
+#'  \item{suffix}{a character}
+#'  \item{xmlName}{a character}
+#' }
+#' 
+#' \strong{Document}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_document.htm}{Salesforce Documentation for Document}
+#' \describe{
+#'  \item{content}{a character formed using RCurl::base64Encode (inherited from MetadataWithContent)}
+#'  \item{description}{a character}
+#'  \item{internalUseOnly}{a character either 'true' or 'false'}
+#'  \item{keywords}{a character}
+#'  \item{name}{a character}
+#'  \item{public}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{DocumentFolder}
+#' 
+#' 
+#' \describe{
+#'  \item{accessType}{a FolderAccessTypes (inherited from Folder)}
+#'  \item{folderShares}{a FolderShare (inherited from Folder)}
+#'  \item{name}{a character (inherited from Folder)}
+#'  \item{publicFolderAccess}{a PublicFolderAccess (inherited from Folder)}
+#'  \item{sharedTo}{a SharedTo (inherited from Folder)}
+#' }
+#' 
+#' \strong{DomainWhitelist}
+#' 
+#' 
+#' \describe{
+#'  \item{domain}{a character}
+#' }
+#' 
+#' \strong{EmailFolder}
+#' 
+#' 
+#' \describe{
+#'  \item{accessType}{a FolderAccessTypes (inherited from Folder)}
+#'  \item{folderShares}{a FolderShare (inherited from Folder)}
+#'  \item{name}{a character (inherited from Folder)}
+#'  \item{publicFolderAccess}{a PublicFolderAccess (inherited from Folder)}
+#'  \item{sharedTo}{a SharedTo (inherited from Folder)}
+#' }
+#' 
+#' \strong{EmailTemplate}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_emailtemplate.htm}{Salesforce Documentation for EmailTemplate}
+#' \describe{
+#'  \item{content}{a character formed using RCurl::base64Encode (inherited from MetadataWithContent)}
+#'  \item{apiVersion}{a numeric}
+#'  \item{attachedDocuments}{a character}
+#'  \item{attachments}{a Attachment}
+#'  \item{available}{a character either 'true' or 'false'}
+#'  \item{description}{a character}
+#'  \item{encodingKey}{a Encoding - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{UTF-8}
+#'      \item{ISO-8859-1}
+#'      \item{Shift_JIS}
+#'      \item{ISO-2022-JP}
+#'      \item{EUC-JP}
+#'      \item{ks_c_5601-1987}
+#'      \item{Big5}
+#'      \item{GB2312}
+#'      \item{Big5-HKSCS}
+#'      \item{x-SJIS_0213}
+#'    }
+#'   }
+#'  \item{letterhead}{a character}
+#'  \item{name}{a character}
+#'  \item{packageVersions}{a PackageVersion}
+#'  \item{style}{a EmailTemplateStyle - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{none}
+#'      \item{freeForm}
+#'      \item{formalLetter}
+#'      \item{promotionRight}
+#'      \item{promotionLeft}
+#'      \item{newsletter}
+#'      \item{products}
+#'    }
+#'   }
+#'  \item{subject}{a character}
+#'  \item{textOnly}{a character}
+#'  \item{type}{a EmailTemplateType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{text}
+#'      \item{html}
+#'      \item{custom}
+#'      \item{visualforce}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{EmailToCaseRoutingAddress}
+#' 
+#' 
+#' \describe{
+#'  \item{addressType}{a EmailToCaseRoutingAddressType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{EmailToCase}
+#'      \item{Outlook}
+#'    }
+#'   }
+#'  \item{authorizedSenders}{a character}
+#'  \item{caseOrigin}{a character}
+#'  \item{caseOwner}{a character}
+#'  \item{caseOwnerType}{a character}
+#'  \item{casePriority}{a character}
+#'  \item{createTask}{a character either 'true' or 'false'}
+#'  \item{emailAddress}{a character}
+#'  \item{routingName}{a character}
+#'  \item{saveEmailHeaders}{a character either 'true' or 'false'}
+#'  \item{taskStatus}{a character}
+#' }
+#' 
+#' \strong{EmailToCaseSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{enableEmailToCase}{a character either 'true' or 'false'}
+#'  \item{enableHtmlEmail}{a character either 'true' or 'false'}
+#'  \item{enableOnDemandEmailToCase}{a character either 'true' or 'false'}
+#'  \item{enableThreadIDInBody}{a character either 'true' or 'false'}
+#'  \item{enableThreadIDInSubject}{a character either 'true' or 'false'}
+#'  \item{notifyOwnerOnNewCaseEmail}{a character either 'true' or 'false'}
+#'  \item{overEmailLimitAction}{a EmailToCaseOnFailureActionType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Bounce}
+#'      \item{Discard}
+#'      \item{Requeue}
+#'    }
+#'   }
+#'  \item{preQuoteSignature}{a character either 'true' or 'false'}
+#'  \item{routingAddresses}{a EmailToCaseRoutingAddress}
+#'  \item{unauthorizedSenderAction}{a EmailToCaseOnFailureActionType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Bounce}
+#'      \item{Discard}
+#'      \item{Requeue}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{EntitlementProcess}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_entitlementprocess.htm}{Salesforce Documentation for EntitlementProcess}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{businessHours}{a character}
+#'  \item{description}{a character}
+#'  \item{entryStartDateField}{a character}
+#'  \item{exitCriteriaBooleanFilter}{a character}
+#'  \item{exitCriteriaFilterItems}{a FilterItem}
+#'  \item{exitCriteriaFormula}{a character}
+#'  \item{isVersionDefault}{a character either 'true' or 'false'}
+#'  \item{milestones}{a EntitlementProcessMilestoneItem}
+#'  \item{name}{a character}
+#'  \item{versionMaster}{a character}
+#'  \item{versionNotes}{a character}
+#'  \item{versionNumber}{a integer}
+#' }
+#' 
+#' \strong{EntitlementProcessMilestoneItem}
+#' 
+#' 
+#' \describe{
+#'  \item{businessHours}{a character}
+#'  \item{criteriaBooleanFilter}{a character}
+#'  \item{milestoneCriteriaFilterItems}{a FilterItem}
+#'  \item{milestoneCriteriaFormula}{a character}
+#'  \item{milestoneName}{a character}
+#'  \item{minutesCustomClass}{a character}
+#'  \item{minutesToComplete}{a integer}
+#'  \item{successActions}{a WorkflowActionReference}
+#'  \item{timeTriggers}{a EntitlementProcessMilestoneTimeTrigger}
+#'  \item{useCriteriaStartTime}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{EntitlementProcessMilestoneTimeTrigger}
+#' 
+#' 
+#' \describe{
+#'  \item{actions}{a WorkflowActionReference}
+#'  \item{timeLength}{a integer}
+#'  \item{workflowTimeTriggerUnit}{a MilestoneTimeUnits - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Minutes}
+#'      \item{Hours}
+#'      \item{Days}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{EntitlementSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_entitlementsettings.htm}{Salesforce Documentation for EntitlementSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{assetLookupLimitedToActiveEntitlementsOnAccount}{a character either 'true' or 'false'}
+#'  \item{assetLookupLimitedToActiveEntitlementsOnContact}{a character either 'true' or 'false'}
+#'  \item{assetLookupLimitedToSameAccount}{a character either 'true' or 'false'}
+#'  \item{assetLookupLimitedToSameContact}{a character either 'true' or 'false'}
+#'  \item{enableEntitlementVersioning}{a character either 'true' or 'false'}
+#'  \item{enableEntitlements}{a character either 'true' or 'false'}
+#'  \item{entitlementLookupLimitedToActiveStatus}{a character either 'true' or 'false'}
+#'  \item{entitlementLookupLimitedToSameAccount}{a character either 'true' or 'false'}
+#'  \item{entitlementLookupLimitedToSameAsset}{a character either 'true' or 'false'}
+#'  \item{entitlementLookupLimitedToSameContact}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{EntitlementTemplate}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_entitlementtemplate.htm}{Salesforce Documentation for EntitlementTemplate}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{businessHours}{a character}
+#'  \item{casesPerEntitlement}{a integer}
+#'  \item{entitlementProcess}{a character}
+#'  \item{isPerIncident}{a character either 'true' or 'false'}
+#'  \item{term}{a integer}
+#'  \item{type}{a character}
+#' }
+#' 
+#' \strong{EscalationAction}
+#' 
+#' 
+#' \describe{
+#'  \item{assignedTo}{a character}
+#'  \item{assignedToTemplate}{a character}
+#'  \item{assignedToType}{a AssignToLookupValueType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{User}
+#'      \item{Queue}
+#'    }
+#'   }
+#'  \item{minutesToEscalation}{a integer}
+#'  \item{notifyCaseOwner}{a character either 'true' or 'false'}
+#'  \item{notifyEmail}{a character}
+#'  \item{notifyTo}{a character}
+#'  \item{notifyToTemplate}{a character}
+#' }
+#' 
+#' \strong{EscalationRule}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{ruleEntry}{a RuleEntry}
+#' }
+#' 
+#' \strong{EscalationRules}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_escalationrules.htm}{Salesforce Documentation for EscalationRules}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{escalationRule}{a EscalationRule}
+#' }
+#' 
+#' \strong{ExternalDataSource}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_externaldatasource.htm}{Salesforce Documentation for ExternalDataSource}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{apiKey}{a character}
+#'  \item{authProvider}{a character}
+#'  \item{certificate}{a character}
+#'  \item{customConfiguration}{a character}
+#'  \item{endpoint}{a character}
+#'  \item{isWritable}{a character either 'true' or 'false'}
+#'  \item{label}{a character}
+#'  \item{oauthRefreshToken}{a character}
+#'  \item{oauthScope}{a character}
+#'  \item{oauthToken}{a character}
+#'  \item{password}{a character}
+#'  \item{principalType}{a ExternalPrincipalType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Anonymous}
+#'      \item{PerUser}
+#'      \item{NamedUser}
+#'    }
+#'   }
+#'  \item{protocol}{a AuthenticationProtocol - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{NoAuthentication}
+#'      \item{Oauth}
+#'      \item{Password}
+#'    }
+#'   }
+#'  \item{repository}{a character}
+#'  \item{type}{a ExternalDataSourceType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Identity}
+#'      \item{SimpleURL}
+#'      \item{Wrapper}
+#'    }
+#'   }
+#'  \item{username}{a character}
+#'  \item{version}{a character}
+#' }
+#' 
+#' \strong{FeedFilterCriterion}
+#' 
+#' 
+#' \describe{
+#'  \item{feedItemType}{a FeedItemType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{TrackedChange}
+#'      \item{UserStatus}
+#'      \item{TextPost}
+#'      \item{AdvancedTextPost}
+#'      \item{LinkPost}
+#'      \item{ContentPost}
+#'      \item{PollPost}
+#'      \item{RypplePost}
+#'      \item{ProfileSkillPost}
+#'      \item{DashboardComponentSnapshot}
+#'      \item{ApprovalPost}
+#'      \item{CaseCommentPost}
+#'      \item{ReplyPost}
+#'      \item{EmailMessageEvent}
+#'      \item{CallLogPost}
+#'      \item{ChangeStatusPost}
+#'      \item{AttachArticleEvent}
+#'      \item{MilestoneEvent}
+#'      \item{ActivityEvent}
+#'      \item{ChatTranscriptPost}
+#'      \item{CollaborationGroupCreated}
+#'      \item{CollaborationGroupUnarchived}
+#'      \item{SocialPost}
+#'      \item{QuestionPost}
+#'      \item{FacebookPost}
+#'      \item{BasicTemplateFeedItem}
+#'      \item{CreateRecordEvent}
+#'      \item{CanvasPost}
+#'      \item{AnnouncementPost}
+#'    }
+#'   }
+#'  \item{feedItemVisibility}{a FeedItemVisibility - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{AllUsers}
+#'      \item{InternalUsers}
+#'    }
+#'   }
+#'  \item{relatedSObjectType}{a character}
+#' }
+#' 
+#' \strong{FeedItemSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{characterLimit}{a integer}
+#'  \item{collapseThread}{a character either 'true' or 'false'}
+#'  \item{displayFormat}{a FeedItemDisplayFormat - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Default}
+#'      \item{HideBlankLines}
+#'    }
+#'   }
+#'  \item{feedItemType}{a FeedItemType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{TrackedChange}
+#'      \item{UserStatus}
+#'      \item{TextPost}
+#'      \item{AdvancedTextPost}
+#'      \item{LinkPost}
+#'      \item{ContentPost}
+#'      \item{PollPost}
+#'      \item{RypplePost}
+#'      \item{ProfileSkillPost}
+#'      \item{DashboardComponentSnapshot}
+#'      \item{ApprovalPost}
+#'      \item{CaseCommentPost}
+#'      \item{ReplyPost}
+#'      \item{EmailMessageEvent}
+#'      \item{CallLogPost}
+#'      \item{ChangeStatusPost}
+#'      \item{AttachArticleEvent}
+#'      \item{MilestoneEvent}
+#'      \item{ActivityEvent}
+#'      \item{ChatTranscriptPost}
+#'      \item{CollaborationGroupCreated}
+#'      \item{CollaborationGroupUnarchived}
+#'      \item{SocialPost}
+#'      \item{QuestionPost}
+#'      \item{FacebookPost}
+#'      \item{BasicTemplateFeedItem}
+#'      \item{CreateRecordEvent}
+#'      \item{CanvasPost}
+#'      \item{AnnouncementPost}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{FeedLayout}
+#' 
+#' 
+#' \describe{
+#'  \item{autocollapsePublisher}{a character either 'true' or 'false'}
+#'  \item{compactFeed}{a character either 'true' or 'false'}
+#'  \item{feedFilterPosition}{a FeedLayoutFilterPosition - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{CenterDropDown}
+#'      \item{LeftFixed}
+#'      \item{LeftFloat}
+#'    }
+#'   }
+#'  \item{feedFilters}{a FeedLayoutFilter}
+#'  \item{fullWidthFeed}{a character either 'true' or 'false'}
+#'  \item{hideSidebar}{a character either 'true' or 'false'}
+#'  \item{highlightExternalFeedItems}{a character either 'true' or 'false'}
+#'  \item{leftComponents}{a FeedLayoutComponent}
+#'  \item{rightComponents}{a FeedLayoutComponent}
+#'  \item{useInlineFiltersInConsole}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{FeedLayoutComponent}
+#' 
+#' 
+#' \describe{
+#'  \item{componentType}{a FeedLayoutComponentType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{HelpAndToolLinks}
+#'      \item{CustomButtons}
+#'      \item{Following}
+#'      \item{Followers}
+#'      \item{CustomLinks}
+#'      \item{Milestones}
+#'      \item{Topics}
+#'      \item{Visualforce}
+#'    }
+#'   }
+#'  \item{height}{a integer}
+#'  \item{page}{a character}
+#' }
+#' 
+#' \strong{FeedLayoutFilter}
+#' 
+#' 
+#' \describe{
+#'  \item{feedFilterName}{a character}
+#'  \item{feedFilterType}{a FeedLayoutFilterType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{AllUpdates}
+#'      \item{FeedItemType}
+#'      \item{Custom}
+#'    }
+#'   }
+#'  \item{feedItemType}{a FeedItemType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{TrackedChange}
+#'      \item{UserStatus}
+#'      \item{TextPost}
+#'      \item{AdvancedTextPost}
+#'      \item{LinkPost}
+#'      \item{ContentPost}
+#'      \item{PollPost}
+#'      \item{RypplePost}
+#'      \item{ProfileSkillPost}
+#'      \item{DashboardComponentSnapshot}
+#'      \item{ApprovalPost}
+#'      \item{CaseCommentPost}
+#'      \item{ReplyPost}
+#'      \item{EmailMessageEvent}
+#'      \item{CallLogPost}
+#'      \item{ChangeStatusPost}
+#'      \item{AttachArticleEvent}
+#'      \item{MilestoneEvent}
+#'      \item{ActivityEvent}
+#'      \item{ChatTranscriptPost}
+#'      \item{CollaborationGroupCreated}
+#'      \item{CollaborationGroupUnarchived}
+#'      \item{SocialPost}
+#'      \item{QuestionPost}
+#'      \item{FacebookPost}
+#'      \item{BasicTemplateFeedItem}
+#'      \item{CreateRecordEvent}
+#'      \item{CanvasPost}
+#'      \item{AnnouncementPost}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{FieldOverride}
+#' 
+#' 
+#' \describe{
+#'  \item{field}{a character}
+#'  \item{formula}{a character}
+#'  \item{literalValue}{a character}
+#' }
+#' 
+#' \strong{FieldSet}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_fieldset.htm}{Salesforce Documentation for FieldSet}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{availableFields}{a FieldSetItem}
+#'  \item{description}{a character}
+#'  \item{displayedFields}{a FieldSetItem}
+#'  \item{label}{a character}
+#' }
+#' 
+#' \strong{FieldSetItem}
+#' 
+#' 
+#' \describe{
+#'  \item{field}{a character}
+#'  \item{isFieldManaged}{a character either 'true' or 'false'}
+#'  \item{isRequired}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{FieldValue}
+#' 
+#' 
+#' \describe{
+#'  \item{name}{a character}
+#'  \item{value}{a character that appears similar to any of the other accepted types (integer, numeric, date, datetime, boolean)}
+#' }
+#' 
+#' \strong{FileProperties}
+#' 
+#' 
+#' \describe{
+#'  \item{createdById}{a character}
+#'  \item{createdByName}{a character}
+#'  \item{createdDate}{a character formatted as 'yyyy-mm-ddThh:mm:ssZ'}
+#'  \item{fileName}{a character}
+#'  \item{fullName}{a character}
+#'  \item{id}{a character}
+#'  \item{lastModifiedById}{a character}
+#'  \item{lastModifiedByName}{a character}
+#'  \item{lastModifiedDate}{a character formatted as 'yyyy-mm-ddThh:mm:ssZ'}
+#'  \item{manageableState}{a ManageableState - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{released}
+#'      \item{deleted}
+#'      \item{deprecated}
+#'      \item{installed}
+#'      \item{beta}
+#'      \item{unmanaged}
+#'    }
+#'   }
+#'  \item{namespacePrefix}{a character}
+#'  \item{type}{a character}
+#' }
+#' 
+#' \strong{FilterItem}
+#' 
+#' 
+#' \describe{
+#'  \item{field}{a character}
+#'  \item{operation}{a FilterOperation - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{equals}
+#'      \item{notEqual}
+#'      \item{lessThan}
+#'      \item{greaterThan}
+#'      \item{lessOrEqual}
+#'      \item{greaterOrEqual}
+#'      \item{contains}
+#'      \item{notContain}
+#'      \item{startsWith}
+#'      \item{includes}
+#'      \item{excludes}
+#'      \item{within}
+#'    }
+#'   }
+#'  \item{value}{a character}
+#'  \item{valueField}{a character}
+#' }
+#' 
+#' \strong{FindSimilarOppFilter}
+#' 
+#' 
+#' \describe{
+#'  \item{similarOpportunitiesDisplayColumns}{a character}
+#'  \item{similarOpportunitiesMatchFields}{a character}
+#' }
+#' 
+#' \strong{FiscalYearSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{fiscalYearNameBasedOn}{a character}
+#'  \item{startMonth}{a character}
+#' }
+#' 
+#' \strong{FlexiPage}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_flexipage.htm}{Salesforce Documentation for FlexiPage}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{description}{a character}
+#'  \item{flexiPageRegions}{a FlexiPageRegion}
+#'  \item{masterLabel}{a character}
+#'  \item{pageTemplate}{a character}
+#'  \item{parentFlexiPage}{a character}
+#'  \item{platformActionlist}{a PlatformActionList}
+#'  \item{quickActionList}{a QuickActionList}
+#'  \item{sobjectType}{a character}
+#'  \item{type}{a FlexiPageType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{AppPage}
+#'      \item{ObjectPage}
+#'      \item{RecordPage}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{FlexiPageRegion}
+#' 
+#' 
+#' \describe{
+#'  \item{appendable}{a RegionFlagStatus - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{disabled}
+#'      \item{enabled}
+#'    }
+#'   }
+#'  \item{componentInstances}{a ComponentInstance}
+#'  \item{mode}{a FlexiPageRegionMode - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Append}
+#'      \item{Prepend}
+#'      \item{Replace}
+#'    }
+#'   }
+#'  \item{name}{a character}
+#'  \item{prependable}{a RegionFlagStatus - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{disabled}
+#'      \item{enabled}
+#'    }
+#'   }
+#'  \item{replaceable}{a RegionFlagStatus - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{disabled}
+#'      \item{enabled}
+#'    }
+#'   }
+#'  \item{type}{a FlexiPageRegionType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Region}
+#'      \item{Facet}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{Flow}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{actionCalls}{a FlowActionCall}
+#'  \item{apexPluginCalls}{a FlowApexPluginCall}
+#'  \item{assignments}{a FlowAssignment}
+#'  \item{choices}{a FlowChoice}
+#'  \item{constants}{a FlowConstant}
+#'  \item{decisions}{a FlowDecision}
+#'  \item{description}{a character}
+#'  \item{dynamicChoiceSets}{a FlowDynamicChoiceSet}
+#'  \item{formulas}{a FlowFormula}
+#'  \item{interviewLabel}{a character}
+#'  \item{label}{a character}
+#'  \item{loops}{a FlowLoop}
+#'  \item{processMetadataValues}{a FlowMetadataValue}
+#'  \item{processType}{a FlowProcessType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{AutoLaunchedFlow}
+#'      \item{Flow}
+#'      \item{Workflow}
+#'      \item{LoginFlow}
+#'      \item{ActionPlan}
+#'      \item{JourneyBuilderIntegration}
+#'      \item{UserProvisioningFlow}
+#'    }
+#'   }
+#'  \item{recordCreates}{a FlowRecordCreate}
+#'  \item{recordDeletes}{a FlowRecordDelete}
+#'  \item{recordLookups}{a FlowRecordLookup}
+#'  \item{recordUpdates}{a FlowRecordUpdate}
+#'  \item{screens}{a FlowScreen}
+#'  \item{startElementReference}{a character}
+#'  \item{steps}{a FlowStep}
+#'  \item{subflows}{a FlowSubflow}
+#'  \item{textTemplates}{a FlowTextTemplate}
+#'  \item{variables}{a FlowVariable}
+#'  \item{waits}{a FlowWait}
+#' }
+#' 
+#' \strong{FlowActionCall}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character (inherited from FlowNode)}
+#'  \item{locationX}{a integer (inherited from FlowNode)}
+#'  \item{locationY}{a integer (inherited from FlowNode)}
+#'  \item{actionName}{a character}
+#'  \item{actionType}{a InvocableActionType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{apex}
+#'      \item{chatterPost}
+#'      \item{contentWorkspaceEnableFolders}
+#'      \item{emailAlert}
+#'      \item{emailSimple}
+#'      \item{flow}
+#'      \item{metricRefresh}
+#'      \item{quickAction}
+#'      \item{submit}
+#'      \item{thanks}
+#'    }
+#'   }
+#'  \item{connector}{a FlowConnector}
+#'  \item{faultConnector}{a FlowConnector}
+#'  \item{inputParameters}{a FlowActionCallInputParameter}
+#'  \item{outputParameters}{a FlowActionCallOutputParameter}
+#' }
+#' 
+#' \strong{FlowActionCallInputParameter}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{name}{a character}
+#'  \item{value}{a FlowElementReferenceOrValue}
+#' }
+#' 
+#' \strong{FlowActionCallOutputParameter}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{assignToReference}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{FlowApexPluginCall}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character (inherited from FlowNode)}
+#'  \item{locationX}{a integer (inherited from FlowNode)}
+#'  \item{locationY}{a integer (inherited from FlowNode)}
+#'  \item{apexClass}{a character}
+#'  \item{connector}{a FlowConnector}
+#'  \item{faultConnector}{a FlowConnector}
+#'  \item{inputParameters}{a FlowApexPluginCallInputParameter}
+#'  \item{outputParameters}{a FlowApexPluginCallOutputParameter}
+#' }
+#' 
+#' \strong{FlowApexPluginCallInputParameter}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{name}{a character}
+#'  \item{value}{a FlowElementReferenceOrValue}
+#' }
+#' 
+#' \strong{FlowApexPluginCallOutputParameter}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{assignToReference}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{FlowAssignment}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character (inherited from FlowNode)}
+#'  \item{locationX}{a integer (inherited from FlowNode)}
+#'  \item{locationY}{a integer (inherited from FlowNode)}
+#'  \item{assignmentItems}{a FlowAssignmentItem}
+#'  \item{connector}{a FlowConnector}
+#' }
+#' 
+#' \strong{FlowAssignmentItem}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{assignToReference}{a character}
+#'  \item{operator}{a FlowAssignmentOperator - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Assign}
+#'      \item{Add}
+#'      \item{Subtract}
+#'      \item{AddItem}
+#'    }
+#'   }
+#'  \item{value}{a FlowElementReferenceOrValue}
+#' }
+#' 
+#' \strong{FlowBaseElement}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue}
+#' }
+#' 
+#' \strong{FlowChoice}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character (inherited from FlowElement)}
+#'  \item{name}{a character (inherited from FlowElement)}
+#'  \item{choiceText}{a character}
+#'  \item{dataType}{a FlowDataType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Currency}
+#'      \item{Date}
+#'      \item{Number}
+#'      \item{String}
+#'      \item{Boolean}
+#'      \item{SObject}
+#'      \item{DateTime}
+#'      \item{Picklist}
+#'      \item{Multipicklist}
+#'    }
+#'   }
+#'  \item{userInput}{a FlowChoiceUserInput}
+#'  \item{value}{a FlowElementReferenceOrValue}
+#' }
+#' 
+#' \strong{FlowChoiceUserInput}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{isRequired}{a character either 'true' or 'false'}
+#'  \item{promptText}{a character}
+#'  \item{validationRule}{a FlowInputValidationRule}
+#' }
+#' 
+#' \strong{FlowCondition}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{leftValueReference}{a character}
+#'  \item{operator}{a FlowComparisonOperator - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{EqualTo}
+#'      \item{NotEqualTo}
+#'      \item{GreaterThan}
+#'      \item{LessThan}
+#'      \item{GreaterThanOrEqualTo}
+#'      \item{LessThanOrEqualTo}
+#'      \item{StartsWith}
+#'      \item{EndsWith}
+#'      \item{Contains}
+#'      \item{IsNull}
+#'      \item{WasSet}
+#'      \item{WasSelected}
+#'      \item{WasVisited}
+#'    }
+#'   }
+#'  \item{rightValue}{a FlowElementReferenceOrValue}
+#' }
+#' 
+#' \strong{FlowConnector}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{targetReference}{a character}
+#' }
+#' 
+#' \strong{FlowConstant}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character (inherited from FlowElement)}
+#'  \item{name}{a character (inherited from FlowElement)}
+#'  \item{dataType}{a FlowDataType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Currency}
+#'      \item{Date}
+#'      \item{Number}
+#'      \item{String}
+#'      \item{Boolean}
+#'      \item{SObject}
+#'      \item{DateTime}
+#'      \item{Picklist}
+#'      \item{Multipicklist}
+#'    }
+#'   }
+#'  \item{value}{a FlowElementReferenceOrValue}
+#' }
+#' 
+#' \strong{FlowDecision}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character (inherited from FlowNode)}
+#'  \item{locationX}{a integer (inherited from FlowNode)}
+#'  \item{locationY}{a integer (inherited from FlowNode)}
+#'  \item{defaultConnector}{a FlowConnector}
+#'  \item{defaultConnectorLabel}{a character}
+#'  \item{rules}{a FlowRule}
+#' }
+#' 
+#' \strong{FlowDefinition}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_flowdefinition.htm}{Salesforce Documentation for FlowDefinition}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{activeVersionNumber}{a integer}
+#'  \item{description}{a character}
+#'  \item{masterLabel}{a character}
+#' }
+#' 
+#' \strong{FlowDynamicChoiceSet}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character (inherited from FlowElement)}
+#'  \item{name}{a character (inherited from FlowElement)}
+#'  \item{dataType}{a FlowDataType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Currency}
+#'      \item{Date}
+#'      \item{Number}
+#'      \item{String}
+#'      \item{Boolean}
+#'      \item{SObject}
+#'      \item{DateTime}
+#'      \item{Picklist}
+#'      \item{Multipicklist}
+#'    }
+#'   }
+#'  \item{displayField}{a character}
+#'  \item{filters}{a FlowRecordFilter}
+#'  \item{limit}{a integer}
+#'  \item{object}{a character}
+#'  \item{outputAssignments}{a FlowOutputFieldAssignment}
+#'  \item{picklistField}{a character}
+#'  \item{picklistObject}{a character}
+#'  \item{sortField}{a character}
+#'  \item{sortOrder}{a SortOrder - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Asc}
+#'      \item{Desc}
+#'    }
+#'   }
+#'  \item{valueField}{a character}
+#' }
+#' 
+#' \strong{FlowElement}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{description}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{FlowElementReferenceOrValue}
+#' 
+#' 
+#' \describe{
+#'  \item{booleanValue}{a character either 'true' or 'false'}
+#'  \item{dateTimeValue}{a character formatted as 'yyyy-mm-ddThh:mm:ssZ'}
+#'  \item{dateValue}{a character formatted as 'yyyy-mm-dd'}
+#'  \item{elementReference}{a character}
+#'  \item{numberValue}{a numeric}
+#'  \item{stringValue}{a character}
+#' }
+#' 
+#' \strong{FlowFormula}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character (inherited from FlowElement)}
+#'  \item{name}{a character (inherited from FlowElement)}
+#'  \item{dataType}{a FlowDataType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Currency}
+#'      \item{Date}
+#'      \item{Number}
+#'      \item{String}
+#'      \item{Boolean}
+#'      \item{SObject}
+#'      \item{DateTime}
+#'      \item{Picklist}
+#'      \item{Multipicklist}
+#'    }
+#'   }
+#'  \item{expression}{a character}
+#'  \item{scale}{a integer}
+#' }
+#' 
+#' \strong{FlowInputFieldAssignment}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{field}{a character}
+#'  \item{value}{a FlowElementReferenceOrValue}
+#' }
+#' 
+#' \strong{FlowInputValidationRule}
+#' 
+#' 
+#' \describe{
+#'  \item{errorMessage}{a character}
+#'  \item{formulaExpression}{a character}
+#' }
+#' 
+#' \strong{FlowLoop}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character (inherited from FlowNode)}
+#'  \item{locationX}{a integer (inherited from FlowNode)}
+#'  \item{locationY}{a integer (inherited from FlowNode)}
+#'  \item{assignNextValueToReference}{a character}
+#'  \item{collectionReference}{a character}
+#'  \item{iterationOrder}{a IterationOrder - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Asc}
+#'      \item{Desc}
+#'    }
+#'   }
+#'  \item{nextValueConnector}{a FlowConnector}
+#'  \item{noMoreValuesConnector}{a FlowConnector}
+#' }
+#' 
+#' \strong{FlowMetadataValue}
+#' 
+#' 
+#' \describe{
+#'  \item{name}{a character}
+#'  \item{value}{a FlowElementReferenceOrValue}
+#' }
+#' 
+#' \strong{FlowNode}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character (inherited from FlowElement)}
+#'  \item{name}{a character (inherited from FlowElement)}
+#'  \item{label}{a character}
+#'  \item{locationX}{a integer}
+#'  \item{locationY}{a integer}
+#' }
+#' 
+#' \strong{FlowOutputFieldAssignment}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{assignToReference}{a character}
+#'  \item{field}{a character}
+#' }
+#' 
+#' \strong{FlowRecordCreate}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character (inherited from FlowNode)}
+#'  \item{locationX}{a integer (inherited from FlowNode)}
+#'  \item{locationY}{a integer (inherited from FlowNode)}
+#'  \item{assignRecordIdToReference}{a character}
+#'  \item{connector}{a FlowConnector}
+#'  \item{faultConnector}{a FlowConnector}
+#'  \item{inputAssignments}{a FlowInputFieldAssignment}
+#'  \item{inputReference}{a character}
+#'  \item{object}{a character}
+#' }
+#' 
+#' \strong{FlowRecordDelete}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character (inherited from FlowNode)}
+#'  \item{locationX}{a integer (inherited from FlowNode)}
+#'  \item{locationY}{a integer (inherited from FlowNode)}
+#'  \item{connector}{a FlowConnector}
+#'  \item{faultConnector}{a FlowConnector}
+#'  \item{filters}{a FlowRecordFilter}
+#'  \item{inputReference}{a character}
+#'  \item{object}{a character}
+#' }
+#' 
+#' \strong{FlowRecordFilter}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{field}{a character}
+#'  \item{operator}{a FlowRecordFilterOperator - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{EqualTo}
+#'      \item{NotEqualTo}
+#'      \item{GreaterThan}
+#'      \item{LessThan}
+#'      \item{GreaterThanOrEqualTo}
+#'      \item{LessThanOrEqualTo}
+#'      \item{StartsWith}
+#'      \item{EndsWith}
+#'      \item{Contains}
+#'      \item{IsNull}
+#'    }
+#'   }
+#'  \item{value}{a FlowElementReferenceOrValue}
+#' }
+#' 
+#' \strong{FlowRecordLookup}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character (inherited from FlowNode)}
+#'  \item{locationX}{a integer (inherited from FlowNode)}
+#'  \item{locationY}{a integer (inherited from FlowNode)}
+#'  \item{assignNullValuesIfNoRecordsFound}{a character either 'true' or 'false'}
+#'  \item{connector}{a FlowConnector}
+#'  \item{faultConnector}{a FlowConnector}
+#'  \item{filters}{a FlowRecordFilter}
+#'  \item{object}{a character}
+#'  \item{outputAssignments}{a FlowOutputFieldAssignment}
+#'  \item{outputReference}{a character}
+#'  \item{queriedFields}{a character}
+#'  \item{sortField}{a character}
+#'  \item{sortOrder}{a SortOrder - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Asc}
+#'      \item{Desc}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{FlowRecordUpdate}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character (inherited from FlowNode)}
+#'  \item{locationX}{a integer (inherited from FlowNode)}
+#'  \item{locationY}{a integer (inherited from FlowNode)}
+#'  \item{connector}{a FlowConnector}
+#'  \item{faultConnector}{a FlowConnector}
+#'  \item{filters}{a FlowRecordFilter}
+#'  \item{inputAssignments}{a FlowInputFieldAssignment}
+#'  \item{inputReference}{a character}
+#'  \item{object}{a character}
+#' }
+#' 
+#' \strong{FlowRule}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character (inherited from FlowElement)}
+#'  \item{name}{a character (inherited from FlowElement)}
+#'  \item{conditionLogic}{a character}
+#'  \item{conditions}{a FlowCondition}
+#'  \item{connector}{a FlowConnector}
+#'  \item{label}{a character}
+#' }
+#' 
+#' \strong{FlowScreen}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character (inherited from FlowNode)}
+#'  \item{locationX}{a integer (inherited from FlowNode)}
+#'  \item{locationY}{a integer (inherited from FlowNode)}
+#'  \item{allowBack}{a character either 'true' or 'false'}
+#'  \item{allowFinish}{a character either 'true' or 'false'}
+#'  \item{allowPause}{a character either 'true' or 'false'}
+#'  \item{connector}{a FlowConnector}
+#'  \item{fields}{a FlowScreenField}
+#'  \item{helpText}{a character}
+#'  \item{pausedText}{a character}
+#' }
+#' 
+#' \strong{FlowScreenField}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character (inherited from FlowElement)}
+#'  \item{name}{a character (inherited from FlowElement)}
+#'  \item{choiceReferences}{a character}
+#'  \item{dataType}{a FlowDataType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Currency}
+#'      \item{Date}
+#'      \item{Number}
+#'      \item{String}
+#'      \item{Boolean}
+#'      \item{SObject}
+#'      \item{DateTime}
+#'      \item{Picklist}
+#'      \item{Multipicklist}
+#'    }
+#'   }
+#'  \item{defaultSelectedChoiceReference}{a character}
+#'  \item{defaultValue}{a FlowElementReferenceOrValue}
+#'  \item{fieldText}{a character}
+#'  \item{fieldType}{a FlowScreenFieldType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{DisplayText}
+#'      \item{InputField}
+#'      \item{LargeTextArea}
+#'      \item{PasswordField}
+#'      \item{RadioButtons}
+#'      \item{DropdownBox}
+#'      \item{MultiSelectCheckboxes}
+#'      \item{MultiSelectPicklist}
+#'    }
+#'   }
+#'  \item{helpText}{a character}
+#'  \item{isRequired}{a character either 'true' or 'false'}
+#'  \item{scale}{a integer}
+#'  \item{validationRule}{a FlowInputValidationRule}
+#' }
+#' 
+#' \strong{FlowStep}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character (inherited from FlowNode)}
+#'  \item{locationX}{a integer (inherited from FlowNode)}
+#'  \item{locationY}{a integer (inherited from FlowNode)}
+#'  \item{connectors}{a FlowConnector}
+#' }
+#' 
+#' \strong{FlowSubflow}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character (inherited from FlowNode)}
+#'  \item{locationX}{a integer (inherited from FlowNode)}
+#'  \item{locationY}{a integer (inherited from FlowNode)}
+#'  \item{connector}{a FlowConnector}
+#'  \item{flowName}{a character}
+#'  \item{inputAssignments}{a FlowSubflowInputAssignment}
+#'  \item{outputAssignments}{a FlowSubflowOutputAssignment}
+#' }
+#' 
+#' \strong{FlowSubflowInputAssignment}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{name}{a character}
+#'  \item{value}{a FlowElementReferenceOrValue}
+#' }
+#' 
+#' \strong{FlowSubflowOutputAssignment}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{assignToReference}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{FlowTextTemplate}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character (inherited from FlowElement)}
+#'  \item{name}{a character (inherited from FlowElement)}
+#'  \item{text}{a character}
+#' }
+#' 
+#' \strong{FlowVariable}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character (inherited from FlowElement)}
+#'  \item{name}{a character (inherited from FlowElement)}
+#'  \item{dataType}{a FlowDataType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Currency}
+#'      \item{Date}
+#'      \item{Number}
+#'      \item{String}
+#'      \item{Boolean}
+#'      \item{SObject}
+#'      \item{DateTime}
+#'      \item{Picklist}
+#'      \item{Multipicklist}
+#'    }
+#'   }
+#'  \item{isCollection}{a character either 'true' or 'false'}
+#'  \item{isInput}{a character either 'true' or 'false'}
+#'  \item{isOutput}{a character either 'true' or 'false'}
+#'  \item{objectType}{a character}
+#'  \item{scale}{a integer}
+#'  \item{value}{a FlowElementReferenceOrValue}
+#' }
+#' 
+#' \strong{FlowWait}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character (inherited from FlowNode)}
+#'  \item{locationX}{a integer (inherited from FlowNode)}
+#'  \item{locationY}{a integer (inherited from FlowNode)}
+#'  \item{defaultConnector}{a FlowConnector}
+#'  \item{defaultConnectorLabel}{a character}
+#'  \item{faultConnector}{a FlowConnector}
+#'  \item{waitEvents}{a FlowWaitEvent}
+#' }
+#' 
+#' \strong{FlowWaitEvent}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character (inherited from FlowElement)}
+#'  \item{name}{a character (inherited from FlowElement)}
+#'  \item{conditionLogic}{a character}
+#'  \item{conditions}{a FlowCondition}
+#'  \item{connector}{a FlowConnector}
+#'  \item{eventType}{a character}
+#'  \item{inputParameters}{a FlowWaitEventInputParameter}
+#'  \item{label}{a character}
+#'  \item{outputParameters}{a FlowWaitEventOutputParameter}
+#' }
+#' 
+#' \strong{FlowWaitEventInputParameter}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{name}{a character}
+#'  \item{value}{a FlowElementReferenceOrValue}
+#' }
+#' 
+#' \strong{FlowWaitEventOutputParameter}
+#' 
+#' 
+#' \describe{
+#'  \item{processMetadataValues}{a FlowMetadataValue (inherited from FlowBaseElement)}
+#'  \item{assignToReference}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{Folder}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_folder.htm}{Salesforce Documentation for Folder}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{accessType}{a FolderAccessTypes - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Shared}
+#'      \item{Public}
+#'      \item{Hidden}
+#'      \item{PublicInternal}
+#'    }
+#'   }
+#'  \item{folderShares}{a FolderShare}
+#'  \item{name}{a character}
+#'  \item{publicFolderAccess}{a PublicFolderAccess - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{ReadOnly}
+#'      \item{ReadWrite}
+#'    }
+#'   }
+#'  \item{sharedTo}{a SharedTo}
+#' }
+#' 
+#' \strong{FolderShare}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_foldershare.htm}{Salesforce Documentation for FolderShare}
+#' \describe{
+#'  \item{accessLevel}{a FolderShareAccessLevel - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{View}
+#'      \item{EditAllContents}
+#'      \item{Manage}
+#'    }
+#'   }
+#'  \item{sharedTo}{a character}
+#'  \item{sharedToType}{a FolderSharedToType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Group}
+#'      \item{Role}
+#'      \item{RoleAndSubordinates}
+#'      \item{RoleAndSubordinatesInternal}
+#'      \item{Manager}
+#'      \item{ManagerAndSubordinatesInternal}
+#'      \item{Organization}
+#'      \item{Territory}
+#'      \item{TerritoryAndSubordinates}
+#'      \item{AllPrmUsers}
+#'      \item{User}
+#'      \item{PartnerUser}
+#'      \item{AllCspUsers}
+#'      \item{CustomerPortalUser}
+#'      \item{PortalRole}
+#'      \item{PortalRoleAndSubordinates}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{ForecastingCategoryMapping}
+#' 
+#' 
+#' \describe{
+#'  \item{forecastingItemCategoryApiName}{a character}
+#'  \item{weightedSourceCategories}{a WeightedSourceCategory}
+#' }
+#' 
+#' \strong{ForecastingSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_forecastingsettings.htm}{Salesforce Documentation for ForecastingSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{displayCurrency}{a DisplayCurrency - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{CORPORATE}
+#'      \item{PERSONAL}
+#'    }
+#'   }
+#'  \item{enableForecasts}{a character either 'true' or 'false'}
+#'  \item{forecastingCategoryMappings}{a ForecastingCategoryMapping}
+#'  \item{forecastingTypeSettings}{a ForecastingTypeSettings}
+#' }
+#' 
+#' \strong{ForecastingTypeSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{adjustmentsSettings}{a AdjustmentsSettings}
+#'  \item{displayedCategoryApiNames}{a character}
+#'  \item{forecastRangeSettings}{a ForecastRangeSettings}
+#'  \item{forecastedCategoryApiNames}{a character}
+#'  \item{managerAdjustableCategoryApiNames}{a character}
+#'  \item{name}{a character}
+#'  \item{opportunityListFieldsSelectedSettings}{a OpportunityListFieldsSelectedSettings}
+#'  \item{ownerAdjustableCategoryApiNames}{a character}
+#'  \item{quotasSettings}{a QuotasSettings}
+#' }
+#' 
+#' \strong{ForecastRangeSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{beginning}{a integer}
+#'  \item{displaying}{a integer}
+#'  \item{periodType}{a PeriodTypes - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Month}
+#'      \item{Quarter}
+#'      \item{Week}
+#'      \item{Year}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{GlobalQuickActionTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{Group}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_group.htm}{Salesforce Documentation for Group}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{doesIncludeBosses}{a character either 'true' or 'false'}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{HistoryRetentionPolicy}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_historyretentionpolicy.htm}{Salesforce Documentation for HistoryRetentionPolicy}
+#' \describe{
+#'  \item{archiveAfterMonths}{a integer}
+#'  \item{archiveRetentionYears}{a integer}
+#'  \item{description}{a character}
+#' }
+#' 
+#' \strong{Holiday}
+#' 
+#' 
+#' \describe{
+#'  \item{activityDate}{a character formatted as 'yyyy-mm-dd'}
+#'  \item{businessHours}{a character}
+#'  \item{description}{a character}
+#'  \item{endTime}{a character formatted as 'hh:mm:ssZ}
+#'  \item{isRecurring}{a character either 'true' or 'false'}
+#'  \item{name}{a character}
+#'  \item{recurrenceDayOfMonth}{a integer}
+#'  \item{recurrenceDayOfWeek}{a character}
+#'  \item{recurrenceDayOfWeekMask}{a integer}
+#'  \item{recurrenceEndDate}{a character formatted as 'yyyy-mm-dd'}
+#'  \item{recurrenceInstance}{a character}
+#'  \item{recurrenceInterval}{a integer}
+#'  \item{recurrenceMonthOfYear}{a character}
+#'  \item{recurrenceStartDate}{a character formatted as 'yyyy-mm-dd'}
+#'  \item{recurrenceType}{a character}
+#'  \item{startTime}{a character formatted as 'hh:mm:ssZ}
+#' }
+#' 
+#' \strong{HomePageComponent}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_homepagecomponent.htm}{Salesforce Documentation for HomePageComponent}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{body}{a character}
+#'  \item{height}{a integer}
+#'  \item{links}{a character}
+#'  \item{page}{a character}
+#'  \item{pageComponentType}{a PageComponentType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{links}
+#'      \item{htmlArea}
+#'      \item{imageOrNote}
+#'      \item{visualforcePage}
+#'    }
+#'   }
+#'  \item{showLabel}{a character either 'true' or 'false'}
+#'  \item{showScrollbars}{a character either 'true' or 'false'}
+#'  \item{width}{a PageComponentWidth - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{narrow}
+#'      \item{wide}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{HomePageLayout}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{narrowComponents}{a character}
+#'  \item{wideComponents}{a character}
+#' }
+#' 
+#' \strong{IdeaReputationLevel}
+#' 
+#' 
+#' \describe{
+#'  \item{name}{a character}
+#'  \item{value}{a integer}
+#' }
+#' 
+#' \strong{IdeasSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_ideassettings.htm}{Salesforce Documentation for IdeasSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{enableChatterProfile}{a character either 'true' or 'false'}
+#'  \item{enableIdeaThemes}{a character either 'true' or 'false'}
+#'  \item{enableIdeas}{a character either 'true' or 'false'}
+#'  \item{enableIdeasReputation}{a character either 'true' or 'false'}
+#'  \item{halfLife}{a numeric}
+#'  \item{ideasProfilePage}{a character}
+#' }
+#' 
+#' \strong{InstalledPackage}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_installedpackage.htm}{Salesforce Documentation for InstalledPackage}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{password}{a character}
+#'  \item{versionNumber}{a character}
+#' }
+#' 
+#' \strong{IpRange}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character}
+#'  \item{end}{a character}
+#'  \item{start}{a character}
+#' }
+#' 
+#' \strong{KeyboardShortcuts}
+#' 
+#' 
+#' \describe{
+#'  \item{customShortcut}{a CustomShortcut}
+#'  \item{defaultShortcut}{a DefaultShortcut}
+#' }
+#' 
+#' \strong{KnowledgeAnswerSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{assignTo}{a character}
+#'  \item{defaultArticleType}{a character}
+#'  \item{enableArticleCreation}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{KnowledgeCaseSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{articlePDFCreationProfile}{a character}
+#'  \item{articlePublicSharingCommunities}{a KnowledgeCommunitiesSettings}
+#'  \item{articlePublicSharingSites}{a KnowledgeSitesSettings}
+#'  \item{articlePublicSharingSitesChatterAnswers}{a KnowledgeSitesSettings}
+#'  \item{assignTo}{a character}
+#'  \item{customizationClass}{a character}
+#'  \item{defaultContributionArticleType}{a character}
+#'  \item{editor}{a KnowledgeCaseEditor - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{simple}
+#'      \item{standard}
+#'    }
+#'   }
+#'  \item{enableArticleCreation}{a character either 'true' or 'false'}
+#'  \item{enableArticlePublicSharingSites}{a character either 'true' or 'false'}
+#'  \item{useProfileForPDFCreation}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{KnowledgeCommunitiesSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{community}{a character}
+#' }
+#' 
+#' \strong{KnowledgeLanguage}
+#' 
+#' 
+#' \describe{
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{defaultAssignee}{a character}
+#'  \item{defaultAssigneeType}{a KnowledgeLanguageLookupValueType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{User}
+#'      \item{Queue}
+#'    }
+#'   }
+#'  \item{defaultReviewer}{a character}
+#'  \item{defaultReviewerType}{a KnowledgeLanguageLookupValueType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{User}
+#'      \item{Queue}
+#'    }
+#'   }
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{KnowledgeLanguageSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{language}{a KnowledgeLanguage}
+#' }
+#' 
+#' \strong{KnowledgeSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_knowledgesettings.htm}{Salesforce Documentation for KnowledgeSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{answers}{a KnowledgeAnswerSettings}
+#'  \item{cases}{a KnowledgeCaseSettings}
+#'  \item{defaultLanguage}{a character}
+#'  \item{enableChatterQuestionKBDeflection}{a character either 'true' or 'false'}
+#'  \item{enableCreateEditOnArticlesTab}{a character either 'true' or 'false'}
+#'  \item{enableExternalMediaContent}{a character either 'true' or 'false'}
+#'  \item{enableKnowledge}{a character either 'true' or 'false'}
+#'  \item{languages}{a KnowledgeLanguageSettings}
+#'  \item{showArticleSummariesCustomerPortal}{a character either 'true' or 'false'}
+#'  \item{showArticleSummariesInternalApp}{a character either 'true' or 'false'}
+#'  \item{showArticleSummariesPartnerPortal}{a character either 'true' or 'false'}
+#'  \item{showValidationStatusField}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{KnowledgeSitesSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{site}{a character}
+#' }
+#' 
+#' \strong{Layout}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{customButtons}{a character}
+#'  \item{customConsoleComponents}{a CustomConsoleComponents}
+#'  \item{emailDefault}{a character either 'true' or 'false'}
+#'  \item{excludeButtons}{a character}
+#'  \item{feedLayout}{a FeedLayout}
+#'  \item{headers}{a LayoutHeader - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{PersonalTagging}
+#'      \item{PublicTagging}
+#'    }
+#'   }
+#'  \item{layoutSections}{a LayoutSection}
+#'  \item{miniLayout}{a MiniLayout}
+#'  \item{multilineLayoutFields}{a character}
+#'  \item{platformActionList}{a PlatformActionList}
+#'  \item{quickActionList}{a QuickActionList}
+#'  \item{relatedContent}{a RelatedContent}
+#'  \item{relatedLists}{a RelatedListItem}
+#'  \item{relatedObjects}{a character}
+#'  \item{runAssignmentRulesDefault}{a character either 'true' or 'false'}
+#'  \item{showEmailCheckbox}{a character either 'true' or 'false'}
+#'  \item{showHighlightsPanel}{a character either 'true' or 'false'}
+#'  \item{showInteractionLogPanel}{a character either 'true' or 'false'}
+#'  \item{showKnowledgeComponent}{a character either 'true' or 'false'}
+#'  \item{showRunAssignmentRulesCheckbox}{a character either 'true' or 'false'}
+#'  \item{showSolutionSection}{a character either 'true' or 'false'}
+#'  \item{showSubmitAndAttachButton}{a character either 'true' or 'false'}
+#'  \item{summaryLayout}{a SummaryLayout}
+#' }
+#' 
+#' \strong{LayoutColumn}
+#' 
+#' 
+#' \describe{
+#'  \item{layoutItems}{a LayoutItem}
+#'  \item{reserved}{a character}
+#' }
+#' 
+#' \strong{LayoutItem}
+#' 
+#' 
+#' \describe{
+#'  \item{analyticsCloudComponent}{a AnalyticsCloudComponentLayoutItem}
+#'  \item{behavior}{a UiBehavior - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Edit}
+#'      \item{Required}
+#'      \item{Readonly}
+#'    }
+#'   }
+#'  \item{canvas}{a character}
+#'  \item{component}{a character}
+#'  \item{customLink}{a character}
+#'  \item{emptySpace}{a character either 'true' or 'false'}
+#'  \item{field}{a character}
+#'  \item{height}{a integer}
+#'  \item{page}{a character}
+#'  \item{reportChartComponent}{a ReportChartComponentLayoutItem}
+#'  \item{scontrol}{a character}
+#'  \item{showLabel}{a character either 'true' or 'false'}
+#'  \item{showScrollbars}{a character either 'true' or 'false'}
+#'  \item{width}{a character}
+#' }
+#' 
+#' \strong{LayoutSection}
+#' 
+#' 
+#' \describe{
+#'  \item{customLabel}{a character either 'true' or 'false'}
+#'  \item{detailHeading}{a character either 'true' or 'false'}
+#'  \item{editHeading}{a character either 'true' or 'false'}
+#'  \item{label}{a character}
+#'  \item{layoutColumns}{a LayoutColumn}
+#'  \item{style}{a LayoutSectionStyle - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{TwoColumnsTopToBottom}
+#'      \item{TwoColumnsLeftToRight}
+#'      \item{OneColumn}
+#'      \item{CustomLinks}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{LayoutSectionTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character}
+#'  \item{section}{a character}
+#' }
+#' 
+#' \strong{LayoutTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{layout}{a character}
+#'  \item{layoutType}{a character}
+#'  \item{sections}{a LayoutSectionTranslation}
+#' }
+#' 
+#' \strong{LeadConvertSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{allowOwnerChange}{a character either 'true' or 'false'}
+#'  \item{opportunityCreationOptions}{a VisibleOrRequired - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{VisibleOptional}
+#'      \item{VisibleRequired}
+#'      \item{NotVisible}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{Letterhead}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_letterhead.htm}{Salesforce Documentation for Letterhead}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{available}{a character either 'true' or 'false'}
+#'  \item{backgroundColor}{a character}
+#'  \item{bodyColor}{a character}
+#'  \item{bottomLine}{a LetterheadLine}
+#'  \item{description}{a character}
+#'  \item{footer}{a LetterheadHeaderFooter}
+#'  \item{header}{a LetterheadHeaderFooter}
+#'  \item{middleLine}{a LetterheadLine}
+#'  \item{name}{a character}
+#'  \item{topLine}{a LetterheadLine}
+#' }
+#' 
+#' \strong{LetterheadHeaderFooter}
+#' 
+#' 
+#' \describe{
+#'  \item{backgroundColor}{a character}
+#'  \item{height}{a integer}
+#'  \item{horizontalAlignment}{a LetterheadHorizontalAlignment - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{None}
+#'      \item{Left}
+#'      \item{Center}
+#'      \item{Right}
+#'    }
+#'   }
+#'  \item{logo}{a character}
+#'  \item{verticalAlignment}{a LetterheadVerticalAlignment - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{None}
+#'      \item{Top}
+#'      \item{Middle}
+#'      \item{Bottom}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{LetterheadLine}
+#' 
+#' 
+#' \describe{
+#'  \item{color}{a character}
+#'  \item{height}{a integer}
+#' }
+#' 
+#' \strong{LicensedCustomPermissions}
+#' 
+#' 
+#' \describe{
+#'  \item{customPermission}{a character}
+#'  \item{licenseDefinition}{a character}
+#' }
+#' 
+#' \strong{LicenseDefinition}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{aggregationGroup}{a character}
+#'  \item{description}{a character}
+#'  \item{isPublished}{a character either 'true' or 'false'}
+#'  \item{label}{a character}
+#'  \item{licensedCustomPermissions}{a LicensedCustomPermissions}
+#'  \item{licensingAuthority}{a character}
+#'  \item{licensingAuthorityProvider}{a character}
+#'  \item{minPlatformVersion}{a integer}
+#'  \item{origin}{a character}
+#'  \item{revision}{a integer}
+#'  \item{trialLicenseDuration}{a integer}
+#'  \item{trialLicenseQuantity}{a integer}
+#' }
+#' 
+#' \strong{ListMetadataQuery}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_listmetadataquery.htm}{Salesforce Documentation for ListMetadataQuery}
+#' \describe{
+#'  \item{folder}{a character}
+#'  \item{type}{a character}
+#' }
+#' 
+#' \strong{ListPlacement}
+#' 
+#' 
+#' \describe{
+#'  \item{height}{a integer}
+#'  \item{location}{a character}
+#'  \item{units}{a character}
+#'  \item{width}{a integer}
+#' }
+#' 
+#' \strong{ListView}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_listview.htm}{Salesforce Documentation for ListView}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{booleanFilter}{a character}
+#'  \item{columns}{a character}
+#'  \item{division}{a character}
+#'  \item{filterScope}{a FilterScope - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Everything}
+#'      \item{Mine}
+#'      \item{Queue}
+#'      \item{Delegated}
+#'      \item{MyTerritory}
+#'      \item{MyTeamTerritory}
+#'      \item{Team}
+#'    }
+#'   }
+#'  \item{filters}{a ListViewFilter}
+#'  \item{label}{a character}
+#'  \item{language}{a Language - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{en_US}
+#'      \item{de}
+#'      \item{es}
+#'      \item{fr}
+#'      \item{it}
+#'      \item{ja}
+#'      \item{sv}
+#'      \item{ko}
+#'      \item{zh_TW}
+#'      \item{zh_CN}
+#'      \item{pt_BR}
+#'      \item{nl_NL}
+#'      \item{da}
+#'      \item{th}
+#'      \item{fi}
+#'      \item{ru}
+#'      \item{es_MX}
+#'      \item{no}
+#'      \item{hu}
+#'      \item{pl}
+#'      \item{cs}
+#'      \item{tr}
+#'      \item{in}
+#'      \item{ro}
+#'      \item{vi}
+#'      \item{uk}
+#'      \item{iw}
+#'      \item{el}
+#'      \item{bg}
+#'      \item{en_GB}
+#'      \item{ar}
+#'      \item{sk}
+#'      \item{pt_PT}
+#'      \item{hr}
+#'      \item{sl}
+#'      \item{fr_CA}
+#'      \item{ka}
+#'      \item{sr}
+#'      \item{sh}
+#'      \item{en_AU}
+#'      \item{en_MY}
+#'      \item{en_IN}
+#'      \item{en_PH}
+#'      \item{en_CA}
+#'      \item{ro_MD}
+#'      \item{bs}
+#'      \item{mk}
+#'      \item{lv}
+#'      \item{lt}
+#'      \item{et}
+#'      \item{sq}
+#'      \item{sh_ME}
+#'      \item{mt}
+#'      \item{ga}
+#'      \item{eu}
+#'      \item{cy}
+#'      \item{is}
+#'      \item{ms}
+#'      \item{tl}
+#'      \item{lb}
+#'      \item{rm}
+#'      \item{hy}
+#'      \item{hi}
+#'      \item{ur}
+#'      \item{bn}
+#'      \item{de_AT}
+#'      \item{de_CH}
+#'      \item{ta}
+#'      \item{ar_DZ}
+#'      \item{ar_BH}
+#'      \item{ar_EG}
+#'      \item{ar_IQ}
+#'      \item{ar_JO}
+#'      \item{ar_KW}
+#'      \item{ar_LB}
+#'      \item{ar_LY}
+#'      \item{ar_MA}
+#'      \item{ar_OM}
+#'      \item{ar_QA}
+#'      \item{ar_SA}
+#'      \item{ar_SD}
+#'      \item{ar_SY}
+#'      \item{ar_TN}
+#'      \item{ar_AE}
+#'      \item{ar_YE}
+#'      \item{zh_SG}
+#'      \item{zh_HK}
+#'      \item{en_HK}
+#'      \item{en_IE}
+#'      \item{en_SG}
+#'      \item{en_ZA}
+#'      \item{fr_BE}
+#'      \item{fr_LU}
+#'      \item{fr_CH}
+#'      \item{de_LU}
+#'      \item{it_CH}
+#'      \item{es_AR}
+#'      \item{es_BO}
+#'      \item{es_CL}
+#'      \item{es_CO}
+#'      \item{es_CR}
+#'      \item{es_DO}
+#'      \item{es_EC}
+#'      \item{es_SV}
+#'      \item{es_GT}
+#'      \item{es_HN}
+#'      \item{es_NI}
+#'      \item{es_PA}
+#'      \item{es_PY}
+#'      \item{es_PE}
+#'      \item{es_PR}
+#'      \item{es_US}
+#'      \item{es_UY}
+#'      \item{es_VE}
+#'      \item{eo}
+#'      \item{iw_EO}
+#'    }
+#'   }
+#'  \item{queue}{a character}
+#'  \item{sharedTo}{a SharedTo}
+#' }
+#' 
+#' \strong{ListViewFilter}
+#' 
+#' 
+#' \describe{
+#'  \item{field}{a character}
+#'  \item{operation}{a FilterOperation - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{equals}
+#'      \item{notEqual}
+#'      \item{lessThan}
+#'      \item{greaterThan}
+#'      \item{lessOrEqual}
+#'      \item{greaterOrEqual}
+#'      \item{contains}
+#'      \item{notContain}
+#'      \item{startsWith}
+#'      \item{includes}
+#'      \item{excludes}
+#'      \item{within}
+#'    }
+#'   }
+#'  \item{value}{a character}
+#' }
+#' 
+#' \strong{LiveAgentConfig}
+#' 
+#' 
+#' \describe{
+#'  \item{enableLiveChat}{a character either 'true' or 'false'}
+#'  \item{openNewAccountSubtab}{a character either 'true' or 'false'}
+#'  \item{openNewCaseSubtab}{a character either 'true' or 'false'}
+#'  \item{openNewContactSubtab}{a character either 'true' or 'false'}
+#'  \item{openNewLeadSubtab}{a character either 'true' or 'false'}
+#'  \item{openNewVFPageSubtab}{a character either 'true' or 'false'}
+#'  \item{pagesToOpen}{a PagesToOpen}
+#'  \item{showKnowledgeArticles}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{LiveAgentSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_liveagentsettings.htm}{Salesforce Documentation for LiveAgentSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{enableLiveAgent}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{LiveChatAgentConfig}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_livechatagentconfig.htm}{Salesforce Documentation for LiveChatAgentConfig}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{assignments}{a AgentConfigAssignments}
+#'  \item{autoGreeting}{a character}
+#'  \item{capacity}{a integer}
+#'  \item{criticalWaitTime}{a integer}
+#'  \item{customAgentName}{a character}
+#'  \item{enableAgentFileTransfer}{a character either 'true' or 'false'}
+#'  \item{enableAgentSneakPeek}{a character either 'true' or 'false'}
+#'  \item{enableAssistanceFlag}{a character either 'true' or 'false'}
+#'  \item{enableAutoAwayOnDecline}{a character either 'true' or 'false'}
+#'  \item{enableAutoAwayOnPushTimeout}{a character either 'true' or 'false'}
+#'  \item{enableChatConferencing}{a character either 'true' or 'false'}
+#'  \item{enableChatMonitoring}{a character either 'true' or 'false'}
+#'  \item{enableChatTransfer}{a character either 'true' or 'false'}
+#'  \item{enableLogoutSound}{a character either 'true' or 'false'}
+#'  \item{enableNotifications}{a character either 'true' or 'false'}
+#'  \item{enableRequestSound}{a character either 'true' or 'false'}
+#'  \item{enableSneakPeek}{a character either 'true' or 'false'}
+#'  \item{enableVisitorBlocking}{a character either 'true' or 'false'}
+#'  \item{enableWhisperMessage}{a character either 'true' or 'false'}
+#'  \item{label}{a character}
+#'  \item{supervisorDefaultAgentStatusFilter}{a SupervisorAgentStatusFilter - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Online}
+#'      \item{Away}
+#'      \item{Offline}
+#'    }
+#'   }
+#'  \item{supervisorDefaultButtonFilter}{a character}
+#'  \item{supervisorDefaultSkillFilter}{a character}
+#'  \item{supervisorSkills}{a SupervisorAgentConfigSkills}
+#'  \item{transferableButtons}{a AgentConfigButtons}
+#'  \item{transferableSkills}{a AgentConfigSkills}
+#' }
+#' 
+#' \strong{LiveChatButton}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_livechatbutton.htm}{Salesforce Documentation for LiveChatButton}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{animation}{a LiveChatButtonPresentation - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Slide}
+#'      \item{Fade}
+#'      \item{Appear}
+#'      \item{Custom}
+#'    }
+#'   }
+#'  \item{autoGreeting}{a character}
+#'  \item{chasitorIdleTimeout}{a integer}
+#'  \item{chasitorIdleTimeoutWarning}{a integer}
+#'  \item{chatPage}{a character}
+#'  \item{customAgentName}{a character}
+#'  \item{deployments}{a LiveChatButtonDeployments}
+#'  \item{enableQueue}{a character either 'true' or 'false'}
+#'  \item{inviteEndPosition}{a LiveChatButtonInviteEndPosition - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{TopLeft}
+#'      \item{Top}
+#'      \item{TopRight}
+#'      \item{Left}
+#'      \item{Center}
+#'      \item{Right}
+#'      \item{BottomLeft}
+#'      \item{Bottom}
+#'      \item{BottomRight}
+#'    }
+#'   }
+#'  \item{inviteImage}{a character}
+#'  \item{inviteStartPosition}{a LiveChatButtonInviteStartPosition - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{TopLeft}
+#'      \item{TopLeftTop}
+#'      \item{Top}
+#'      \item{TopRightTop}
+#'      \item{TopRight}
+#'      \item{TopRightRight}
+#'      \item{Right}
+#'      \item{BottomRightRight}
+#'      \item{BottomRight}
+#'      \item{BottomRightBottom}
+#'      \item{Bottom}
+#'      \item{BottomLeftBottom}
+#'      \item{BottomLeft}
+#'      \item{BottomLeftLeft}
+#'      \item{Left}
+#'      \item{TopLeftLeft}
+#'    }
+#'   }
+#'  \item{isActive}{a character either 'true' or 'false'}
+#'  \item{label}{a character}
+#'  \item{numberOfReroutingAttempts}{a integer}
+#'  \item{offlineImage}{a character}
+#'  \item{onlineImage}{a character}
+#'  \item{optionsCustomRoutingIsEnabled}{a character either 'true' or 'false'}
+#'  \item{optionsHasChasitorIdleTimeout}{a character either 'true' or 'false'}
+#'  \item{optionsHasInviteAfterAccept}{a character either 'true' or 'false'}
+#'  \item{optionsHasInviteAfterReject}{a character either 'true' or 'false'}
+#'  \item{optionsHasRerouteDeclinedRequest}{a character either 'true' or 'false'}
+#'  \item{optionsIsAutoAccept}{a character either 'true' or 'false'}
+#'  \item{optionsIsInviteAutoRemove}{a character either 'true' or 'false'}
+#'  \item{overallQueueLength}{a integer}
+#'  \item{perAgentQueueLength}{a integer}
+#'  \item{postChatPage}{a character}
+#'  \item{postChatUrl}{a character}
+#'  \item{preChatFormPage}{a character}
+#'  \item{preChatFormUrl}{a character}
+#'  \item{pushTimeOut}{a integer}
+#'  \item{routingType}{a LiveChatButtonRoutingType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Choice}
+#'      \item{LeastActive}
+#'      \item{MostAvailable}
+#'    }
+#'   }
+#'  \item{site}{a character}
+#'  \item{skills}{a LiveChatButtonSkills}
+#'  \item{timeToRemoveInvite}{a integer}
+#'  \item{type}{a LiveChatButtonType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Standard}
+#'      \item{Invite}
+#'    }
+#'   }
+#'  \item{windowLanguage}{a Language - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{en_US}
+#'      \item{de}
+#'      \item{es}
+#'      \item{fr}
+#'      \item{it}
+#'      \item{ja}
+#'      \item{sv}
+#'      \item{ko}
+#'      \item{zh_TW}
+#'      \item{zh_CN}
+#'      \item{pt_BR}
+#'      \item{nl_NL}
+#'      \item{da}
+#'      \item{th}
+#'      \item{fi}
+#'      \item{ru}
+#'      \item{es_MX}
+#'      \item{no}
+#'      \item{hu}
+#'      \item{pl}
+#'      \item{cs}
+#'      \item{tr}
+#'      \item{in}
+#'      \item{ro}
+#'      \item{vi}
+#'      \item{uk}
+#'      \item{iw}
+#'      \item{el}
+#'      \item{bg}
+#'      \item{en_GB}
+#'      \item{ar}
+#'      \item{sk}
+#'      \item{pt_PT}
+#'      \item{hr}
+#'      \item{sl}
+#'      \item{fr_CA}
+#'      \item{ka}
+#'      \item{sr}
+#'      \item{sh}
+#'      \item{en_AU}
+#'      \item{en_MY}
+#'      \item{en_IN}
+#'      \item{en_PH}
+#'      \item{en_CA}
+#'      \item{ro_MD}
+#'      \item{bs}
+#'      \item{mk}
+#'      \item{lv}
+#'      \item{lt}
+#'      \item{et}
+#'      \item{sq}
+#'      \item{sh_ME}
+#'      \item{mt}
+#'      \item{ga}
+#'      \item{eu}
+#'      \item{cy}
+#'      \item{is}
+#'      \item{ms}
+#'      \item{tl}
+#'      \item{lb}
+#'      \item{rm}
+#'      \item{hy}
+#'      \item{hi}
+#'      \item{ur}
+#'      \item{bn}
+#'      \item{de_AT}
+#'      \item{de_CH}
+#'      \item{ta}
+#'      \item{ar_DZ}
+#'      \item{ar_BH}
+#'      \item{ar_EG}
+#'      \item{ar_IQ}
+#'      \item{ar_JO}
+#'      \item{ar_KW}
+#'      \item{ar_LB}
+#'      \item{ar_LY}
+#'      \item{ar_MA}
+#'      \item{ar_OM}
+#'      \item{ar_QA}
+#'      \item{ar_SA}
+#'      \item{ar_SD}
+#'      \item{ar_SY}
+#'      \item{ar_TN}
+#'      \item{ar_AE}
+#'      \item{ar_YE}
+#'      \item{zh_SG}
+#'      \item{zh_HK}
+#'      \item{en_HK}
+#'      \item{en_IE}
+#'      \item{en_SG}
+#'      \item{en_ZA}
+#'      \item{fr_BE}
+#'      \item{fr_LU}
+#'      \item{fr_CH}
+#'      \item{de_LU}
+#'      \item{it_CH}
+#'      \item{es_AR}
+#'      \item{es_BO}
+#'      \item{es_CL}
+#'      \item{es_CO}
+#'      \item{es_CR}
+#'      \item{es_DO}
+#'      \item{es_EC}
+#'      \item{es_SV}
+#'      \item{es_GT}
+#'      \item{es_HN}
+#'      \item{es_NI}
+#'      \item{es_PA}
+#'      \item{es_PY}
+#'      \item{es_PE}
+#'      \item{es_PR}
+#'      \item{es_US}
+#'      \item{es_UY}
+#'      \item{es_VE}
+#'      \item{eo}
+#'      \item{iw_EO}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{LiveChatButtonDeployments}
+#' 
+#' 
+#' \describe{
+#'  \item{deployment}{a character}
+#' }
+#' 
+#' \strong{LiveChatButtonSkills}
+#' 
+#' 
+#' \describe{
+#'  \item{skill}{a character}
+#' }
+#' 
+#' \strong{LiveChatDeployment}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_livechatdeployment.htm}{Salesforce Documentation for LiveChatDeployment}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{brandingImage}{a character}
+#'  \item{displayQueuePosition}{a character either 'true' or 'false'}
+#'  \item{domainWhiteList}{a LiveChatDeploymentDomainWhitelist}
+#'  \item{enablePrechatApi}{a character either 'true' or 'false'}
+#'  \item{enableTranscriptSave}{a character either 'true' or 'false'}
+#'  \item{label}{a character}
+#'  \item{mobileBrandingImage}{a character}
+#'  \item{site}{a character}
+#'  \item{windowTitle}{a character}
+#' }
+#' 
+#' \strong{LiveChatDeploymentDomainWhitelist}
+#' 
+#' 
+#' \describe{
+#'  \item{domain}{a character}
+#' }
+#' 
+#' \strong{LiveChatSensitiveDataRule}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_livechatsensitivedatarule.htm}{Salesforce Documentation for LiveChatSensitiveDataRule}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{actionType}{a SensitiveDataActionType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Remove}
+#'      \item{Replace}
+#'    }
+#'   }
+#'  \item{description}{a character}
+#'  \item{enforceOn}{a integer}
+#'  \item{isEnabled}{a character either 'true' or 'false'}
+#'  \item{pattern}{a character}
+#'  \item{replacement}{a character}
+#' }
+#' 
+#' \strong{LogInfo}
+#' 
+#' 
+#' \describe{
+#'  \item{category}{a LogCategory - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Db}
+#'      \item{Workflow}
+#'      \item{Validation}
+#'      \item{Callout}
+#'      \item{Apex_code}
+#'      \item{Apex_profiling}
+#'      \item{Visualforce}
+#'      \item{System}
+#'      \item{All}
+#'    }
+#'   }
+#'  \item{level}{a LogCategoryLevel - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{None}
+#'      \item{Internal}
+#'      \item{Finest}
+#'      \item{Finer}
+#'      \item{Fine}
+#'      \item{Debug}
+#'      \item{Info}
+#'      \item{Warn}
+#'      \item{Error}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{LookupFilter}
+#' 
+#' 
+#' \describe{
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{booleanFilter}{a character}
+#'  \item{description}{a character}
+#'  \item{errorMessage}{a character}
+#'  \item{filterItems}{a FilterItem}
+#'  \item{infoMessage}{a character}
+#'  \item{isOptional}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{LookupFilterTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{errorMessage}{a character}
+#'  \item{informationalMessage}{a character}
+#' }
+#' 
+#' \strong{ManagedTopic}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{managedTopicType}{a character}
+#'  \item{name}{a character}
+#'  \item{parentName}{a character}
+#'  \item{position}{a integer}
+#'  \item{topicDescription}{a character}
+#' }
+#' 
+#' \strong{ManagedTopics}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_managedtopics.htm}{Salesforce Documentation for ManagedTopics}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{managedTopic}{a ManagedTopic}
+#' }
+#' 
+#' \strong{MarketingActionSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{enableMarketingAction}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{MarketingResourceType}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{description}{a character}
+#'  \item{masterLabel}{a character}
+#'  \item{object}{a character}
+#'  \item{provider}{a character}
+#' }
+#' 
+#' \strong{MatchingRule}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_matchingrule.htm}{Salesforce Documentation for MatchingRule}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{booleanFilter}{a character}
+#'  \item{description}{a character}
+#'  \item{label}{a character}
+#'  \item{matchingRuleItems}{a MatchingRuleItem}
+#'  \item{ruleStatus}{a MatchingRuleStatus - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Inactive}
+#'      \item{DeactivationFailed}
+#'      \item{Activating}
+#'      \item{Deactivating}
+#'      \item{Active}
+#'      \item{ActivationFailed}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{MatchingRuleItem}
+#' 
+#' 
+#' \describe{
+#'  \item{blankValueBehavior}{a BlankValueBehavior - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{MatchBlanks}
+#'      \item{NullNotAllowed}
+#'    }
+#'   }
+#'  \item{fieldName}{a character}
+#'  \item{matchingMethod}{a MatchingMethod - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Exact}
+#'      \item{FirstName}
+#'      \item{LastName}
+#'      \item{CompanyName}
+#'      \item{Phone}
+#'      \item{City}
+#'      \item{Street}
+#'      \item{Zip}
+#'      \item{Title}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{MatchingRules}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{matchingRules}{a MatchingRule}
+#' }
+#' 
+#' \strong{Metadata}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character}
+#' }
+#' 
+#' \strong{MetadataWithContent}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_metadatawithcontent.htm}{Salesforce Documentation for MetadataWithContent}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{content}{a character formed using RCurl::base64Encode}
+#' }
+#' 
+#' \strong{MilestoneType}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_milestonetype.htm}{Salesforce Documentation for MilestoneType}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{description}{a character}
+#'  \item{recurrenceType}{a MilestoneTypeRecurrenceType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{none}
+#'      \item{recursIndependently}
+#'      \item{recursChained}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{MiniLayout}
+#' 
+#' 
+#' \describe{
+#'  \item{fields}{a character}
+#'  \item{relatedLists}{a RelatedListItem}
+#' }
+#' 
+#' \strong{MobileSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_mobilesettings.htm}{Salesforce Documentation for MobileSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{chatterMobile}{a ChatterMobileSettings}
+#'  \item{dashboardMobile}{a DashboardMobileSettings}
+#'  \item{salesforceMobile}{a SFDCMobileSettings}
+#'  \item{touchMobile}{a TouchMobileSettings}
+#' }
+#' 
+#' \strong{NamedCredential}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_namedcredential.htm}{Salesforce Documentation for NamedCredential}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{authProvider}{a character}
+#'  \item{certificate}{a character}
+#'  \item{endpoint}{a character}
+#'  \item{label}{a character}
+#'  \item{oauthRefreshToken}{a character}
+#'  \item{oauthScope}{a character}
+#'  \item{oauthToken}{a character}
+#'  \item{password}{a character}
+#'  \item{principalType}{a ExternalPrincipalType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Anonymous}
+#'      \item{PerUser}
+#'      \item{NamedUser}
+#'    }
+#'   }
+#'  \item{protocol}{a AuthenticationProtocol - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{NoAuthentication}
+#'      \item{Oauth}
+#'      \item{Password}
+#'    }
+#'   }
+#'  \item{username}{a character}
+#' }
+#' 
+#' \strong{NameSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_namesettings.htm}{Salesforce Documentation for NameSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{enableMiddleName}{a character either 'true' or 'false'}
+#'  \item{enableNameSuffix}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{Network}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_network.htm}{Salesforce Documentation for Network}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{allowMembersToFlag}{a character either 'true' or 'false'}
+#'  \item{branding}{a Branding}
+#'  \item{caseCommentEmailTemplate}{a character}
+#'  \item{changePasswordTemplate}{a character}
+#'  \item{description}{a character}
+#'  \item{emailSenderAddress}{a character}
+#'  \item{emailSenderName}{a character}
+#'  \item{enableGuestChatter}{a character either 'true' or 'false'}
+#'  \item{enableInvitation}{a character either 'true' or 'false'}
+#'  \item{enableKnowledgeable}{a character either 'true' or 'false'}
+#'  \item{enableNicknameDisplay}{a character either 'true' or 'false'}
+#'  \item{enablePrivateMessages}{a character either 'true' or 'false'}
+#'  \item{enableReputation}{a character either 'true' or 'false'}
+#'  \item{feedChannel}{a character}
+#'  \item{forgotPasswordTemplate}{a character}
+#'  \item{logoutUrl}{a character}
+#'  \item{networkMemberGroups}{a NetworkMemberGroup}
+#'  \item{newSenderAddress}{a character}
+#'  \item{picassoSite}{a character}
+#'  \item{reputationLevels}{a ReputationLevelDefinitions}
+#'  \item{reputationPointsRules}{a ReputationPointsRules}
+#'  \item{selfRegProfile}{a character}
+#'  \item{selfRegistration}{a character either 'true' or 'false'}
+#'  \item{sendWelcomeEmail}{a character either 'true' or 'false'}
+#'  \item{site}{a character}
+#'  \item{status}{a NetworkStatus - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{UnderConstruction}
+#'      \item{Live}
+#'      \item{DownForMaintenance}
+#'    }
+#'   }
+#'  \item{tabs}{a NetworkTabSet}
+#'  \item{urlPathPrefix}{a character}
+#'  \item{welcomeTemplate}{a character}
+#' }
+#' 
+#' \strong{NetworkAccess}
+#' 
+#' 
+#' \describe{
+#'  \item{ipRanges}{a IpRange}
+#' }
+#' 
+#' \strong{NetworkMemberGroup}
+#' 
+#' 
+#' \describe{
+#'  \item{permissionSet}{a character}
+#'  \item{profile}{a character}
+#' }
+#' 
+#' \strong{NetworkTabSet}
+#' 
+#' 
+#' \describe{
+#'  \item{customTab}{a character}
+#'  \item{defaultTab}{a character}
+#'  \item{standardTab}{a character}
+#' }
+#' 
+#' \strong{NextAutomatedApprover}
+#' 
+#' 
+#' \describe{
+#'  \item{useApproverFieldOfRecordOwner}{a character either 'true' or 'false'}
+#'  \item{userHierarchyField}{a character}
+#' }
+#' 
+#' \strong{ObjectNameCaseValue}
+#' 
+#' 
+#' \describe{
+#'  \item{article}{a Article - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{None}
+#'      \item{Indefinite}
+#'      \item{Definite}
+#'    }
+#'   }
+#'  \item{caseType}{a CaseType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Nominative}
+#'      \item{Accusative}
+#'      \item{Genitive}
+#'      \item{Dative}
+#'      \item{Inessive}
+#'      \item{Elative}
+#'      \item{Illative}
+#'      \item{Adessive}
+#'      \item{Ablative}
+#'      \item{Allative}
+#'      \item{Essive}
+#'      \item{Translative}
+#'      \item{Partitive}
+#'      \item{Objective}
+#'      \item{Subjective}
+#'      \item{Instrumental}
+#'      \item{Prepositional}
+#'      \item{Locative}
+#'      \item{Vocative}
+#'      \item{Sublative}
+#'      \item{Superessive}
+#'      \item{Delative}
+#'      \item{Causalfinal}
+#'      \item{Essiveformal}
+#'      \item{Termanative}
+#'      \item{Distributive}
+#'      \item{Ergative}
+#'      \item{Adverbial}
+#'      \item{Abessive}
+#'      \item{Comitative}
+#'    }
+#'   }
+#'  \item{plural}{a character either 'true' or 'false'}
+#'  \item{possessive}{a Possessive - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{None}
+#'      \item{First}
+#'      \item{Second}
+#'    }
+#'   }
+#'  \item{value}{a character}
+#' }
+#' 
+#' \strong{ObjectRelationship}
+#' 
+#' 
+#' \describe{
+#'  \item{join}{a ObjectRelationship}
+#'  \item{outerJoin}{a character either 'true' or 'false'}
+#'  \item{relationship}{a character}
+#' }
+#' 
+#' \strong{ObjectUsage}
+#' 
+#' 
+#' \describe{
+#'  \item{object}{a character}
+#' }
+#' 
+#' \strong{OpportunityListFieldsSelectedSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{field}{a character}
+#' }
+#' 
+#' \strong{OpportunitySettings}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{autoActivateNewReminders}{a character either 'true' or 'false'}
+#'  \item{enableFindSimilarOpportunities}{a character either 'true' or 'false'}
+#'  \item{enableOpportunityTeam}{a character either 'true' or 'false'}
+#'  \item{enableUpdateReminders}{a character either 'true' or 'false'}
+#'  \item{findSimilarOppFilter}{a FindSimilarOppFilter}
+#'  \item{promptToAddProducts}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{OrderSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_ordersettings.htm}{Salesforce Documentation for OrderSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{enableNegativeQuantity}{a character either 'true' or 'false'}
+#'  \item{enableOrders}{a character either 'true' or 'false'}
+#'  \item{enableReductionOrders}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{Package}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_package.htm}{Salesforce Documentation for Package}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{apiAccessLevel}{a APIAccessLevel - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Unrestricted}
+#'      \item{Restricted}
+#'    }
+#'   }
+#'  \item{description}{a character}
+#'  \item{namespacePrefix}{a character}
+#'  \item{objectPermissions}{a ProfileObjectPermissions}
+#'  \item{postInstallClass}{a character}
+#'  \item{setupWeblink}{a character}
+#'  \item{types}{a PackageTypeMembers}
+#'  \item{uninstallClass}{a character}
+#'  \item{version}{a character}
+#' }
+#' 
+#' \strong{PackageTypeMembers}
+#' 
+#' 
+#' \describe{
+#'  \item{members}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{PackageVersion}
+#' 
+#' 
+#' \describe{
+#'  \item{majorNumber}{a integer}
+#'  \item{minorNumber}{a integer}
+#'  \item{namespace}{a character}
+#' }
+#' 
+#' \strong{PagesToOpen}
+#' 
+#' 
+#' \describe{
+#'  \item{pageToOpen}{a character}
+#' }
+#' 
+#' \strong{PasswordPolicies}
+#' 
+#' 
+#' \describe{
+#'  \item{apiOnlyUserHomePageURL}{a character}
+#'  \item{complexity}{a Complexity - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{NoRestriction}
+#'      \item{AlphaNumeric}
+#'      \item{SpecialCharacters}
+#'      \item{UpperLowerCaseNumeric}
+#'      \item{UpperLowerCaseNumericSpecialCharacters}
+#'    }
+#'   }
+#'  \item{expiration}{a Expiration - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{ThirtyDays}
+#'      \item{SixtyDays}
+#'      \item{NinetyDays}
+#'      \item{SixMonths}
+#'      \item{OneYear}
+#'      \item{Never}
+#'    }
+#'   }
+#'  \item{historyRestriction}{a character}
+#'  \item{lockoutInterval}{a LockoutInterval - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{FifteenMinutes}
+#'      \item{ThirtyMinutes}
+#'      \item{SixtyMinutes}
+#'      \item{Forever}
+#'    }
+#'   }
+#'  \item{maxLoginAttempts}{a MaxLoginAttempts - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{ThreeAttempts}
+#'      \item{FiveAttempts}
+#'      \item{TenAttempts}
+#'      \item{NoLimit}
+#'    }
+#'   }
+#'  \item{minimumPasswordLength}{a character}
+#'  \item{minimumPasswordLifetime}{a character either 'true' or 'false'}
+#'  \item{obscureSecretAnswer}{a character either 'true' or 'false'}
+#'  \item{passwordAssistanceMessage}{a character}
+#'  \item{passwordAssistanceURL}{a character}
+#'  \item{questionRestriction}{a QuestionRestriction - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{None}
+#'      \item{DoesNotContainPassword}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{PathAssistant}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_pathassistant.htm}{Salesforce Documentation for PathAssistant}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{entityName}{a character}
+#'  \item{fieldName}{a character}
+#'  \item{masterLabel}{a character}
+#'  \item{pathAssistantSteps}{a PathAssistantStep}
+#'  \item{recordTypeName}{a character}
+#' }
+#' 
+#' \strong{PathAssistantSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_pathassistantsettings.htm}{Salesforce Documentation for PathAssistantSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{pathAssistantEnabled}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{PathAssistantStep}
+#' 
+#' 
+#' \describe{
+#'  \item{fieldNames}{a character}
+#'  \item{info}{a character}
+#'  \item{picklistValueName}{a character}
+#' }
+#' 
+#' \strong{PermissionSet}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_permissionset.htm}{Salesforce Documentation for PermissionSet}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{applicationVisibilities}{a PermissionSetApplicationVisibility}
+#'  \item{classAccesses}{a PermissionSetApexClassAccess}
+#'  \item{customPermissions}{a PermissionSetCustomPermissions}
+#'  \item{description}{a character}
+#'  \item{externalDataSourceAccesses}{a PermissionSetExternalDataSourceAccess}
+#'  \item{fieldPermissions}{a PermissionSetFieldPermissions}
+#'  \item{label}{a character}
+#'  \item{objectPermissions}{a PermissionSetObjectPermissions}
+#'  \item{pageAccesses}{a PermissionSetApexPageAccess}
+#'  \item{recordTypeVisibilities}{a PermissionSetRecordTypeVisibility}
+#'  \item{tabSettings}{a PermissionSetTabSetting}
+#'  \item{userLicense}{a character}
+#'  \item{userPermissions}{a PermissionSetUserPermission}
+#' }
+#' 
+#' \strong{PermissionSetApexClassAccess}
+#' 
+#' 
+#' \describe{
+#'  \item{apexClass}{a character}
+#'  \item{enabled}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{PermissionSetApexPageAccess}
+#' 
+#' 
+#' \describe{
+#'  \item{apexPage}{a character}
+#'  \item{enabled}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{PermissionSetApplicationVisibility}
+#' 
+#' 
+#' \describe{
+#'  \item{application}{a character}
+#'  \item{visible}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{PermissionSetCustomPermissions}
+#' 
+#' 
+#' \describe{
+#'  \item{enabled}{a character either 'true' or 'false'}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{PermissionSetExternalDataSourceAccess}
+#' 
+#' 
+#' \describe{
+#'  \item{enabled}{a character either 'true' or 'false'}
+#'  \item{externalDataSource}{a character}
+#' }
+#' 
+#' \strong{PermissionSetFieldPermissions}
+#' 
+#' 
+#' \describe{
+#'  \item{editable}{a character either 'true' or 'false'}
+#'  \item{field}{a character}
+#'  \item{readable}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{PermissionSetObjectPermissions}
+#' 
+#' 
+#' \describe{
+#'  \item{allowCreate}{a character either 'true' or 'false'}
+#'  \item{allowDelete}{a character either 'true' or 'false'}
+#'  \item{allowEdit}{a character either 'true' or 'false'}
+#'  \item{allowRead}{a character either 'true' or 'false'}
+#'  \item{modifyAllRecords}{a character either 'true' or 'false'}
+#'  \item{object}{a character}
+#'  \item{viewAllRecords}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{PermissionSetRecordTypeVisibility}
+#' 
+#' 
+#' \describe{
+#'  \item{recordType}{a character}
+#'  \item{visible}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{PermissionSetTabSetting}
+#' 
+#' 
+#' \describe{
+#'  \item{tab}{a character}
+#'  \item{visibility}{a PermissionSetTabVisibility - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{None}
+#'      \item{Available}
+#'      \item{Visible}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{PermissionSetUserPermission}
+#' 
+#' 
+#' \describe{
+#'  \item{enabled}{a character either 'true' or 'false'}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{PersonalJourneySettings}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{enableExactTargetForSalesforceApps}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{PersonListSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{enablePersonList}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{Picklist}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_picklist.htm}{Salesforce Documentation for Picklist}
+#' \describe{
+#'  \item{controllingField}{a character}
+#'  \item{picklistValues}{a PicklistValue}
+#'  \item{sorted}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{PicklistEntry}
+#' 
+#' 
+#' \describe{
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{defaultValue}{a character either 'true' or 'false'}
+#'  \item{label}{a character}
+#'  \item{validFor}{a character}
+#'  \item{value}{a character}
+#' }
+#' 
+#' \strong{PicklistValue}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{allowEmail}{a character either 'true' or 'false'}
+#'  \item{closed}{a character either 'true' or 'false'}
+#'  \item{color}{a character}
+#'  \item{controllingFieldValues}{a character}
+#'  \item{converted}{a character either 'true' or 'false'}
+#'  \item{cssExposed}{a character either 'true' or 'false'}
+#'  \item{default}{a character either 'true' or 'false'}
+#'  \item{description}{a character}
+#'  \item{forecastCategory}{a ForecastCategories - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Omitted}
+#'      \item{Pipeline}
+#'      \item{BestCase}
+#'      \item{Forecast}
+#'      \item{Closed}
+#'    }
+#'   }
+#'  \item{highPriority}{a character either 'true' or 'false'}
+#'  \item{probability}{a integer}
+#'  \item{reverseRole}{a character}
+#'  \item{reviewed}{a character either 'true' or 'false'}
+#'  \item{won}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{PicklistValueTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{masterLabel}{a character}
+#'  \item{translation}{a character}
+#' }
+#' 
+#' \strong{PlatformActionList}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{actionListContext}{a PlatformActionListContext - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{ListView}
+#'      \item{RelatedList}
+#'      \item{ListViewRecord}
+#'      \item{RelatedListRecord}
+#'      \item{Record}
+#'      \item{FeedElement}
+#'      \item{Chatter}
+#'      \item{Global}
+#'      \item{Flexipage}
+#'      \item{MruList}
+#'      \item{MruRow}
+#'      \item{RecordEdit}
+#'      \item{Photo}
+#'      \item{ObjectHomeChart}
+#'    }
+#'   }
+#'  \item{platformActionListItems}{a PlatformActionListItem}
+#'  \item{relatedSourceEntity}{a character}
+#' }
+#' 
+#' \strong{PlatformActionListItem}
+#' 
+#' 
+#' \describe{
+#'  \item{actionName}{a character}
+#'  \item{actionType}{a PlatformActionType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{QuickAction}
+#'      \item{StandardButton}
+#'      \item{CustomButton}
+#'      \item{ProductivityAction}
+#'      \item{ActionLink}
+#'      \item{InvocableAction}
+#'    }
+#'   }
+#'  \item{sortOrder}{a integer}
+#'  \item{subtype}{a character}
+#' }
+#' 
+#' \strong{PlatformCachePartition}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_platformcachepartition.htm}{Salesforce Documentation for PlatformCachePartition}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{description}{a character}
+#'  \item{isDefaultPartition}{a character either 'true' or 'false'}
+#'  \item{masterLabel}{a character}
+#'  \item{platformCachePartitionTypes}{a PlatformCachePartitionType}
+#' }
+#' 
+#' \strong{PlatformCachePartitionType}
+#' 
+#' 
+#' \describe{
+#'  \item{allocatedCapacity}{a integer}
+#'  \item{allocatedPurchasedCapacity}{a integer}
+#'  \item{cacheType}{a PlatformCacheType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Session}
+#'      \item{Organization}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{Portal}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_portal.htm}{Salesforce Documentation for Portal}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{admin}{a character}
+#'  \item{defaultLanguage}{a character}
+#'  \item{description}{a character}
+#'  \item{emailSenderAddress}{a character}
+#'  \item{emailSenderName}{a character}
+#'  \item{enableSelfCloseCase}{a character either 'true' or 'false'}
+#'  \item{footerDocument}{a character}
+#'  \item{forgotPassTemplate}{a character}
+#'  \item{headerDocument}{a character}
+#'  \item{isSelfRegistrationActivated}{a character either 'true' or 'false'}
+#'  \item{loginHeaderDocument}{a character}
+#'  \item{logoDocument}{a character}
+#'  \item{logoutUrl}{a character}
+#'  \item{newCommentTemplate}{a character}
+#'  \item{newPassTemplate}{a character}
+#'  \item{newUserTemplate}{a character}
+#'  \item{ownerNotifyTemplate}{a character}
+#'  \item{selfRegNewUserUrl}{a character}
+#'  \item{selfRegUserDefaultProfile}{a character}
+#'  \item{selfRegUserDefaultRole}{a PortalRoles - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Executive}
+#'      \item{Manager}
+#'      \item{Worker}
+#'      \item{PersonAccount}
+#'    }
+#'   }
+#'  \item{selfRegUserTemplate}{a character}
+#'  \item{showActionConfirmation}{a character either 'true' or 'false'}
+#'  \item{stylesheetDocument}{a character}
+#'  \item{type}{a PortalType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{CustomerSuccess}
+#'      \item{Partner}
+#'      \item{Network}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{PostTemplate}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_posttemplate.htm}{Salesforce Documentation for PostTemplate}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{default}{a character either 'true' or 'false'}
+#'  \item{description}{a character}
+#'  \item{fields}{a character}
+#'  \item{label}{a character}
+#' }
+#' 
+#' \strong{PrimaryTabComponents}
+#' 
+#' 
+#' \describe{
+#'  \item{containers}{a Container}
+#' }
+#' 
+#' \strong{ProductSettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_productsettings.htm}{Salesforce Documentation for ProductSettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{enableCascadeActivateToRelatedPrices}{a character either 'true' or 'false'}
+#'  \item{enableQuantitySchedule}{a character either 'true' or 'false'}
+#'  \item{enableRevenueSchedule}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{Profile}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_profile.htm}{Salesforce Documentation for Profile}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{applicationVisibilities}{a ProfileApplicationVisibility}
+#'  \item{classAccesses}{a ProfileApexClassAccess}
+#'  \item{custom}{a character either 'true' or 'false'}
+#'  \item{customPermissions}{a ProfileCustomPermissions}
+#'  \item{description}{a character}
+#'  \item{externalDataSourceAccesses}{a ProfileExternalDataSourceAccess}
+#'  \item{fieldPermissions}{a ProfileFieldLevelSecurity}
+#'  \item{layoutAssignments}{a ProfileLayoutAssignment}
+#'  \item{loginHours}{a ProfileLoginHours}
+#'  \item{loginIpRanges}{a ProfileLoginIpRange}
+#'  \item{objectPermissions}{a ProfileObjectPermissions}
+#'  \item{pageAccesses}{a ProfileApexPageAccess}
+#'  \item{recordTypeVisibilities}{a ProfileRecordTypeVisibility}
+#'  \item{tabVisibilities}{a ProfileTabVisibility}
+#'  \item{userLicense}{a character}
+#'  \item{userPermissions}{a ProfileUserPermission}
+#' }
+#' 
+#' \strong{ProfileApexClassAccess}
+#' 
+#' 
+#' \describe{
+#'  \item{apexClass}{a character}
+#'  \item{enabled}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{ProfileApexPageAccess}
+#' 
+#' 
+#' \describe{
+#'  \item{apexPage}{a character}
+#'  \item{enabled}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{ProfileApplicationVisibility}
+#' 
+#' 
+#' \describe{
+#'  \item{application}{a character}
+#'  \item{default}{a character either 'true' or 'false'}
+#'  \item{visible}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{ProfileCustomPermissions}
+#' 
+#' 
+#' \describe{
+#'  \item{enabled}{a character either 'true' or 'false'}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{ProfileExternalDataSourceAccess}
+#' 
+#' 
+#' \describe{
+#'  \item{enabled}{a character either 'true' or 'false'}
+#'  \item{externalDataSource}{a character}
+#' }
+#' 
+#' \strong{ProfileFieldLevelSecurity}
+#' 
+#' 
+#' \describe{
+#'  \item{editable}{a character either 'true' or 'false'}
+#'  \item{field}{a character}
+#'  \item{readable}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{ProfileLayoutAssignment}
+#' 
+#' 
+#' \describe{
+#'  \item{layout}{a character}
+#'  \item{recordType}{a character}
+#' }
+#' 
+#' \strong{ProfileLoginHours}
+#' 
+#' 
+#' \describe{
+#'  \item{fridayEnd}{a character}
+#'  \item{fridayStart}{a character}
+#'  \item{mondayEnd}{a character}
+#'  \item{mondayStart}{a character}
+#'  \item{saturdayEnd}{a character}
+#'  \item{saturdayStart}{a character}
+#'  \item{sundayEnd}{a character}
+#'  \item{sundayStart}{a character}
+#'  \item{thursdayEnd}{a character}
+#'  \item{thursdayStart}{a character}
+#'  \item{tuesdayEnd}{a character}
+#'  \item{tuesdayStart}{a character}
+#'  \item{wednesdayEnd}{a character}
+#'  \item{wednesdayStart}{a character}
+#' }
+#' 
+#' \strong{ProfileLoginIpRange}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character}
+#'  \item{endAddress}{a character}
+#'  \item{startAddress}{a character}
+#' }
+#' 
+#' \strong{ProfileObjectPermissions}
+#' 
+#' 
+#' \describe{
+#'  \item{allowCreate}{a character either 'true' or 'false'}
+#'  \item{allowDelete}{a character either 'true' or 'false'}
+#'  \item{allowEdit}{a character either 'true' or 'false'}
+#'  \item{allowRead}{a character either 'true' or 'false'}
+#'  \item{modifyAllRecords}{a character either 'true' or 'false'}
+#'  \item{object}{a character}
+#'  \item{viewAllRecords}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{ProfileRecordTypeVisibility}
+#' 
+#' 
+#' \describe{
+#'  \item{default}{a character either 'true' or 'false'}
+#'  \item{personAccountDefault}{a character either 'true' or 'false'}
+#'  \item{recordType}{a character}
+#'  \item{visible}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{ProfileTabVisibility}
+#' 
+#' 
+#' \describe{
+#'  \item{tab}{a character}
+#'  \item{visibility}{a TabVisibility - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Hidden}
+#'      \item{DefaultOff}
+#'      \item{DefaultOn}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{ProfileUserPermission}
+#' 
+#' 
+#' \describe{
+#'  \item{enabled}{a character either 'true' or 'false'}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{PushNotification}
+#' 
+#' 
+#' \describe{
+#'  \item{fieldNames}{a character}
+#'  \item{objectName}{a character}
+#' }
+#' 
+#' \strong{PushNotifications}
+#' 
+#' 
+#' \describe{
+#'  \item{pushNotification}{a PushNotification}
+#' }
+#' 
+#' \strong{Queue}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_queue.htm}{Salesforce Documentation for Queue}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{doesSendEmailToMembers}{a character either 'true' or 'false'}
+#'  \item{email}{a character}
+#'  \item{name}{a character}
+#'  \item{queueSobject}{a QueueSobject}
+#' }
+#' 
+#' \strong{QueueSobject}
+#' 
+#' 
+#' \describe{
+#'  \item{sobjectType}{a character}
+#' }
+#' 
+#' \strong{QuickAction}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_quickaction.htm}{Salesforce Documentation for QuickAction}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{canvas}{a character}
+#'  \item{description}{a character}
+#'  \item{fieldOverrides}{a FieldOverride}
+#'  \item{height}{a integer}
+#'  \item{icon}{a character}
+#'  \item{isProtected}{a character either 'true' or 'false'}
+#'  \item{label}{a character}
+#'  \item{page}{a character}
+#'  \item{quickActionLayout}{a QuickActionLayout}
+#'  \item{standardLabel}{a QuickActionLabel - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{LogACall}
+#'      \item{LogANote}
+#'      \item{New}
+#'      \item{NewRecordType}
+#'      \item{Update}
+#'      \item{NewChild}
+#'      \item{NewChildRecordType}
+#'      \item{CreateNew}
+#'      \item{CreateNewRecordType}
+#'      \item{SendEmail}
+#'      \item{QuickRecordType}
+#'      \item{Quick}
+#'      \item{EditDescription}
+#'      \item{Defer}
+#'      \item{ChangeDueDate}
+#'      \item{ChangePriority}
+#'      \item{ChangeStatus}
+#'      \item{SocialPost}
+#'      \item{Escalate}
+#'      \item{EscalateToRecord}
+#'      \item{OfferFeedback}
+#'      \item{RequestFeedback}
+#'      \item{AddRecord}
+#'      \item{AddMember}
+#'    }
+#'   }
+#'  \item{targetObject}{a character}
+#'  \item{targetParentField}{a character}
+#'  \item{targetRecordType}{a character}
+#'  \item{type}{a QuickActionType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Create}
+#'      \item{VisualforcePage}
+#'      \item{Post}
+#'      \item{SendEmail}
+#'      \item{LogACall}
+#'      \item{SocialPost}
+#'      \item{Canvas}
+#'      \item{Update}
+#'    }
+#'   }
+#'  \item{width}{a integer}
+#' }
+#' 
+#' \strong{QuickActionLayout}
+#' 
+#' 
+#' \describe{
+#'  \item{layoutSectionStyle}{a LayoutSectionStyle - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{TwoColumnsTopToBottom}
+#'      \item{TwoColumnsLeftToRight}
+#'      \item{OneColumn}
+#'      \item{CustomLinks}
+#'    }
+#'   }
+#'  \item{quickActionLayoutColumns}{a QuickActionLayoutColumn}
+#' }
+#' 
+#' \strong{QuickActionLayoutColumn}
+#' 
+#' 
+#' \describe{
+#'  \item{quickActionLayoutItems}{a QuickActionLayoutItem}
+#' }
+#' 
+#' \strong{QuickActionLayoutItem}
+#' 
+#' 
+#' \describe{
+#'  \item{emptySpace}{a character either 'true' or 'false'}
+#'  \item{field}{a character}
+#'  \item{uiBehavior}{a UiBehavior - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Edit}
+#'      \item{Required}
+#'      \item{Readonly}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{QuickActionList}
+#' 
+#' 
+#' \describe{
+#'  \item{quickActionListItems}{a QuickActionListItem}
+#' }
+#' 
+#' \strong{QuickActionListItem}
+#' 
+#' 
+#' \describe{
+#'  \item{quickActionName}{a character}
+#' }
+#' 
+#' \strong{QuickActionTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{QuotasSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{showQuotas}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{QuoteSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{enableQuote}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{RecordType}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_recordtype.htm}{Salesforce Documentation for RecordType}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{businessProcess}{a character}
+#'  \item{compactLayoutAssignment}{a character}
+#'  \item{description}{a character}
+#'  \item{label}{a character}
+#'  \item{picklistValues}{a RecordTypePicklistValue}
+#' }
+#' 
+#' \strong{RecordTypePicklistValue}
+#' 
+#' 
+#' \describe{
+#'  \item{picklist}{a character}
+#'  \item{values}{a PicklistValue}
+#' }
+#' 
+#' \strong{RecordTypeTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{RelatedContent}
+#' 
+#' 
+#' \describe{
+#'  \item{relatedContentItems}{a RelatedContentItem}
+#' }
+#' 
+#' \strong{RelatedContentItem}
+#' 
+#' 
+#' \describe{
+#'  \item{layoutItem}{a LayoutItem}
+#' }
+#' 
+#' \strong{RelatedList}
+#' 
+#' 
+#' \describe{
+#'  \item{hideOnDetail}{a character either 'true' or 'false'}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{RelatedListItem}
+#' 
+#' 
+#' \describe{
+#'  \item{customButtons}{a character}
+#'  \item{excludeButtons}{a character}
+#'  \item{fields}{a character}
+#'  \item{relatedList}{a character}
+#'  \item{sortField}{a character}
+#'  \item{sortOrder}{a SortOrder - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Asc}
+#'      \item{Desc}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{RemoteSiteSetting}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_remotesitesetting.htm}{Salesforce Documentation for RemoteSiteSetting}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{description}{a character}
+#'  \item{disableProtocolSecurity}{a character either 'true' or 'false'}
+#'  \item{isActive}{a character either 'true' or 'false'}
+#'  \item{url}{a character}
+#' }
+#' 
+#' \strong{Report}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_report.htm}{Salesforce Documentation for Report}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{aggregates}{a ReportAggregate}
+#'  \item{block}{a Report}
+#'  \item{blockInfo}{a ReportBlockInfo}
+#'  \item{buckets}{a ReportBucketField}
+#'  \item{chart}{a ReportChart}
+#'  \item{colorRanges}{a ReportColorRange}
+#'  \item{columns}{a ReportColumn}
+#'  \item{crossFilters}{a ReportCrossFilter}
+#'  \item{currency}{a CurrencyIsoCode - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{ADP}
+#'      \item{AED}
+#'      \item{AFA}
+#'      \item{AFN}
+#'      \item{ALL}
+#'      \item{AMD}
+#'      \item{ANG}
+#'      \item{AOA}
+#'      \item{ARS}
+#'      \item{ATS}
+#'      \item{AUD}
+#'      \item{AWG}
+#'      \item{AZM}
+#'      \item{AZN}
+#'      \item{BAM}
+#'      \item{BBD}
+#'      \item{BDT}
+#'      \item{BEF}
+#'      \item{BGL}
+#'      \item{BGN}
+#'      \item{BHD}
+#'      \item{BIF}
+#'      \item{BMD}
+#'      \item{BND}
+#'      \item{BOB}
+#'      \item{BOV}
+#'      \item{BRB}
+#'      \item{BRL}
+#'      \item{BSD}
+#'      \item{BTN}
+#'      \item{BWP}
+#'      \item{BYB}
+#'      \item{BYR}
+#'      \item{BZD}
+#'      \item{CAD}
+#'      \item{CDF}
+#'      \item{CHF}
+#'      \item{CLF}
+#'      \item{CLP}
+#'      \item{CNY}
+#'      \item{COP}
+#'      \item{CRC}
+#'      \item{CSD}
+#'      \item{CUC}
+#'      \item{CUP}
+#'      \item{CVE}
+#'      \item{CYP}
+#'      \item{CZK}
+#'      \item{DEM}
+#'      \item{DJF}
+#'      \item{DKK}
+#'      \item{DOP}
+#'      \item{DZD}
+#'      \item{ECS}
+#'      \item{EEK}
+#'      \item{EGP}
+#'      \item{ERN}
+#'      \item{ESP}
+#'      \item{ETB}
+#'      \item{EUR}
+#'      \item{FIM}
+#'      \item{FJD}
+#'      \item{FKP}
+#'      \item{FRF}
+#'      \item{GBP}
+#'      \item{GEL}
+#'      \item{GHC}
+#'      \item{GHS}
+#'      \item{GIP}
+#'      \item{GMD}
+#'      \item{GNF}
+#'      \item{GRD}
+#'      \item{GTQ}
+#'      \item{GWP}
+#'      \item{GYD}
+#'      \item{HKD}
+#'      \item{HNL}
+#'      \item{HRD}
+#'      \item{HRK}
+#'      \item{HTG}
+#'      \item{HUF}
+#'      \item{IDR}
+#'      \item{IEP}
+#'      \item{ILS}
+#'      \item{INR}
+#'      \item{IQD}
+#'      \item{IRR}
+#'      \item{ISK}
+#'      \item{ITL}
+#'      \item{JMD}
+#'      \item{JOD}
+#'      \item{JPY}
+#'      \item{KES}
+#'      \item{KGS}
+#'      \item{KHR}
+#'      \item{KMF}
+#'      \item{KPW}
+#'      \item{KRW}
+#'      \item{KWD}
+#'      \item{KYD}
+#'      \item{KZT}
+#'      \item{LAK}
+#'      \item{LBP}
+#'      \item{LKR}
+#'      \item{LRD}
+#'      \item{LSL}
+#'      \item{LTL}
+#'      \item{LUF}
+#'      \item{LVL}
+#'      \item{LYD}
+#'      \item{MAD}
+#'      \item{MDL}
+#'      \item{MGA}
+#'      \item{MGF}
+#'      \item{MKD}
+#'      \item{MMK}
+#'      \item{MNT}
+#'      \item{MOP}
+#'      \item{MRO}
+#'      \item{MTL}
+#'      \item{MUR}
+#'      \item{MVR}
+#'      \item{MWK}
+#'      \item{MXN}
+#'      \item{MXV}
+#'      \item{MYR}
+#'      \item{MZM}
+#'      \item{MZN}
+#'      \item{NAD}
+#'      \item{NGN}
+#'      \item{NIO}
+#'      \item{NLG}
+#'      \item{NOK}
+#'      \item{NPR}
+#'      \item{NZD}
+#'      \item{OMR}
+#'      \item{PAB}
+#'      \item{PEN}
+#'      \item{PGK}
+#'      \item{PHP}
+#'      \item{PKR}
+#'      \item{PLN}
+#'      \item{PTE}
+#'      \item{PYG}
+#'      \item{QAR}
+#'      \item{RMB}
+#'      \item{ROL}
+#'      \item{RON}
+#'      \item{RSD}
+#'      \item{RUB}
+#'      \item{RUR}
+#'      \item{RWF}
+#'      \item{SAR}
+#'      \item{SBD}
+#'      \item{SCR}
+#'      \item{SDD}
+#'      \item{SDG}
+#'      \item{SEK}
+#'      \item{SGD}
+#'      \item{SHP}
+#'      \item{SIT}
+#'      \item{SKK}
+#'      \item{SLL}
+#'      \item{SOS}
+#'      \item{SRD}
+#'      \item{SRG}
+#'      \item{SSP}
+#'      \item{STD}
+#'      \item{SUR}
+#'      \item{SVC}
+#'      \item{SYP}
+#'      \item{SZL}
+#'      \item{THB}
+#'      \item{TJR}
+#'      \item{TJS}
+#'      \item{TMM}
+#'      \item{TMT}
+#'      \item{TND}
+#'      \item{TOP}
+#'      \item{TPE}
+#'      \item{TRL}
+#'      \item{TRY}
+#'      \item{TTD}
+#'      \item{TWD}
+#'      \item{TZS}
+#'      \item{UAH}
+#'      \item{UGX}
+#'      \item{USD}
+#'      \item{UYU}
+#'      \item{UZS}
+#'      \item{VEB}
+#'      \item{VEF}
+#'      \item{VND}
+#'      \item{VUV}
+#'      \item{WST}
+#'      \item{XAF}
+#'      \item{XCD}
+#'      \item{XOF}
+#'      \item{XPF}
+#'      \item{YER}
+#'      \item{YUM}
+#'      \item{ZAR}
+#'      \item{ZMK}
+#'      \item{ZMW}
+#'      \item{ZWD}
+#'      \item{ZWL}
+#'    }
+#'   }
+#'  \item{dataCategoryFilters}{a ReportDataCategoryFilter}
+#'  \item{description}{a character}
+#'  \item{division}{a character}
+#'  \item{filter}{a ReportFilter}
+#'  \item{folderName}{a character}
+#'  \item{format}{a ReportFormat - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{MultiBlock}
+#'      \item{Matrix}
+#'      \item{Summary}
+#'      \item{Tabular}
+#'    }
+#'   }
+#'  \item{groupingsAcross}{a ReportGrouping}
+#'  \item{groupingsDown}{a ReportGrouping}
+#'  \item{historicalSelector}{a ReportHistoricalSelector}
+#'  \item{name}{a character}
+#'  \item{params}{a ReportParam}
+#'  \item{reportType}{a character}
+#'  \item{roleHierarchyFilter}{a character}
+#'  \item{rowLimit}{a integer}
+#'  \item{scope}{a character}
+#'  \item{showCurrentDate}{a character either 'true' or 'false'}
+#'  \item{showDetails}{a character either 'true' or 'false'}
+#'  \item{sortColumn}{a character}
+#'  \item{sortOrder}{a SortOrder - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Asc}
+#'      \item{Desc}
+#'    }
+#'   }
+#'  \item{territoryHierarchyFilter}{a character}
+#'  \item{timeFrameFilter}{a ReportTimeFrameFilter}
+#'  \item{userFilter}{a character}
+#' }
+#' 
+#' \strong{ReportAggregate}
+#' 
+#' 
+#' \describe{
+#'  \item{acrossGroupingContext}{a character}
+#'  \item{calculatedFormula}{a character}
+#'  \item{datatype}{a ReportAggregateDatatype - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{currency}
+#'      \item{percent}
+#'      \item{number}
+#'    }
+#'   }
+#'  \item{description}{a character}
+#'  \item{developerName}{a character}
+#'  \item{downGroupingContext}{a character}
+#'  \item{isActive}{a character either 'true' or 'false'}
+#'  \item{isCrossBlock}{a character either 'true' or 'false'}
+#'  \item{masterLabel}{a character}
+#'  \item{reportType}{a character}
+#'  \item{scale}{a integer}
+#' }
+#' 
+#' \strong{ReportAggregateReference}
+#' 
+#' 
+#' \describe{
+#'  \item{aggregate}{a character}
+#' }
+#' 
+#' \strong{ReportBlockInfo}
+#' 
+#' 
+#' \describe{
+#'  \item{aggregateReferences}{a ReportAggregateReference}
+#'  \item{blockId}{a character}
+#'  \item{joinTable}{a character}
+#' }
+#' 
+#' \strong{ReportBucketField}
+#' 
+#' 
+#' \describe{
+#'  \item{bucketType}{a ReportBucketFieldType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{text}
+#'      \item{number}
+#'      \item{picklist}
+#'    }
+#'   }
+#'  \item{developerName}{a character}
+#'  \item{masterLabel}{a character}
+#'  \item{nullTreatment}{a ReportFormulaNullTreatment - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{n}
+#'      \item{z}
+#'    }
+#'   }
+#'  \item{otherBucketLabel}{a character}
+#'  \item{sourceColumnName}{a character}
+#'  \item{useOther}{a character either 'true' or 'false'}
+#'  \item{values}{a ReportBucketFieldValue}
+#' }
+#' 
+#' \strong{ReportBucketFieldSourceValue}
+#' 
+#' 
+#' \describe{
+#'  \item{from}{a character}
+#'  \item{sourceValue}{a character}
+#'  \item{to}{a character}
+#' }
+#' 
+#' \strong{ReportBucketFieldValue}
+#' 
+#' 
+#' \describe{
+#'  \item{sourceValues}{a ReportBucketFieldSourceValue}
+#'  \item{value}{a character}
+#' }
+#' 
+#' \strong{ReportChart}
+#' 
+#' 
+#' \describe{
+#'  \item{backgroundColor1}{a character}
+#'  \item{backgroundColor2}{a character}
+#'  \item{backgroundFadeDir}{a ChartBackgroundDirection - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{TopToBottom}
+#'      \item{LeftToRight}
+#'      \item{Diagonal}
+#'    }
+#'   }
+#'  \item{chartSummaries}{a ChartSummary}
+#'  \item{chartType}{a ChartType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{None}
+#'      \item{Scatter}
+#'      \item{ScatterGrouped}
+#'      \item{Bubble}
+#'      \item{BubbleGrouped}
+#'      \item{HorizontalBar}
+#'      \item{HorizontalBarGrouped}
+#'      \item{HorizontalBarStacked}
+#'      \item{HorizontalBarStackedTo100}
+#'      \item{VerticalColumn}
+#'      \item{VerticalColumnGrouped}
+#'      \item{VerticalColumnStacked}
+#'      \item{VerticalColumnStackedTo100}
+#'      \item{Line}
+#'      \item{LineGrouped}
+#'      \item{LineCumulative}
+#'      \item{LineCumulativeGrouped}
+#'      \item{Pie}
+#'      \item{Donut}
+#'      \item{Funnel}
+#'      \item{VerticalColumnLine}
+#'      \item{VerticalColumnGroupedLine}
+#'      \item{VerticalColumnStackedLine}
+#'      \item{Plugin}
+#'    }
+#'   }
+#'  \item{enableHoverLabels}{a character either 'true' or 'false'}
+#'  \item{expandOthers}{a character either 'true' or 'false'}
+#'  \item{groupingColumn}{a character}
+#'  \item{legendPosition}{a ChartLegendPosition - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Right}
+#'      \item{Bottom}
+#'      \item{OnChart}
+#'    }
+#'   }
+#'  \item{location}{a ChartPosition - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{CHART_TOP}
+#'      \item{CHART_BOTTOM}
+#'    }
+#'   }
+#'  \item{secondaryGroupingColumn}{a character}
+#'  \item{showAxisLabels}{a character either 'true' or 'false'}
+#'  \item{showPercentage}{a character either 'true' or 'false'}
+#'  \item{showTotal}{a character either 'true' or 'false'}
+#'  \item{showValues}{a character either 'true' or 'false'}
+#'  \item{size}{a ReportChartSize - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Tiny}
+#'      \item{Small}
+#'      \item{Medium}
+#'      \item{Large}
+#'      \item{Huge}
+#'    }
+#'   }
+#'  \item{summaryAxisManualRangeEnd}{a numeric}
+#'  \item{summaryAxisManualRangeStart}{a numeric}
+#'  \item{summaryAxisRange}{a ChartRangeType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Auto}
+#'      \item{Manual}
+#'    }
+#'   }
+#'  \item{textColor}{a character}
+#'  \item{textSize}{a integer}
+#'  \item{title}{a character}
+#'  \item{titleColor}{a character}
+#'  \item{titleSize}{a integer}
+#' }
+#' 
+#' \strong{ReportChartComponentLayoutItem}
+#' 
+#' 
+#' \describe{
+#'  \item{cacheData}{a character either 'true' or 'false'}
+#'  \item{contextFilterableField}{a character}
+#'  \item{error}{a character}
+#'  \item{hideOnError}{a character either 'true' or 'false'}
+#'  \item{includeContext}{a character either 'true' or 'false'}
+#'  \item{reportName}{a character}
+#'  \item{showTitle}{a character either 'true' or 'false'}
+#'  \item{size}{a ReportChartComponentSize - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{SMALL}
+#'      \item{MEDIUM}
+#'      \item{LARGE}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{ReportColorRange}
+#' 
+#' 
+#' \describe{
+#'  \item{aggregate}{a ReportSummaryType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Sum}
+#'      \item{Average}
+#'      \item{Maximum}
+#'      \item{Minimum}
+#'      \item{None}
+#'    }
+#'   }
+#'  \item{columnName}{a character}
+#'  \item{highBreakpoint}{a numeric}
+#'  \item{highColor}{a character}
+#'  \item{lowBreakpoint}{a numeric}
+#'  \item{lowColor}{a character}
+#'  \item{midColor}{a character}
+#' }
+#' 
+#' \strong{ReportColumn}
+#' 
+#' 
+#' \describe{
+#'  \item{aggregateTypes}{a ReportSummaryType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Sum}
+#'      \item{Average}
+#'      \item{Maximum}
+#'      \item{Minimum}
+#'      \item{None}
+#'    }
+#'   }
+#'  \item{field}{a character}
+#'  \item{reverseColors}{a character either 'true' or 'false'}
+#'  \item{showChanges}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{ReportCrossFilter}
+#' 
+#' 
+#' \describe{
+#'  \item{criteriaItems}{a ReportFilterItem}
+#'  \item{operation}{a ObjectFilterOperator - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{with}
+#'      \item{without}
+#'    }
+#'   }
+#'  \item{primaryTableColumn}{a character}
+#'  \item{relatedTable}{a character}
+#'  \item{relatedTableJoinColumn}{a character}
+#' }
+#' 
+#' \strong{ReportDataCategoryFilter}
+#' 
+#' 
+#' \describe{
+#'  \item{dataCategory}{a character}
+#'  \item{dataCategoryGroup}{a character}
+#'  \item{operator}{a DataCategoryFilterOperation - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{above}
+#'      \item{below}
+#'      \item{at}
+#'      \item{aboveOrBelow}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{ReportFilter}
+#' 
+#' 
+#' \describe{
+#'  \item{booleanFilter}{a character}
+#'  \item{criteriaItems}{a ReportFilterItem}
+#'  \item{language}{a Language - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{en_US}
+#'      \item{de}
+#'      \item{es}
+#'      \item{fr}
+#'      \item{it}
+#'      \item{ja}
+#'      \item{sv}
+#'      \item{ko}
+#'      \item{zh_TW}
+#'      \item{zh_CN}
+#'      \item{pt_BR}
+#'      \item{nl_NL}
+#'      \item{da}
+#'      \item{th}
+#'      \item{fi}
+#'      \item{ru}
+#'      \item{es_MX}
+#'      \item{no}
+#'      \item{hu}
+#'      \item{pl}
+#'      \item{cs}
+#'      \item{tr}
+#'      \item{in}
+#'      \item{ro}
+#'      \item{vi}
+#'      \item{uk}
+#'      \item{iw}
+#'      \item{el}
+#'      \item{bg}
+#'      \item{en_GB}
+#'      \item{ar}
+#'      \item{sk}
+#'      \item{pt_PT}
+#'      \item{hr}
+#'      \item{sl}
+#'      \item{fr_CA}
+#'      \item{ka}
+#'      \item{sr}
+#'      \item{sh}
+#'      \item{en_AU}
+#'      \item{en_MY}
+#'      \item{en_IN}
+#'      \item{en_PH}
+#'      \item{en_CA}
+#'      \item{ro_MD}
+#'      \item{bs}
+#'      \item{mk}
+#'      \item{lv}
+#'      \item{lt}
+#'      \item{et}
+#'      \item{sq}
+#'      \item{sh_ME}
+#'      \item{mt}
+#'      \item{ga}
+#'      \item{eu}
+#'      \item{cy}
+#'      \item{is}
+#'      \item{ms}
+#'      \item{tl}
+#'      \item{lb}
+#'      \item{rm}
+#'      \item{hy}
+#'      \item{hi}
+#'      \item{ur}
+#'      \item{bn}
+#'      \item{de_AT}
+#'      \item{de_CH}
+#'      \item{ta}
+#'      \item{ar_DZ}
+#'      \item{ar_BH}
+#'      \item{ar_EG}
+#'      \item{ar_IQ}
+#'      \item{ar_JO}
+#'      \item{ar_KW}
+#'      \item{ar_LB}
+#'      \item{ar_LY}
+#'      \item{ar_MA}
+#'      \item{ar_OM}
+#'      \item{ar_QA}
+#'      \item{ar_SA}
+#'      \item{ar_SD}
+#'      \item{ar_SY}
+#'      \item{ar_TN}
+#'      \item{ar_AE}
+#'      \item{ar_YE}
+#'      \item{zh_SG}
+#'      \item{zh_HK}
+#'      \item{en_HK}
+#'      \item{en_IE}
+#'      \item{en_SG}
+#'      \item{en_ZA}
+#'      \item{fr_BE}
+#'      \item{fr_LU}
+#'      \item{fr_CH}
+#'      \item{de_LU}
+#'      \item{it_CH}
+#'      \item{es_AR}
+#'      \item{es_BO}
+#'      \item{es_CL}
+#'      \item{es_CO}
+#'      \item{es_CR}
+#'      \item{es_DO}
+#'      \item{es_EC}
+#'      \item{es_SV}
+#'      \item{es_GT}
+#'      \item{es_HN}
+#'      \item{es_NI}
+#'      \item{es_PA}
+#'      \item{es_PY}
+#'      \item{es_PE}
+#'      \item{es_PR}
+#'      \item{es_US}
+#'      \item{es_UY}
+#'      \item{es_VE}
+#'      \item{eo}
+#'      \item{iw_EO}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{ReportFilterItem}
+#' 
+#' 
+#' \describe{
+#'  \item{column}{a character}
+#'  \item{columnToColumn}{a character either 'true' or 'false'}
+#'  \item{operator}{a FilterOperation - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{equals}
+#'      \item{notEqual}
+#'      \item{lessThan}
+#'      \item{greaterThan}
+#'      \item{lessOrEqual}
+#'      \item{greaterOrEqual}
+#'      \item{contains}
+#'      \item{notContain}
+#'      \item{startsWith}
+#'      \item{includes}
+#'      \item{excludes}
+#'      \item{within}
+#'    }
+#'   }
+#'  \item{snapshot}{a character}
+#'  \item{value}{a character}
+#' }
+#' 
+#' \strong{ReportFolder}
+#' 
+#' 
+#' \describe{
+#'  \item{accessType}{a FolderAccessTypes (inherited from Folder)}
+#'  \item{folderShares}{a FolderShare (inherited from Folder)}
+#'  \item{name}{a character (inherited from Folder)}
+#'  \item{publicFolderAccess}{a PublicFolderAccess (inherited from Folder)}
+#'  \item{sharedTo}{a SharedTo (inherited from Folder)}
+#' }
+#' 
+#' \strong{ReportGrouping}
+#' 
+#' 
+#' \describe{
+#'  \item{aggregateType}{a ReportAggrType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Sum}
+#'      \item{Average}
+#'      \item{Maximum}
+#'      \item{Minimum}
+#'      \item{RowCount}
+#'    }
+#'   }
+#'  \item{dateGranularity}{a UserDateGranularity - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{None}
+#'      \item{Day}
+#'      \item{Week}
+#'      \item{Month}
+#'      \item{Quarter}
+#'      \item{Year}
+#'      \item{FiscalQuarter}
+#'      \item{FiscalYear}
+#'      \item{MonthInYear}
+#'      \item{DayInMonth}
+#'      \item{FiscalPeriod}
+#'      \item{FiscalWeek}
+#'    }
+#'   }
+#'  \item{field}{a character}
+#'  \item{sortByName}{a character}
+#'  \item{sortOrder}{a SortOrder - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Asc}
+#'      \item{Desc}
+#'    }
+#'   }
+#'  \item{sortType}{a ReportSortType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Column}
+#'      \item{Aggregate}
+#'      \item{CustomSummaryFormula}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{ReportHistoricalSelector}
+#' 
+#' 
+#' \describe{
+#'  \item{snapshot}{a character}
+#' }
+#' 
+#' \strong{ReportLayoutSection}
+#' 
+#' 
+#' \describe{
+#'  \item{columns}{a ReportTypeColumn}
+#'  \item{masterLabel}{a character}
+#' }
+#' 
+#' \strong{ReportParam}
+#' 
+#' 
+#' \describe{
+#'  \item{name}{a character}
+#'  \item{value}{a character}
+#' }
+#' 
+#' \strong{ReportTimeFrameFilter}
+#' 
+#' 
+#' \describe{
+#'  \item{dateColumn}{a character}
+#'  \item{endDate}{a character formatted as 'yyyy-mm-dd'}
+#'  \item{interval}{a UserDateInterval - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{INTERVAL_CURRENT}
+#'      \item{INTERVAL_CURNEXT1}
+#'      \item{INTERVAL_CURPREV1}
+#'      \item{INTERVAL_NEXT1}
+#'      \item{INTERVAL_PREV1}
+#'      \item{INTERVAL_CURNEXT3}
+#'      \item{INTERVAL_CURFY}
+#'      \item{INTERVAL_PREVFY}
+#'      \item{INTERVAL_PREV2FY}
+#'      \item{INTERVAL_AGO2FY}
+#'      \item{INTERVAL_NEXTFY}
+#'      \item{INTERVAL_PREVCURFY}
+#'      \item{INTERVAL_PREVCUR2FY}
+#'      \item{INTERVAL_CURNEXTFY}
+#'      \item{INTERVAL_CUSTOM}
+#'      \item{INTERVAL_YESTERDAY}
+#'      \item{INTERVAL_TODAY}
+#'      \item{INTERVAL_TOMORROW}
+#'      \item{INTERVAL_LASTWEEK}
+#'      \item{INTERVAL_THISWEEK}
+#'      \item{INTERVAL_NEXTWEEK}
+#'      \item{INTERVAL_LASTMONTH}
+#'      \item{INTERVAL_THISMONTH}
+#'      \item{INTERVAL_NEXTMONTH}
+#'      \item{INTERVAL_LASTTHISMONTH}
+#'      \item{INTERVAL_THISNEXTMONTH}
+#'      \item{INTERVAL_CURRENTQ}
+#'      \item{INTERVAL_CURNEXTQ}
+#'      \item{INTERVAL_CURPREVQ}
+#'      \item{INTERVAL_NEXTQ}
+#'      \item{INTERVAL_PREVQ}
+#'      \item{INTERVAL_CURNEXT3Q}
+#'      \item{INTERVAL_CURY}
+#'      \item{INTERVAL_PREVY}
+#'      \item{INTERVAL_PREV2Y}
+#'      \item{INTERVAL_AGO2Y}
+#'      \item{INTERVAL_NEXTY}
+#'      \item{INTERVAL_PREVCURY}
+#'      \item{INTERVAL_PREVCUR2Y}
+#'      \item{INTERVAL_CURNEXTY}
+#'      \item{INTERVAL_LAST7}
+#'      \item{INTERVAL_LAST30}
+#'      \item{INTERVAL_LAST60}
+#'      \item{INTERVAL_LAST90}
+#'      \item{INTERVAL_LAST120}
+#'      \item{INTERVAL_NEXT7}
+#'      \item{INTERVAL_NEXT30}
+#'      \item{INTERVAL_NEXT60}
+#'      \item{INTERVAL_NEXT90}
+#'      \item{INTERVAL_NEXT120}
+#'      \item{LAST_FISCALWEEK}
+#'      \item{THIS_FISCALWEEK}
+#'      \item{NEXT_FISCALWEEK}
+#'      \item{LAST_FISCALPERIOD}
+#'      \item{THIS_FISCALPERIOD}
+#'      \item{NEXT_FISCALPERIOD}
+#'      \item{LASTTHIS_FISCALPERIOD}
+#'      \item{THISNEXT_FISCALPERIOD}
+#'      \item{CURRENT_ENTITLEMENT_PERIOD}
+#'      \item{PREVIOUS_ENTITLEMENT_PERIOD}
+#'      \item{PREVIOUS_TWO_ENTITLEMENT_PERIODS}
+#'      \item{TWO_ENTITLEMENT_PERIODS_AGO}
+#'      \item{CURRENT_AND_PREVIOUS_ENTITLEMENT_PERIOD}
+#'      \item{CURRENT_AND_PREVIOUS_TWO_ENTITLEMENT_PERIODS}
+#'    }
+#'   }
+#'  \item{startDate}{a character formatted as 'yyyy-mm-dd'}
+#' }
+#' 
+#' \strong{ReportType}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_reporttype.htm}{Salesforce Documentation for ReportType}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{autogenerated}{a character either 'true' or 'false'}
+#'  \item{baseObject}{a character}
+#'  \item{category}{a ReportTypeCategory - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{accounts}
+#'      \item{opportunities}
+#'      \item{forecasts}
+#'      \item{cases}
+#'      \item{leads}
+#'      \item{campaigns}
+#'      \item{activities}
+#'      \item{busop}
+#'      \item{products}
+#'      \item{admin}
+#'      \item{territory}
+#'      \item{other}
+#'      \item{content}
+#'      \item{usage_entitlement}
+#'      \item{wdc}
+#'      \item{calibration}
+#'      \item{territory2}
+#'    }
+#'   }
+#'  \item{deployed}{a character either 'true' or 'false'}
+#'  \item{description}{a character}
+#'  \item{join}{a ObjectRelationship}
+#'  \item{label}{a character}
+#'  \item{sections}{a ReportLayoutSection}
+#' }
+#' 
+#' \strong{ReportTypeColumn}
+#' 
+#' 
+#' \describe{
+#'  \item{checkedByDefault}{a character either 'true' or 'false'}
+#'  \item{displayNameOverride}{a character}
+#'  \item{field}{a character}
+#'  \item{table}{a character}
+#' }
+#' 
+#' \strong{ReportTypeColumnTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{ReportTypeSectionTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{columns}{a ReportTypeColumnTranslation}
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{ReportTypeTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character}
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#'  \item{sections}{a ReportTypeSectionTranslation}
+#' }
+#' 
+#' \strong{ReputationBranding}
+#' 
+#' 
+#' \describe{
+#'  \item{smallImage}{a character}
+#' }
+#' 
+#' \strong{ReputationLevel}
+#' 
+#' 
+#' \describe{
+#'  \item{branding}{a ReputationBranding}
+#'  \item{label}{a character}
+#'  \item{lowerThreshold}{a numeric}
+#' }
+#' 
+#' \strong{ReputationLevelDefinitions}
+#' 
+#' 
+#' \describe{
+#'  \item{level}{a ReputationLevel}
+#' }
+#' 
+#' \strong{ReputationLevels}
+#' 
+#' 
+#' \describe{
+#'  \item{chatterAnswersReputationLevels}{a ChatterAnswersReputationLevel}
+#'  \item{ideaReputationLevels}{a IdeaReputationLevel}
+#' }
+#' 
+#' \strong{ReputationPointsRule}
+#' 
+#' 
+#' \describe{
+#'  \item{eventType}{a character}
+#'  \item{points}{a integer}
+#' }
+#' 
+#' \strong{ReputationPointsRules}
+#' 
+#' 
+#' \describe{
+#'  \item{pointsRule}{a ReputationPointsRule}
+#' }
+#' 
+#' \strong{RetrieveRequest}
+#' 
+#' 
+#' \describe{
+#'  \item{apiVersion}{a numeric}
+#'  \item{packageNames}{a character}
+#'  \item{singlePackage}{a character either 'true' or 'false'}
+#'  \item{specificFiles}{a character}
+#'  \item{unpackaged}{a Package}
+#' }
+#' 
+#' \strong{Role}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_role.htm}{Salesforce Documentation for Role}
+#' \describe{
+#'  \item{caseAccessLevel}{a character (inherited from RoleOrTerritory)}
+#'  \item{contactAccessLevel}{a character (inherited from RoleOrTerritory)}
+#'  \item{description}{a character (inherited from RoleOrTerritory)}
+#'  \item{mayForecastManagerShare}{a character either 'true' or 'false' (inherited from RoleOrTerritory)}
+#'  \item{name}{a character (inherited from RoleOrTerritory)}
+#'  \item{opportunityAccessLevel}{a character (inherited from RoleOrTerritory)}
+#'  \item{parentRole}{a character}
+#' }
+#' 
+#' \strong{RoleOrTerritory}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_roleorterritory.htm}{Salesforce Documentation for RoleOrTerritory}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{caseAccessLevel}{a character}
+#'  \item{contactAccessLevel}{a character}
+#'  \item{description}{a character}
+#'  \item{mayForecastManagerShare}{a character either 'true' or 'false'}
+#'  \item{name}{a character}
+#'  \item{opportunityAccessLevel}{a character}
+#' }
+#' 
+#' \strong{RuleEntry}
+#' 
+#' 
+#' \describe{
+#'  \item{assignedTo}{a character}
+#'  \item{assignedToType}{a AssignToLookupValueType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{User}
+#'      \item{Queue}
+#'    }
+#'   }
+#'  \item{booleanFilter}{a character}
+#'  \item{businessHours}{a character}
+#'  \item{businessHoursSource}{a BusinessHoursSourceType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{None}
+#'      \item{Case}
+#'      \item{Static}
+#'    }
+#'   }
+#'  \item{criteriaItems}{a FilterItem}
+#'  \item{disableEscalationWhenModified}{a character either 'true' or 'false'}
+#'  \item{escalationAction}{a EscalationAction}
+#'  \item{escalationStartTime}{a EscalationStartTimeType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{CaseCreation}
+#'      \item{CaseLastModified}
+#'    }
+#'   }
+#'  \item{formula}{a character}
+#'  \item{notifyCcRecipients}{a character either 'true' or 'false'}
+#'  \item{overrideExistingTeams}{a character either 'true' or 'false'}
+#'  \item{replyToEmail}{a character}
+#'  \item{senderEmail}{a character}
+#'  \item{senderName}{a character}
+#'  \item{team}{a character}
+#'  \item{template}{a character}
+#' }
+#' 
+#' \strong{SamlSsoConfig}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_samlssoconfig.htm}{Salesforce Documentation for SamlSsoConfig}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{attributeName}{a character}
+#'  \item{attributeNameIdFormat}{a character}
+#'  \item{decryptionCertificate}{a character}
+#'  \item{errorUrl}{a character}
+#'  \item{executionUserId}{a character}
+#'  \item{identityLocation}{a SamlIdentityLocationType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{SubjectNameId}
+#'      \item{Attribute}
+#'    }
+#'   }
+#'  \item{identityMapping}{a SamlIdentityType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Username}
+#'      \item{FederationId}
+#'      \item{UserId}
+#'    }
+#'   }
+#'  \item{issuer}{a character}
+#'  \item{loginUrl}{a character}
+#'  \item{logoutUrl}{a character}
+#'  \item{name}{a character}
+#'  \item{oauthTokenEndpoint}{a character}
+#'  \item{redirectBinding}{a character either 'true' or 'false'}
+#'  \item{requestSignatureMethod}{a character}
+#'  \item{salesforceLoginUrl}{a character}
+#'  \item{samlEntityId}{a character}
+#'  \item{samlJitHandlerId}{a character}
+#'  \item{samlVersion}{a SamlType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{SAML1_1}
+#'      \item{SAML2_0}
+#'    }
+#'   }
+#'  \item{userProvisioning}{a character either 'true' or 'false'}
+#'  \item{validationCert}{a character}
+#' }
+#' 
+#' \strong{Scontrol}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_scontrol.htm}{Salesforce Documentation for Scontrol}
+#' \describe{
+#'  \item{content}{a character formed using RCurl::base64Encode (inherited from MetadataWithContent)}
+#'  \item{contentSource}{a SControlContentSource - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{HTML}
+#'      \item{URL}
+#'      \item{Snippet}
+#'    }
+#'   }
+#'  \item{description}{a character}
+#'  \item{encodingKey}{a Encoding - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{UTF-8}
+#'      \item{ISO-8859-1}
+#'      \item{Shift_JIS}
+#'      \item{ISO-2022-JP}
+#'      \item{EUC-JP}
+#'      \item{ks_c_5601-1987}
+#'      \item{Big5}
+#'      \item{GB2312}
+#'      \item{Big5-HKSCS}
+#'      \item{x-SJIS_0213}
+#'    }
+#'   }
+#'  \item{fileContent}{a character formed using RCurl::base64Encode}
+#'  \item{fileName}{a character}
+#'  \item{name}{a character}
+#'  \item{supportsCaching}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{ScontrolTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{SearchLayouts}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_searchlayouts.htm}{Salesforce Documentation for SearchLayouts}
+#' \describe{
+#'  \item{customTabListAdditionalFields}{a character}
+#'  \item{excludedStandardButtons}{a character}
+#'  \item{listViewButtons}{a character}
+#'  \item{lookupDialogsAdditionalFields}{a character}
+#'  \item{lookupFilterFields}{a character}
+#'  \item{lookupPhoneDialogsAdditionalFields}{a character}
+#'  \item{searchFilterFields}{a character}
+#'  \item{searchResultsAdditionalFields}{a character}
+#'  \item{searchResultsCustomButtons}{a character}
+#' }
+#' 
+#' \strong{SecuritySettings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_securitysettings.htm}{Salesforce Documentation for SecuritySettings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{networkAccess}{a NetworkAccess}
+#'  \item{passwordPolicies}{a PasswordPolicies}
+#'  \item{sessionSettings}{a SessionSettings}
+#' }
+#' 
+#' \strong{SessionSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{disableTimeoutWarning}{a character either 'true' or 'false'}
+#'  \item{enableCSPOnEmail}{a character either 'true' or 'false'}
+#'  \item{enableCSRFOnGet}{a character either 'true' or 'false'}
+#'  \item{enableCSRFOnPost}{a character either 'true' or 'false'}
+#'  \item{enableCacheAndAutocomplete}{a character either 'true' or 'false'}
+#'  \item{enableClickjackNonsetupSFDC}{a character either 'true' or 'false'}
+#'  \item{enableClickjackNonsetupUser}{a character either 'true' or 'false'}
+#'  \item{enableClickjackNonsetupUserHeaderless}{a character either 'true' or 'false'}
+#'  \item{enableClickjackSetup}{a character either 'true' or 'false'}
+#'  \item{enablePostForSessions}{a character either 'true' or 'false'}
+#'  \item{enableSMSIdentity}{a character either 'true' or 'false'}
+#'  \item{enforceIpRangesEveryRequest}{a character either 'true' or 'false'}
+#'  \item{forceLogoutOnSessionTimeout}{a character either 'true' or 'false'}
+#'  \item{forceRelogin}{a character either 'true' or 'false'}
+#'  \item{lockSessionsToDomain}{a character either 'true' or 'false'}
+#'  \item{lockSessionsToIp}{a character either 'true' or 'false'}
+#'  \item{logoutURL}{a character}
+#'  \item{sessionTimeout}{a SessionTimeout - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{TwelveHours}
+#'      \item{EightHours}
+#'      \item{FourHours}
+#'      \item{TwoHours}
+#'      \item{SixtyMinutes}
+#'      \item{ThirtyMinutes}
+#'      \item{FifteenMinutes}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{SFDCMobileSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{enableMobileLite}{a character either 'true' or 'false'}
+#'  \item{enableUserToDeviceLinking}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{SharedTo}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_sharedto.htm}{Salesforce Documentation for SharedTo}
+#' \describe{
+#'  \item{allCustomerPortalUsers}{a character}
+#'  \item{allInternalUsers}{a character}
+#'  \item{allPartnerUsers}{a character}
+#'  \item{group}{a character}
+#'  \item{groups}{a character}
+#'  \item{managerSubordinates}{a character}
+#'  \item{managers}{a character}
+#'  \item{portalRole}{a character}
+#'  \item{portalRoleAndSubordinates}{a character}
+#'  \item{queue}{a character}
+#'  \item{role}{a character}
+#'  \item{roleAndSubordinates}{a character}
+#'  \item{roleAndSubordinatesInternal}{a character}
+#'  \item{roles}{a character}
+#'  \item{rolesAndSubordinates}{a character}
+#'  \item{territories}{a character}
+#'  \item{territoriesAndSubordinates}{a character}
+#'  \item{territory}{a character}
+#'  \item{territoryAndSubordinates}{a character}
+#' }
+#' 
+#' \strong{SharingBaseRule}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_sharingbaserule.htm}{Salesforce Documentation for SharingBaseRule}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{accessLevel}{a character}
+#'  \item{accountSettings}{a AccountSharingRuleSettings}
+#'  \item{description}{a character}
+#'  \item{label}{a character}
+#'  \item{sharedTo}{a SharedTo}
+#' }
+#' 
+#' \strong{SharingCriteriaRule}
+#' 
+#' 
+#' \describe{
+#'  \item{accessLevel}{a character (inherited from SharingBaseRule)}
+#'  \item{accountSettings}{a AccountSharingRuleSettings (inherited from SharingBaseRule)}
+#'  \item{description}{a character (inherited from SharingBaseRule)}
+#'  \item{label}{a character (inherited from SharingBaseRule)}
+#'  \item{sharedTo}{a SharedTo (inherited from SharingBaseRule)}
+#'  \item{booleanFilter}{a character}
+#'  \item{criteriaItems}{a FilterItem}
+#' }
+#' 
+#' \strong{SharingOwnerRule}
+#' 
+#' 
+#' \describe{
+#'  \item{accessLevel}{a character (inherited from SharingBaseRule)}
+#'  \item{accountSettings}{a AccountSharingRuleSettings (inherited from SharingBaseRule)}
+#'  \item{description}{a character (inherited from SharingBaseRule)}
+#'  \item{label}{a character (inherited from SharingBaseRule)}
+#'  \item{sharedTo}{a SharedTo (inherited from SharingBaseRule)}
+#'  \item{sharedFrom}{a SharedTo}
+#' }
+#' 
+#' \strong{SharingReason}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{label}{a character}
+#' }
+#' 
+#' \strong{SharingReasonTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{SharingRecalculation}
+#' 
+#' 
+#' \describe{
+#'  \item{className}{a character}
+#' }
+#' 
+#' \strong{SharingRules}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_sharingrules.htm}{Salesforce Documentation for SharingRules}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{sharingCriteriaRules}{a SharingCriteriaRule}
+#'  \item{sharingOwnerRules}{a SharingOwnerRule}
+#'  \item{sharingTerritoryRules}{a SharingTerritoryRule}
+#' }
+#' 
+#' \strong{SharingSet}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_sharingset.htm}{Salesforce Documentation for SharingSet}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{accessMappings}{a AccessMapping}
+#'  \item{description}{a character}
+#'  \item{name}{a character}
+#'  \item{profiles}{a character}
+#' }
+#' 
+#' \strong{SharingTerritoryRule}
+#' 
+#' 
+#' \describe{
+#'  \item{sharedFrom}{a SharedTo (inherited from SharingOwnerRule)}
+#' }
+#' 
+#' \strong{SidebarComponent}
+#' 
+#' 
+#' \describe{
+#'  \item{componentType}{a character}
+#'  \item{height}{a integer}
+#'  \item{label}{a character}
+#'  \item{lookup}{a character}
+#'  \item{page}{a character}
+#'  \item{relatedLists}{a RelatedList}
+#'  \item{unit}{a character}
+#'  \item{width}{a integer}
+#' }
+#' 
+#' \strong{SiteDotCom}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_sitedotcom.htm}{Salesforce Documentation for SiteDotCom}
+#' \describe{
+#'  \item{content}{a character formed using RCurl::base64Encode (inherited from MetadataWithContent)}
+#'  \item{label}{a character}
+#'  \item{siteType}{a SiteType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Siteforce}
+#'      \item{Visualforce}
+#'      \item{User}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{SiteRedirectMapping}
+#' 
+#' 
+#' \describe{
+#'  \item{action}{a SiteRedirect - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Permanent}
+#'      \item{Temporary}
+#'    }
+#'   }
+#'  \item{isActive}{a character either 'true' or 'false'}
+#'  \item{source}{a character}
+#'  \item{target}{a character}
+#' }
+#' 
+#' \strong{SiteWebAddress}
+#' 
+#' 
+#' \describe{
+#'  \item{certificate}{a character}
+#'  \item{domainName}{a character}
+#'  \item{primary}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{Skill}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{assignments}{a SkillAssignments}
+#'  \item{label}{a character}
+#' }
+#' 
+#' \strong{SkillAssignments}
+#' 
+#' 
+#' \describe{
+#'  \item{profiles}{a SkillProfileAssignments}
+#'  \item{users}{a SkillUserAssignments}
+#' }
+#' 
+#' \strong{SkillProfileAssignments}
+#' 
+#' 
+#' \describe{
+#'  \item{profile}{a character}
+#' }
+#' 
+#' \strong{SkillUserAssignments}
+#' 
+#' 
+#' \describe{
+#'  \item{user}{a character}
+#' }
+#' 
+#' \strong{StandardFieldTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{State}
+#' 
+#' 
+#' \describe{
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{integrationValue}{a character}
+#'  \item{isoCode}{a character}
+#'  \item{label}{a character}
+#'  \item{standard}{a character either 'true' or 'false'}
+#'  \item{visible}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{StaticResource}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_staticresource.htm}{Salesforce Documentation for StaticResource}
+#' \describe{
+#'  \item{content}{a character formed using RCurl::base64Encode (inherited from MetadataWithContent)}
+#'  \item{cacheControl}{a StaticResourceCacheControl - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Private}
+#'      \item{Public}
+#'    }
+#'   }
+#'  \item{contentType}{a character}
+#'  \item{description}{a character}
+#' }
+#' 
+#' \strong{SubtabComponents}
+#' 
+#' 
+#' \describe{
+#'  \item{containers}{a Container}
+#' }
+#' 
+#' \strong{SummaryLayout}
+#' 
+#' 
+#' \describe{
+#'  \item{masterLabel}{a character}
+#'  \item{sizeX}{a integer}
+#'  \item{sizeY}{a integer}
+#'  \item{sizeZ}{a integer}
+#'  \item{summaryLayoutItems}{a SummaryLayoutItem}
+#'  \item{summaryLayoutStyle}{a SummaryLayoutStyle - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Default}
+#'      \item{QuoteTemplate}
+#'      \item{DefaultQuoteTemplate}
+#'      \item{CaseInteraction}
+#'      \item{QuickActionLayoutLeftRight}
+#'      \item{QuickActionLayoutTopDown}
+#'      \item{PathAssistant}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{SummaryLayoutItem}
+#' 
+#' 
+#' \describe{
+#'  \item{customLink}{a character}
+#'  \item{field}{a character}
+#'  \item{posX}{a integer}
+#'  \item{posY}{a integer}
+#'  \item{posZ}{a integer}
+#' }
+#' 
+#' \strong{SupervisorAgentConfigSkills}
+#' 
+#' 
+#' \describe{
+#'  \item{skill}{a character}
+#' }
+#' 
+#' \strong{SynonymDictionary}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_synonymdictionary.htm}{Salesforce Documentation for SynonymDictionary}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{groups}{a SynonymGroup}
+#'  \item{isProtected}{a character either 'true' or 'false'}
+#'  \item{label}{a character}
+#' }
+#' 
+#' \strong{SynonymGroup}
+#' 
+#' 
+#' \describe{
+#'  \item{languages}{a Language - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{en_US}
+#'      \item{de}
+#'      \item{es}
+#'      \item{fr}
+#'      \item{it}
+#'      \item{ja}
+#'      \item{sv}
+#'      \item{ko}
+#'      \item{zh_TW}
+#'      \item{zh_CN}
+#'      \item{pt_BR}
+#'      \item{nl_NL}
+#'      \item{da}
+#'      \item{th}
+#'      \item{fi}
+#'      \item{ru}
+#'      \item{es_MX}
+#'      \item{no}
+#'      \item{hu}
+#'      \item{pl}
+#'      \item{cs}
+#'      \item{tr}
+#'      \item{in}
+#'      \item{ro}
+#'      \item{vi}
+#'      \item{uk}
+#'      \item{iw}
+#'      \item{el}
+#'      \item{bg}
+#'      \item{en_GB}
+#'      \item{ar}
+#'      \item{sk}
+#'      \item{pt_PT}
+#'      \item{hr}
+#'      \item{sl}
+#'      \item{fr_CA}
+#'      \item{ka}
+#'      \item{sr}
+#'      \item{sh}
+#'      \item{en_AU}
+#'      \item{en_MY}
+#'      \item{en_IN}
+#'      \item{en_PH}
+#'      \item{en_CA}
+#'      \item{ro_MD}
+#'      \item{bs}
+#'      \item{mk}
+#'      \item{lv}
+#'      \item{lt}
+#'      \item{et}
+#'      \item{sq}
+#'      \item{sh_ME}
+#'      \item{mt}
+#'      \item{ga}
+#'      \item{eu}
+#'      \item{cy}
+#'      \item{is}
+#'      \item{ms}
+#'      \item{tl}
+#'      \item{lb}
+#'      \item{rm}
+#'      \item{hy}
+#'      \item{hi}
+#'      \item{ur}
+#'      \item{bn}
+#'      \item{de_AT}
+#'      \item{de_CH}
+#'      \item{ta}
+#'      \item{ar_DZ}
+#'      \item{ar_BH}
+#'      \item{ar_EG}
+#'      \item{ar_IQ}
+#'      \item{ar_JO}
+#'      \item{ar_KW}
+#'      \item{ar_LB}
+#'      \item{ar_LY}
+#'      \item{ar_MA}
+#'      \item{ar_OM}
+#'      \item{ar_QA}
+#'      \item{ar_SA}
+#'      \item{ar_SD}
+#'      \item{ar_SY}
+#'      \item{ar_TN}
+#'      \item{ar_AE}
+#'      \item{ar_YE}
+#'      \item{zh_SG}
+#'      \item{zh_HK}
+#'      \item{en_HK}
+#'      \item{en_IE}
+#'      \item{en_SG}
+#'      \item{en_ZA}
+#'      \item{fr_BE}
+#'      \item{fr_LU}
+#'      \item{fr_CH}
+#'      \item{de_LU}
+#'      \item{it_CH}
+#'      \item{es_AR}
+#'      \item{es_BO}
+#'      \item{es_CL}
+#'      \item{es_CO}
+#'      \item{es_CR}
+#'      \item{es_DO}
+#'      \item{es_EC}
+#'      \item{es_SV}
+#'      \item{es_GT}
+#'      \item{es_HN}
+#'      \item{es_NI}
+#'      \item{es_PA}
+#'      \item{es_PY}
+#'      \item{es_PE}
+#'      \item{es_PR}
+#'      \item{es_US}
+#'      \item{es_UY}
+#'      \item{es_VE}
+#'      \item{eo}
+#'      \item{iw_EO}
+#'    }
+#'   }
+#'  \item{terms}{a character}
+#' }
+#' 
+#' \strong{Territory}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_territory.htm}{Salesforce Documentation for Territory}
+#' \describe{
+#'  \item{caseAccessLevel}{a character (inherited from RoleOrTerritory)}
+#'  \item{contactAccessLevel}{a character (inherited from RoleOrTerritory)}
+#'  \item{description}{a character (inherited from RoleOrTerritory)}
+#'  \item{mayForecastManagerShare}{a character either 'true' or 'false' (inherited from RoleOrTerritory)}
+#'  \item{name}{a character (inherited from RoleOrTerritory)}
+#'  \item{opportunityAccessLevel}{a character (inherited from RoleOrTerritory)}
+#'  \item{accountAccessLevel}{a character}
+#'  \item{parentTerritory}{a character}
+#' }
+#' 
+#' \strong{Territory2}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_territory2.htm}{Salesforce Documentation for Territory2}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{accountAccessLevel}{a character}
+#'  \item{caseAccessLevel}{a character}
+#'  \item{contactAccessLevel}{a character}
+#'  \item{customFields}{a FieldValue}
+#'  \item{description}{a character}
+#'  \item{name}{a character}
+#'  \item{opportunityAccessLevel}{a character}
+#'  \item{parentTerritory}{a character}
+#'  \item{ruleAssociations}{a Territory2RuleAssociation}
+#'  \item{territory2Type}{a character}
+#' }
+#' 
+#' \strong{Territory2Model}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_territory2model.htm}{Salesforce Documentation for Territory2Model}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{customFields}{a FieldValue}
+#'  \item{description}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{Territory2Rule}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_territory2rule.htm}{Salesforce Documentation for Territory2Rule}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{booleanFilter}{a character}
+#'  \item{name}{a character}
+#'  \item{objectType}{a character}
+#'  \item{ruleItems}{a Territory2RuleItem}
+#' }
+#' 
+#' \strong{Territory2RuleAssociation}
+#' 
+#' 
+#' \describe{
+#'  \item{inherited}{a character either 'true' or 'false'}
+#'  \item{ruleName}{a character}
+#' }
+#' 
+#' \strong{Territory2RuleItem}
+#' 
+#' 
+#' \describe{
+#'  \item{field}{a character}
+#'  \item{operation}{a FilterOperation - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{equals}
+#'      \item{notEqual}
+#'      \item{lessThan}
+#'      \item{greaterThan}
+#'      \item{lessOrEqual}
+#'      \item{greaterOrEqual}
+#'      \item{contains}
+#'      \item{notContain}
+#'      \item{startsWith}
+#'      \item{includes}
+#'      \item{excludes}
+#'      \item{within}
+#'    }
+#'   }
+#'  \item{value}{a character}
+#' }
+#' 
+#' \strong{Territory2Settings}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_territory2settings.htm}{Salesforce Documentation for Territory2Settings}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{defaultAccountAccessLevel}{a character}
+#'  \item{defaultCaseAccessLevel}{a character}
+#'  \item{defaultContactAccessLevel}{a character}
+#'  \item{defaultOpportunityAccessLevel}{a character}
+#'  \item{opportunityFilterSettings}{a Territory2SettingsOpportunityFilter}
+#' }
+#' 
+#' \strong{Territory2SettingsOpportunityFilter}
+#' 
+#' 
+#' \describe{
+#'  \item{apexClassName}{a character}
+#'  \item{enableFilter}{a character either 'true' or 'false'}
+#'  \item{runOnCreate}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{Territory2Type}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_territory2type.htm}{Salesforce Documentation for Territory2Type}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{description}{a character}
+#'  \item{name}{a character}
+#'  \item{priority}{a integer}
+#' }
+#' 
+#' \strong{TouchMobileSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{enableTouchAppIPad}{a character either 'true' or 'false'}
+#'  \item{enableTouchAppIPhone}{a character either 'true' or 'false'}
+#'  \item{enableTouchBrowserIPad}{a character either 'true' or 'false'}
+#'  \item{enableTouchIosPhone}{a character either 'true' or 'false'}
+#'  \item{enableVisualforceInTouch}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{TransactionSecurityAction}
+#' 
+#' 
+#' \describe{
+#'  \item{block}{a character either 'true' or 'false'}
+#'  \item{endSession}{a character either 'true' or 'false'}
+#'  \item{notifications}{a TransactionSecurityNotification}
+#'  \item{twoFactorAuthentication}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{TransactionSecurityNotification}
+#' 
+#' 
+#' \describe{
+#'  \item{inApp}{a character either 'true' or 'false'}
+#'  \item{sendEmail}{a character either 'true' or 'false'}
+#'  \item{user}{a character}
+#' }
+#' 
+#' \strong{TransactionSecurityPolicy}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{action}{a TransactionSecurityAction}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{apexClass}{a character}
+#'  \item{eventType}{a MonitoredEvents - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{AuditTrail}
+#'      \item{Login}
+#'      \item{Entity}
+#'      \item{DataExport}
+#'      \item{AccessResource}
+#'    }
+#'   }
+#'  \item{executionUser}{a character}
+#'  \item{resourceName}{a character}
+#' }
+#' 
+#' \strong{Translations}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_translations.htm}{Salesforce Documentation for Translations}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{customApplications}{a CustomApplicationTranslation}
+#'  \item{customDataTypeTranslations}{a CustomDataTypeTranslation}
+#'  \item{customLabels}{a CustomLabelTranslation}
+#'  \item{customPageWebLinks}{a CustomPageWebLinkTranslation}
+#'  \item{customTabs}{a CustomTabTranslation}
+#'  \item{quickActions}{a GlobalQuickActionTranslation}
+#'  \item{reportTypes}{a ReportTypeTranslation}
+#'  \item{scontrols}{a ScontrolTranslation}
+#' }
+#' 
+#' \strong{UiPlugin}
+#' 
+#' 
+#' \describe{
+#'  \item{content}{a character formed using RCurl::base64Encode (inherited from MetadataWithContent)}
+#'  \item{description}{a character}
+#'  \item{extensionPointIdentifier}{a character}
+#'  \item{isEnabled}{a character either 'true' or 'false'}
+#'  \item{language}{a character}
+#'  \item{masterLabel}{a character}
+#' }
+#' 
+#' \strong{ValidationRule}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{description}{a character}
+#'  \item{errorConditionFormula}{a character}
+#'  \item{errorDisplayField}{a character}
+#'  \item{errorMessage}{a character}
+#' }
+#' 
+#' \strong{ValidationRuleTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{errorMessage}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{ValueTypeField}
+#' 
+#' 
+#' \describe{
+#'  \item{fields}{a ValueTypeField}
+#'  \item{foreignKeyDomain}{a character}
+#'  \item{isForeignKey}{a character either 'true' or 'false'}
+#'  \item{isNameField}{a character either 'true' or 'false'}
+#'  \item{minOccurs}{a integer}
+#'  \item{name}{a character}
+#'  \item{picklistValues}{a PicklistEntry}
+#'  \item{soapType}{a character}
+#'  \item{valueRequired}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{VisualizationPlugin}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{description}{a character}
+#'  \item{developerName}{a character}
+#'  \item{icon}{a character}
+#'  \item{masterLabel}{a character}
+#'  \item{visualizationResources}{a VisualizationResource}
+#'  \item{visualizationTypes}{a VisualizationType}
+#' }
+#' 
+#' \strong{VisualizationResource}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character}
+#'  \item{file}{a character}
+#'  \item{rank}{a integer}
+#'  \item{type}{a VisualizationResourceType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{js}
+#'      \item{css}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{VisualizationType}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character}
+#'  \item{developerName}{a character}
+#'  \item{icon}{a character}
+#'  \item{masterLabel}{a character}
+#'  \item{scriptBootstrapMethod}{a character}
+#' }
+#' 
+#' \strong{WaveTemplateBundle}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_wavetemplatebundle.htm}{Salesforce Documentation for WaveTemplateBundle}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{assetIcon}{a character}
+#'  \item{description}{a character}
+#'  \item{label}{a character}
+#'  \item{templateType}{a character}
+#' }
+#' 
+#' \strong{WebLink}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_weblink.htm}{Salesforce Documentation for WebLink}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{availability}{a WebLinkAvailability - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{online}
+#'      \item{offline}
+#'    }
+#'   }
+#'  \item{description}{a character}
+#'  \item{displayType}{a WebLinkDisplayType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{link}
+#'      \item{button}
+#'      \item{massActionButton}
+#'    }
+#'   }
+#'  \item{encodingKey}{a Encoding - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{UTF-8}
+#'      \item{ISO-8859-1}
+#'      \item{Shift_JIS}
+#'      \item{ISO-2022-JP}
+#'      \item{EUC-JP}
+#'      \item{ks_c_5601-1987}
+#'      \item{Big5}
+#'      \item{GB2312}
+#'      \item{Big5-HKSCS}
+#'      \item{x-SJIS_0213}
+#'    }
+#'   }
+#'  \item{hasMenubar}{a character either 'true' or 'false'}
+#'  \item{hasScrollbars}{a character either 'true' or 'false'}
+#'  \item{hasToolbar}{a character either 'true' or 'false'}
+#'  \item{height}{a integer}
+#'  \item{isResizable}{a character either 'true' or 'false'}
+#'  \item{linkType}{a WebLinkType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{url}
+#'      \item{sControl}
+#'      \item{javascript}
+#'      \item{page}
+#'      \item{flow}
+#'    }
+#'   }
+#'  \item{masterLabel}{a character}
+#'  \item{openType}{a WebLinkWindowType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{newWindow}
+#'      \item{sidebar}
+#'      \item{noSidebar}
+#'      \item{replace}
+#'      \item{onClickJavaScript}
+#'    }
+#'   }
+#'  \item{page}{a character}
+#'  \item{position}{a WebLinkPosition - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{fullScreen}
+#'      \item{none}
+#'      \item{topLeft}
+#'    }
+#'   }
+#'  \item{protected}{a character either 'true' or 'false'}
+#'  \item{requireRowSelection}{a character either 'true' or 'false'}
+#'  \item{scontrol}{a character}
+#'  \item{showsLocation}{a character either 'true' or 'false'}
+#'  \item{showsStatus}{a character either 'true' or 'false'}
+#'  \item{url}{a character}
+#'  \item{width}{a integer}
+#' }
+#' 
+#' \strong{WebLinkTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{label}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' \strong{WebToCaseSettings}
+#' 
+#' 
+#' \describe{
+#'  \item{caseOrigin}{a character}
+#'  \item{defaultResponseTemplate}{a character}
+#'  \item{enableWebToCase}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{WeightedSourceCategory}
+#' 
+#' 
+#' \describe{
+#'  \item{sourceCategoryApiName}{a character}
+#'  \item{weight}{a numeric}
+#' }
+#' 
+#' \strong{Workflow}
+#' 
+#' 
+#' \href{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_workflow.htm}{Salesforce Documentation for Workflow}
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{alerts}{a WorkflowAlert}
+#'  \item{fieldUpdates}{a WorkflowFieldUpdate}
+#'  \item{flowActions}{a WorkflowFlowAction}
+#'  \item{knowledgePublishes}{a WorkflowKnowledgePublish}
+#'  \item{outboundMessages}{a WorkflowOutboundMessage}
+#'  \item{rules}{a WorkflowRule}
+#'  \item{send}{a WorkflowSend}
+#'  \item{tasks}{a WorkflowTask}
+#' }
+#' 
+#' \strong{WorkflowAction}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#' }
+#' 
+#' \strong{WorkflowActionReference}
+#' 
+#' 
+#' \describe{
+#'  \item{name}{a character}
+#'  \item{type}{a WorkflowActionType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{FieldUpdate}
+#'      \item{KnowledgePublish}
+#'      \item{Task}
+#'      \item{Alert}
+#'      \item{Send}
+#'      \item{OutboundMessage}
+#'      \item{FlowAction}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{WorkflowAlert}
+#' 
+#' 
+#' \describe{
+#'  \item{extends WorkflowAction}{see documentation for WorkflowAction}
+#'  \item{ccEmails}{a character}
+#'  \item{description}{a character}
+#'  \item{protected}{a character either 'true' or 'false'}
+#'  \item{recipients}{a WorkflowEmailRecipient}
+#'  \item{senderAddress}{a character}
+#'  \item{senderType}{a ActionEmailSenderType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{CurrentUser}
+#'      \item{OrgWideEmailAddress}
+#'      \item{DefaultWorkflowUser}
+#'    }
+#'   }
+#'  \item{template}{a character}
+#' }
+#' 
+#' \strong{WorkflowEmailRecipient}
+#' 
+#' 
+#' \describe{
+#'  \item{field}{a character}
+#'  \item{recipient}{a character}
+#'  \item{type}{a ActionEmailRecipientTypes - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{group}
+#'      \item{role}
+#'      \item{user}
+#'      \item{opportunityTeam}
+#'      \item{accountTeam}
+#'      \item{roleSubordinates}
+#'      \item{owner}
+#'      \item{creator}
+#'      \item{partnerUser}
+#'      \item{accountOwner}
+#'      \item{customerPortalUser}
+#'      \item{portalRole}
+#'      \item{portalRoleSubordinates}
+#'      \item{contactLookup}
+#'      \item{userLookup}
+#'      \item{roleSubordinatesInternal}
+#'      \item{email}
+#'      \item{caseTeam}
+#'      \item{campaignMemberDerivedOwner}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{WorkflowFieldUpdate}
+#' 
+#' 
+#' \describe{
+#'  \item{extends WorkflowAction}{see documentation for WorkflowAction}
+#'  \item{description}{a character}
+#'  \item{field}{a character}
+#'  \item{formula}{a character}
+#'  \item{literalValue}{a character}
+#'  \item{lookupValue}{a character}
+#'  \item{lookupValueType}{a LookupValueType - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{User}
+#'      \item{Queue}
+#'      \item{RecordType}
+#'    }
+#'   }
+#'  \item{name}{a character}
+#'  \item{notifyAssignee}{a character either 'true' or 'false'}
+#'  \item{operation}{a FieldUpdateOperation - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Formula}
+#'      \item{Literal}
+#'      \item{Null}
+#'      \item{NextValue}
+#'      \item{PreviousValue}
+#'      \item{LookupValue}
+#'    }
+#'   }
+#'  \item{protected}{a character either 'true' or 'false'}
+#'  \item{reevaluateOnChange}{a character either 'true' or 'false'}
+#'  \item{targetObject}{a character}
+#' }
+#' 
+#' \strong{WorkflowFlowAction}
+#' 
+#' 
+#' \describe{
+#'  \item{extends WorkflowAction}{see documentation for WorkflowAction}
+#'  \item{description}{a character}
+#'  \item{flow}{a character}
+#'  \item{flowInputs}{a WorkflowFlowActionParameter}
+#'  \item{label}{a character}
+#'  \item{language}{a character}
+#'  \item{protected}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{WorkflowFlowActionParameter}
+#' 
+#' 
+#' \describe{
+#'  \item{name}{a character}
+#'  \item{value}{a character}
+#' }
+#' 
+#' \strong{WorkflowKnowledgePublish}
+#' 
+#' 
+#' \describe{
+#'  \item{extends WorkflowAction}{see documentation for WorkflowAction}
+#'  \item{action}{a KnowledgeWorkflowAction - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{PublishAsNew}
+#'      \item{Publish}
+#'    }
+#'   }
+#'  \item{description}{a character}
+#'  \item{label}{a character}
+#'  \item{language}{a character}
+#'  \item{protected}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{WorkflowRule}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{actions}{a WorkflowActionReference}
+#'  \item{active}{a character either 'true' or 'false'}
+#'  \item{booleanFilter}{a character}
+#'  \item{criteriaItems}{a FilterItem}
+#'  \item{description}{a character}
+#'  \item{formula}{a character}
+#'  \item{triggerType}{a WorkflowTriggerTypes - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{onCreateOnly}
+#'      \item{onCreateOrTriggeringUpdate}
+#'      \item{onAllChanges}
+#'      \item{OnRecursiveUpdate}
+#'    }
+#'   }
+#'  \item{workflowTimeTriggers}{a WorkflowTimeTrigger}
+#' }
+#' 
+#' \strong{WorkflowSend}
+#' 
+#' 
+#' \describe{
+#'  \item{extends WorkflowAction}{see documentation for WorkflowAction}
+#'  \item{action}{a SendAction - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Send}
+#'    }
+#'   }
+#'  \item{description}{a character}
+#'  \item{label}{a character}
+#'  \item{language}{a character}
+#'  \item{protected}{a character either 'true' or 'false'}
+#' }
+#' 
+#' \strong{WorkflowTask}
+#' 
+#' 
+#' \describe{
+#'  \item{extends WorkflowAction}{see documentation for WorkflowAction}
+#'  \item{assignedTo}{a character}
+#'  \item{assignedToType}{a ActionTaskAssignedToTypes - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{user}
+#'      \item{role}
+#'      \item{opportunityTeam}
+#'      \item{accountTeam}
+#'      \item{owner}
+#'      \item{accountOwner}
+#'      \item{creator}
+#'      \item{accountCreator}
+#'      \item{partnerUser}
+#'      \item{portalRole}
+#'    }
+#'   }
+#'  \item{description}{a character}
+#'  \item{dueDateOffset}{a integer}
+#'  \item{notifyAssignee}{a character either 'true' or 'false'}
+#'  \item{offsetFromField}{a character}
+#'  \item{priority}{a character}
+#'  \item{protected}{a character either 'true' or 'false'}
+#'  \item{status}{a character}
+#'  \item{subject}{a character}
+#' }
+#' 
+#' \strong{WorkflowTaskTranslation}
+#' 
+#' 
+#' \describe{
+#'  \item{description}{a character}
+#'  \item{name}{a character}
+#'  \item{subject}{a character}
+#' }
+#' 
+#' \strong{WorkflowTimeTrigger}
+#' 
+#' 
+#' \describe{
+#'  \item{actions}{a WorkflowActionReference}
+#'  \item{offsetFromField}{a character}
+#'  \item{timeLength}{a character}
+#'  \item{workflowTimeTriggerUnit}{a WorkflowTimeUnits - which is a character taking one of the following values: 
+#'    \itemize{
+#'      \item{Hours}
+#'      \item{Days}
+#'    }
+#'   }
+#' }
+#' 
+#' \strong{WorkspaceMapping}
+#' 
+#' 
+#' \describe{
+#'  \item{fieldName}{a character}
+#'  \item{tab}{a character}
+#' }
+#' 
+#' \strong{WorkspaceMappings}
+#' 
+#' 
+#' \describe{
+#'  \item{mapping}{a WorkspaceMapping}
+#' }
+#' 
+#' \strong{XOrgHub}
+#' 
+#' 
+#' \describe{
+#'  \item{fullName}{a character (inherited from Metadata)}
+#'  \item{label}{a character}
+#'  \item{lockSharedObjects}{a character either 'true' or 'false'}
+#'  \item{permissionSets}{a character}
+#'  \item{sharedObjects}{a XOrgHubSharedObject}
+#' }
+#' 
+#' \strong{XOrgHubSharedObject}
+#' 
+#' 
+#' \describe{
+#'  \item{fields}{a character}
+#'  \item{name}{a character}
+#' }
+#' 
+#' @usage rforcecom.Metadatametadata_type_validator(obj_type, obj_data)
+#' @param obj_type a string from one of the object types described above
+#' @param obj_data a \code{list} of \code{lists} or a \code{data.frame} with the required inputs to create the
+#' the obj_type specified.
+#' @return a \code{list} that can be used as input to one of the CRUD Metadata API
+#' operations: \link{rforcecom.createMetadata}, \link{rforcecom.updateMetadata},
+#' \link{rforcecom.upsertMetadata}
+#' @export
+rforcecom.metadata_type_validator <- function(obj_type, obj_data){
+  
+  stopifnot(length(obj_data) > 0)
+  stopifnot(is.list(obj_data) | is.data.frame(obj_data))
+  
+  if(is.data.frame(obj_data))
+    obj_data <- split(obj_data, seq(nrow(obj_data)))
+  if(typeof(obj_data[[1]]) != "list")
+    obj_data <- list(obj_data)
+  
+  acceptable_inputs <- metadata_inputs[metadata_inputs$data_type==obj_type, 'input']
+  
+  if(length(acceptable_inputs) < 1)
+    stop(paste0("No input validation could be found for the obj_type specified: ", obj_type))
+  
+  new_obj_data <- list()
+  counter <- 1
+  for (e in 1:length(obj_data)){
+    # pull out only the acceptable inputs, just ignore the rest
+    obj_data[[e]] <- obj_data[[e]][intersect(names(obj_data[[e]]), acceptable_inputs)]
+    # reorder according to WSDL since order matters
+    matched_order <- match(acceptable_inputs, names(obj_data[[e]]))
+    
+    if(all(is.na(matched_order)))
+      warning(paste0("Some of the records were dropped because their inputs did not match the acceptable inputs for the specified data type:", obj_type))
+    
+    obj_data[[e]] <- obj_data[[e]][matched_order[!is.na(matched_order)]]
+    
+    # add to the final formatted object if it is a record with some valid input elements
+    if(length(obj_data[[e]]) > 0){
+      new_obj_data[[counter]] <- obj_data[[e]]
+      counter <- counter + 1
+    }
+  }
+  
+  return(new_obj_data)
+}
+

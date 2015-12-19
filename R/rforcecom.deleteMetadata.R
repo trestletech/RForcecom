@@ -31,6 +31,9 @@ rforcecom.deleteMetadata <-
     
     stopifnot(all(is.character(object_names)))
     
+    if(length(metadata_inputs[metadata_inputs$data_type==metadata_type, 'data_type']) < 1)
+      warning(paste0(metadata_type, " wasn't found in the list of acceptable metadata objects to delete"))
+    
     # format names into list
     object_list <- as.list(object_names)
     names(object_list) <- rep('fullNames', length(object_list))
@@ -42,6 +45,11 @@ rforcecom.deleteMetadata <-
     root2 <- newXMLNode("metadataType", metadata_type, parent=root)
     # create full xml onto the root
     metadataListToXML(root=root, sublist=object_list, metatype=NULL)
+    
+    if(verbose) {
+      print(paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion'])))
+      print(root)
+    }
     
     #build soapBody
     soapBody <- paste0('<?xml version="1.0" encoding="UTF-8"?>
