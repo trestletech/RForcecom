@@ -63,7 +63,16 @@ rforcecom.createBulkBatch <-
                                                         'Accept'="application/xml", 
                                                         'Content-Type'="text/csv; charset=UTF-8"),
                         body = httr::upload_file(path=x, type='text/csv'))
-      closeAllConnections()
+      
+      #cleanup the fileupload connection
+      tryCatch({
+        this_con <- as.integer(rownames(showConnections())[which(showConnections()[,'description', drop=F] == x)])
+        close.connection(getConnection(this_con))
+      }, error=function(e){
+        message('Could not close file connection.')
+        message('Having too many unclosed file handles may lead to error. Close manually with close.connection')
+      })
+      
       # Parse XML 
       x.root <- xmlRoot(content(res, as='parsed'))
       
