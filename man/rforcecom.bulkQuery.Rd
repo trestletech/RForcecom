@@ -29,8 +29,8 @@ This must match the target object in the query}
 A \code{data.frame} of the recordset returned by query
 }
 \description{
-This function is a convenience wrapper for submitting and retrieving 
-bulk query API jobs
+This function is a convenience wrapper for 
+submitting and retrieving bulk query API jobs
 }
 \examples{
 \dontrun{
