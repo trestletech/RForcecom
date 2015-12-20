@@ -1,7 +1,7 @@
 Package: RForcecom
 Type: Package
 Version: 0.8
-Title: RForcecom provides the connection to Force.com and Salesforce.com from R.
+Title: RForcecom provides the connection to Force.com and Salesforce.com from R
 Description: RForcecom provides the connection to Force.com and Salesforce.com
     from R.
 Authors@R: c(
@@ -43,7 +43,6 @@ Collate:
     'rforcecom.delete.R'
     'rforcecom.deleteMetadata.R'
     'rforcecom.deployMetadata.R'
-    'rforcecom.deployRecentValidationMetadata.R'
     'rforcecom.describeMetadata.R'
     'rforcecom.getObjectDescription.R'
     'rforcecom.getObjectList.R'
@@ -52,7 +51,6 @@ Collate:
     'rforcecom.listMetadata.R'
     'rforcecom.login.R'
     'rforcecom.logout.R'
-    'rforcecom.metadataFactory.R'
     'rforcecom.query.R'
     'rforcecom.queryMore.R'
     'rforcecom.readMetadata.R'
