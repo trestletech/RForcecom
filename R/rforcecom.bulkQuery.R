@@ -1,7 +1,7 @@
 #' Run Bulk Query 
 #' 
-#' This function is a convenience wrapper for submitting and retrieving 
-#' bulk query API jobs
+#' This function is a convenience wrapper for 
+#' submitting and retrieving bulk query API jobs
 #'
 #' @usage rforcecom.bulkQuery(session, 
 #'                            soqlQuery,
@@ -52,7 +52,7 @@ rforcecom.bulkQuery <- function(session,
     z <- z + 1
   }
   if (!status_complete) {
-    message(paste('Issue with batches submitted', print(proceed_on_batches)))
+    message(paste('Issue with batches submitted', print(status_complete)))
     batch_query_details <- NULL
     tryCatch({
       batch_query_details <- rforcecom.getBatchDetails(session,
