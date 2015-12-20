@@ -64,14 +64,14 @@ rforcecom.createBulkBatch <-
                                                         'Content-Type'="text/csv; charset=UTF-8"),
                         body = httr::upload_file(path=x, type='text/csv'))
       
+      
       #cleanup the fileupload connection
-      tryCatch({
-        this_con <- as.integer(rownames(showConnections())[which(showConnections()[,'description', drop=F] == x)])
+      try({
+        this_con <- as.integer(rownames(showConnections())[which(sapply(strsplit(showConnections()[,'description', drop=F], '\\', fixed=TRUE), 
+                                                                        FUN=function(x){paste(tail(x,2), collapse=' ')}) == 
+                                                                   paste(tail(strsplit(x, '\\', fixed=TRUE)[[1]],2), collapse=' '))])
         close.connection(getConnection(this_con))
-      }, error=function(e){
-        message('Could not close file connection.')
-        message('Having too many unclosed file handles may lead to error. Close manually with close.connection')
-      })
+      }, silent = TRUE)
       
       # Parse XML 
       x.root <- xmlRoot(content(res, as='parsed'))
