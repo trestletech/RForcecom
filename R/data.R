@@ -7,7 +7,7 @@
 #' \itemize{
 #'   \item data_type: the name of the type, not necessarily metadata, but can be submitted
 #'   as part of a metadata request to create or update.
-#'   \item element: the name of the element defined as a valid input to the data_type
+#'   \item input: the name of the element defined as a valid input to the data_type
 #' }
 #'
 #' @docType data
@@ -21,7 +21,7 @@
 #' 
 #' # get a list of the inputs to create "CustomTab" metadata
 #' metadata_inputs[metadata_inputs$data_type=='CustomTab',]
-#'  data_type          input
+#' data_type          input
 #' CustomTab       fullName
 #' CustomTab  auraComponent
 #' CustomTab   customObject
@@ -40,4 +40,4 @@
 #' CustomTab urlEncodingKey
 #' 
 #' }
-NULL
+"metadata_inputs"
