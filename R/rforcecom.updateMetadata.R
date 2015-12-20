@@ -4,11 +4,11 @@
 #' to Salesforce to update an object that already exists
 #'
 #' @usage rforcecom.updateMetadata(session, 
-#'                                 metadata_type=c('CustomObject', 'CustomField'), 
+#'                                 metadata_type, 
 #'                                 metadata, verbose=FALSE)
 #' @concept update metadata salesforce api
 #' @importFrom plyr ldply
-#' @importFrom XML newXMLNode
+#' @importFrom XML newXMLNode xmlInternalTreeParse xmlChildren
 #' @include rforcecom.utils.R
 #' @references \url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/}
 #' @param session a named character vector defining parameters of the api connection as returned by \link{rforcecom.login}
@@ -61,13 +61,13 @@
 #'                              sharingModel='ReadWrite'))
 #' updated_custom_object <- rforcecom.updateMetadata(session, 
 #'                                                    metadata_type='CustomObject', 
-#'                                                    metadata=upsert_metadata)
+#'                                                    metadata=update_metadata)
 #' 
 #' }
 #' @export
 rforcecom.updateMetadata <- 
   function(session, 
-           metadata_type=c('CustomObject', 'CustomField'), 
+           metadata_type, 
            metadata, verbose=FALSE){
     
     # run some basic validation on the metadata to see if it conforms to WSDL standards
@@ -79,38 +79,15 @@ rforcecom.updateMetadata <-
     # add the metadata to it
     metadataListToXML(root=root, sublist=metadata, metatype=metadata_type)
     
+    URL <- paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion']))
+    
     if(verbose) {
-      print(paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion'])))
+      print(URL)
       print(root)
     }
     
-    #build soapBody
-    soapBody <- paste0('<?xml version="1.0" encoding="UTF-8"?>
-                       <env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                       <env:Header>
-                       <SessionHeader xmlns="http://soap.sforce.com/2006/04/metadata">
-                       <sessionId>', session['sessionID'], '</sessionId>
-                       </SessionHeader>
-                       </env:Header>
-                       <env:Body>',
-                       as(root, 'character'),
-                       '</env:Body>
-                       </env:Envelope>')
-    
-    # perform request
-    # HTTP POST
-    h <- basicHeaderGatherer()
-    t <- basicTextGatherer()
-    httpHeader <- c("SOAPAction"="updateMetadata", 'Content-Type'="text/xml")
-    curlPerform(url=paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion'])), 
-                postfields=soapBody, httpheader=httpHeader, headerfunction = h$update, writefunction = t$update, ssl.verifypeer=F)
-    
-    # BEGIN DEBUG
-    if(exists("rforcecom.debug") && rforcecom.debug){ message(URL) }
-    if(exists("rforcecom.debug") && rforcecom.debug){ message(x.root) }
-    # END DEBUG
-    
-    x.root <- xmlRoot(xmlInternalTreeParse(t$value(), asText=T))
+    x.root <- metadata_curl_runner(unname(session['sessionID']), 
+                                   URL, root, SOAPAction='updateMetadata')
     
     # Check whether it success or not
     errorcode <- NA
@@ -126,8 +103,8 @@ rforcecom.updateMetadata <-
     
     # check for request fault
     response <- xmlChildren(xmlChildren(xmlChildren(xmlRoot(x.root))$Body)[['updateMetadataResponse']])
-    try(errorcode <- iconv(xmlValue(response$errors[['statusCode']]), from="UTF-8", to=""), TRUE)
-    try(errormessage <- iconv(xmlValue(response$errors[['message']]), from="UTF-8", to=""), TRUE)
+    try(errorcode <- iconv(xmlValue(response$result[['errors']][['statusCode']]), from="UTF-8", to=""), TRUE)
+    try(errormessage <- iconv(xmlValue(response$result[['errors']][['message']]), from="UTF-8", to=""), TRUE)
     if(!is.na(errorcode) && !is.na(errormessage)){
       stop(paste(errorcode, errormessage, sep=": "))
     }

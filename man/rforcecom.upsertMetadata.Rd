@@ -5,7 +5,7 @@
 \title{Upsert Object or Field Metadata in Salesforce}
 \usage{
 rforcecom.upsertMetadata(session, 
-                                metadata_type=c('CustomObject', 'CustomField'), 
+                                metadata_type, 
                                 metadata, verbose=FALSE)
 }
 \arguments{
@@ -15,7 +15,7 @@ rforcecom.upsertMetadata(session,
 
 \item{metadata}{a list of metadata components to be created formatted as XML before being sent via API}
 
-\item{verbose}{a boolean indicating whether to print messages during metadata creation}
+\item{verbose}{a boolean indicating whether to print the XML request}
 }
 \value{
 A \code{data.frame} containing the creation result for each submitted metadata component

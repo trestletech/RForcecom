@@ -4,9 +4,11 @@
 \alias{rforcecom.checkDeployStatusMetadata}
 \title{Check on Deploy Calls and Get Contents If Available}
 \usage{
-rforcecom.checkDeployStatusMetadata(session, id, 
-                                             includeZip=c('true', 'false'), 
-                                             filename='deployed_package.zip')
+rforcecom.checkDeployStatusMetadata(session, 
+                                           id,
+                                           includeDetails=c('false', 'true'),
+                                           filename='deployed_package.zip', 
+                                           verbose=FALSE)
 }
 \arguments{
 \item{session}{a named character vector defining parameters of the api connection as 
@@ -22,6 +24,8 @@ contained in the DeployDetails portion:
 \item{filename}{a file path to save the zip file in the event that it is downloaded. The 
 name must have a .zip extension. The default behavior will be to save in the current 
 working directory as package.zip}
+
+\item{verbose}{a boolean indicating whether to print messages during metadata creation}
 }
 \value{
 A \code{list} of the response

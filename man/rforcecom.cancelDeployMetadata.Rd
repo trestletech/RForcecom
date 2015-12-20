@@ -4,13 +4,15 @@
 \alias{rforcecom.cancelDeployMetadata}
 \title{Cancel a Prior Call to Deploy Metadata}
 \usage{
-rforcecom.cancelDeployMetadata(session, id)
+rforcecom.cancelDeployMetadata(session, id, verbose=FALSE)
 }
 \arguments{
 \item{session}{a named character vector defining parameters of the api connection as 
 returned by \link{rforcecom.login}}
 
 \item{id}{a character string id returned from \link{rforcecom.deployMetadata}}
+
+\item{verbose}{a boolean indicating whether to print the XML request}
 }
 \description{
 This function cancels a deployment of metadata 

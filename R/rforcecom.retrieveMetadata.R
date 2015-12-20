@@ -7,14 +7,14 @@
 #' @usage rforcecom.retrieveMetadata(session, retrieveRequest, verbose=FALSE)
 #' @concept retrieve metadata salesforce api
 #' @importFrom plyr llply ldply
-#' @importFrom XML newXMLNode
+#' @importFrom XML newXMLNode xmlInternalTreeParse xmlChildren
 #' @include rforcecom.utils.R
 #' @references \url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_retrieve.htm}
 #' @param session a named character vector defining parameters of the api connection as 
 #' returned by \link{rforcecom.login}
 #' @param retrieveRequest a \code{list} of parameters defining what XML file representations
 #' should be returned
-#' @param verbose a boolean indicating whether to print the XML request used
+#' @param verbose a boolean indicating whether to print the XML request
 #' @return A \code{list} of details from the created retrieve request
 #' @note See the Salesforce documentation for the proper arguments to create a 
 #' retrieveRequest. Here is a link to that documentation: 
@@ -37,33 +37,15 @@ rforcecom.retrieveMetadata <- function(session, retrieveRequest, verbose=FALSE){
   metadataListToXML(root=request_root, sublist=retrieveRequest, metatype=NULL)
   addChildren(root, request_root)
   
-  #build soapBody
-  soapBody <- paste0('<?xml version="1.0" encoding="UTF-8"?>
-                     <env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                     <env:Header>
-                     <SessionHeader xmlns="http://soap.sforce.com/2006/04/metadata">
-                     <sessionId>', session['sessionID'], '</sessionId>
-                     </SessionHeader>
-                     </env:Header>
-                     <env:Body>',
-                     as(root, 'character'),
-                     '</env:Body>
-                     </env:Envelope>')
+  URL <- paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion']))
   
-  # perform request
-  # HTTP POST
-  h <- basicHeaderGatherer()
-  t <- basicTextGatherer()
-  httpHeader <- c("SOAPAction"="retrieve", 'Content-Type'="text/xml")
-  curlPerform(url=paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion'])), 
-              postfields=soapBody, httpheader=httpHeader, headerfunction = h$update, writefunction = t$update, ssl.verifypeer=F)
+  if(verbose) {
+    print(URL)
+    print(root)
+  }
   
-  # BEGIN DEBUG
-  if(exists("rforcecom.debug") && rforcecom.debug){ message(URL) }
-  if(exists("rforcecom.debug") && rforcecom.debug){ message(x.root) }
-  # END DEBUG
-  
-  x.root <- xmlRoot(xmlInternalTreeParse(t$value(), asText=T))
+  x.root <- metadata_curl_runner(unname(session['sessionID']), 
+                                 URL, root, SOAPAction='retrieve')
   
   # Check whether it success or not
   errorcode <- NA
@@ -98,7 +80,8 @@ rforcecom.retrieveMetadata <- function(session, retrieveRequest, verbose=FALSE){
 #' 
 #' @usage rforcecom.checkRetrieveStatusMetadata(session, id, 
 #'                                              includeZip=c('true', 'false'), 
-#'                                              filename='package.zip')
+#'                                              filename='package.zip', 
+#'                                              verbose=FALSE)
 #' @concept retrieve metadata salesforce api
 #' @importFrom plyr llply ldply
 #' @importFrom RCurl base64Decode
@@ -114,6 +97,7 @@ rforcecom.retrieveMetadata <- function(session, retrieveRequest, verbose=FALSE){
 #' @param filename a file path to save the zip file in the event that it is downloaded. The 
 #' name must have a .zip extension. The default behavior will be to save in the current 
 #' working directory as package.zip
+#' @param verbose a boolean indicating whether to print messages during metadata creation
 #' @return A \code{list} of the response
 #' @examples
 #' \dontrun{
@@ -129,7 +113,8 @@ rforcecom.retrieveMetadata <- function(session, retrieveRequest, verbose=FALSE){
 rforcecom.checkRetrieveStatusMetadata <- function(session, 
                                                   id, 
                                                   includeZip=c('true','false'), 
-                                                  filename='package.zip'){
+                                                  filename='package.zip', 
+                                                  verbose=FALSE){
   
   stopifnot(grepl('\\.zip$', filename))
   
@@ -142,33 +127,15 @@ rforcecom.checkRetrieveStatusMetadata <- function(session,
   addChildren(root, newXMLNode('asyncProcessId', id))
   addChildren(root, newXMLNode('includeZip', includeZip))
   
-  #build soapBody
-  soapBody <- paste0('<?xml version="1.0" encoding="UTF-8"?>
-                     <env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                     <env:Header>
-                     <SessionHeader xmlns="http://soap.sforce.com/2006/04/metadata">
-                     <sessionId>', session['sessionID'], '</sessionId>
-                     </SessionHeader>
-                     </env:Header>
-                     <env:Body>',
-                     as(root, 'character'),
-                     '</env:Body>
-                     </env:Envelope>')
+  URL <- paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion']))
   
-  # perform request
-  # HTTP POST
-  h <- basicHeaderGatherer()
-  t <- basicTextGatherer()
-  httpHeader <- c("SOAPAction"="checkRetrieveStatus", 'Content-Type'="text/xml")
-  curlPerform(url=paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(apiVersion)), 
-              postfields=soapBody, httpheader=httpHeader, headerfunction = h$update, writefunction = t$update, ssl.verifypeer=F)
+  if(verbose) {
+    print(URL)
+    print(root)
+  }
   
-  # BEGIN DEBUG
-  if(exists("rforcecom.debug") && rforcecom.debug){ message(URL) }
-  if(exists("rforcecom.debug") && rforcecom.debug){ message(x.root) }
-  # END DEBUG
-  
-  x.root <- xmlRoot(xmlInternalTreeParse(t$value(), asText=T))
+  x.root <- metadata_curl_runner(unname(session['sessionID']), 
+                                 URL, root, SOAPAction='checkRetrieveStatus')
   
   # Check whether it success or not
   errorcode <- NA

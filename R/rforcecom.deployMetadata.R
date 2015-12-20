@@ -43,34 +43,11 @@ rforcecom.deployMetadata <- function(session, zipFile, deployOptions=NULL) {
     deploy_node <- newXMLNode("deployOptions", attrs = c(`xsi:type`='DeployOptions'), parent=root, suppressNamespaceWarning=T)
     metadataListToXML(root=deploy_node, sublist=deployOptions, metatype=NULL)
   }
-
-  #build soapBody
-  soapBody <- paste0('<?xml version="1.0" encoding="UTF-8"?>
-                     <env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                     <env:Header>
-                     <SessionHeader xmlns="http://soap.sforce.com/2006/04/metadata">
-                     <sessionId>', session['sessionID'], '</sessionId>
-                     </SessionHeader>
-                     </env:Header>
-                     <env:Body>',
-                     as(root, 'character'),
-                     '</env:Body>
-                     </env:Envelope>')
   
-  # perform request
-  # HTTP POST
-  h <- basicHeaderGatherer()
-  t <- basicTextGatherer()
-  httpHeader <- c("SOAPAction"="deploy", 'Content-Type'="text/xml")
-  curlPerform(url=paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion'])), 
-              postfields=soapBody, httpheader=httpHeader, headerfunction = h$update, writefunction = t$update, ssl.verifypeer=F)
+  URL <- paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion']))
   
-  # BEGIN DEBUG
-  if(exists("rforcecom.debug") && rforcecom.debug){ message(URL) }
-  if(exists("rforcecom.debug") && rforcecom.debug){ message(x.root) }
-  # END DEBUG
-  
-  x.root <- xmlRoot(xmlInternalTreeParse(t$value(), asText=T))
+  x.root <- metadata_curl_runner(unname(session['sessionID']), 
+                                 URL, root, SOAPAction='deploy')
   
   # Check whether it success or not
   errorcode <- NA
@@ -103,12 +80,15 @@ rforcecom.deployMetadata <- function(session, zipFile, deployOptions=NULL) {
 #' This function returns details about an initiated deployMetadata requset
 #' and saves the results into a zip file
 #' 
-#' @usage rforcecom.checkDeployStatusMetadata(session, id, 
-#'                                              includeZip=c('true', 'false'), 
-#'                                              filename='deployed_package.zip')
+#' @usage rforcecom.checkDeployStatusMetadata(session, 
+#'                                            id,
+#'                                            includeDetails=c('false', 'true'),
+#'                                            filename='deployed_package.zip', 
+#'                                            verbose=FALSE)
 #' @concept deploy metadata salesforce api
 #' @importFrom plyr ldply
 #' @importFrom RCurl base64Decode
+#' @importFrom XML removeChildren 
 #' @include rforcecom.utils.R
 #' @references \url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_checkdeploystatus.htm}
 #' @param session a named character vector defining parameters of the api connection as 
@@ -121,6 +101,7 @@ rforcecom.deployMetadata <- function(session, zipFile, deployOptions=NULL) {
 #' @param filename a file path to save the zip file in the event that it is downloaded. The 
 #' name must have a .zip extension. The default behavior will be to save in the current 
 #' working directory as package.zip
+#' @param verbose a boolean indicating whether to print messages during metadata creation
 #' @return A \code{list} of the response
 #' @examples
 #' \dontrun{
@@ -135,8 +116,9 @@ rforcecom.deployMetadata <- function(session, zipFile, deployOptions=NULL) {
 #' @export
 rforcecom.checkDeployStatusMetadata <- function(session, 
                                                 id, 
-                                                includeDetails =c('false','true'), 
-                                                filename='deployed_package.zip'){
+                                                includeDetails=c('false','true'), 
+                                                filename='deployed_package.zip', 
+                                                verbose=FALSE){
   
   stopifnot(is.character(id), nchar(id)=='18')
   stopifnot(grepl('\\.zip$', filename))
@@ -150,35 +132,15 @@ rforcecom.checkDeployStatusMetadata <- function(session,
   addChildren(root, newXMLNode('id', id))
   addChildren(root, newXMLNode('includeDetails', includeDetails))
   
-  print(root)
+  URL <- paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion']))
   
-  #build soapBody
-  soapBody <- paste0('<?xml version="1.0" encoding="UTF-8"?>
-                     <env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                     <env:Header>
-                     <SessionHeader xmlns="http://soap.sforce.com/2006/04/metadata">
-                     <sessionId>', session['sessionID'], '</sessionId>
-                     </SessionHeader>
-                     </env:Header>
-                     <env:Body>',
-                     as(root, 'character'),
-                     '</env:Body>
-                     </env:Envelope>')
+  if(verbose) {
+    print(URL)
+    print(root)
+  }
   
-  # perform request
-  # HTTP POST
-  h <- basicHeaderGatherer()
-  t <- basicTextGatherer()
-  httpHeader <- c("SOAPAction"="checkDeployStatus", 'Content-Type'="text/xml")
-  curlPerform(url=paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(apiVersion)), 
-              postfields=soapBody, httpheader=httpHeader, headerfunction = h$update, writefunction = t$update, ssl.verifypeer=F)
-  
-  # BEGIN DEBUG
-  if(exists("rforcecom.debug") && rforcecom.debug){ message(URL) }
-  if(exists("rforcecom.debug") && rforcecom.debug){ message(x.root) }
-  # END DEBUG
-  
-  x.root <- xmlRoot(xmlInternalTreeParse(t$value(), asText=T))
+  x.root <- metadata_curl_runner(unname(session['sessionID']), 
+                                 URL, root, SOAPAction='checkDeployStatus')
   
   # Check whether it success or not
   errorcode <- NA
@@ -241,15 +203,16 @@ rforcecom.checkDeployStatusMetadata <- function(session,
 #' This function cancels a deployment of metadata 
 #' as a package XML files to a target environment.
 #' 
-#' @usage rforcecom.cancelDeployMetadata(session, id)
+#' @usage rforcecom.cancelDeployMetadata(session, id, verbose=FALSE)
 #' @concept cancel deploy metadata salesforce api
 #' @importFrom plyr ldply
-#' @importFrom XML newXMLNode
+#' @importFrom XML newXMLNode addChildren
 #' @include rforcecom.utils.R
 #' @references \url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_canceldeploy.htm}
 #' @param session a named character vector defining parameters of the api connection as 
 #' returned by \link{rforcecom.login}
 #' @param id a character string id returned from \link{rforcecom.deployMetadata}
+#' @param verbose a boolean indicating whether to print the XML request
 #' @examples
 #' \dontrun{
 #' 
@@ -261,7 +224,7 @@ rforcecom.checkDeployStatusMetadata <- function(session,
 #' 
 #' }
 #' @export
-rforcecom.cancelDeployMetadata <- function(session, id) {
+rforcecom.cancelDeployMetadata <- function(session, id, verbose=FALSE) {
   
   stopifnot(is.character(id), nchar(id)=='18')
   
@@ -270,33 +233,15 @@ rforcecom.cancelDeployMetadata <- function(session, id) {
                      namespaceDefinitions=c('http://soap.sforce.com/2006/04/metadata'))
   addChildren(root, newXMLNode('id', id))
   
-  #build soapBody
-  soapBody <- paste0('<?xml version="1.0" encoding="UTF-8"?>
-                     <env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                     <env:Header>
-                     <SessionHeader xmlns="http://soap.sforce.com/2006/04/metadata">
-                     <sessionId>', session['sessionID'], '</sessionId>
-                     </SessionHeader>
-                     </env:Header>
-                     <env:Body>',
-                     as(root, 'character'),
-                     '</env:Body>
-                     </env:Envelope>')
+  URL <- paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion']))
   
-  # perform request
-  # HTTP POST
-  h <- basicHeaderGatherer()
-  t <- basicTextGatherer()
-  httpHeader <- c("SOAPAction"="cancelDeploy", 'Content-Type'="text/xml")
-  curlPerform(url=paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion'])), 
-              postfields=soapBody, httpheader=httpHeader, headerfunction = h$update, writefunction = t$update, ssl.verifypeer=F)
+  if(verbose) {
+    print(URL)
+    print(root)
+  }
   
-  # BEGIN DEBUG
-  if(exists("rforcecom.debug") && rforcecom.debug){ message(URL) }
-  if(exists("rforcecom.debug") && rforcecom.debug){ message(x.root) }
-  # END DEBUG
-  
-  x.root <- xmlRoot(xmlInternalTreeParse(t$value(), asText=T))
+  x.root <- metadata_curl_runner(unname(session['sessionID']), 
+                                 URL, root, SOAPAction='cancelDeploy')
   
   # Check whether it success or not
   errorcode <- NA
@@ -333,10 +278,10 @@ rforcecom.cancelDeployMetadata <- function(session, id) {
 #' This function redeploys a deployment of metadata 
 #' to production in less time by skipping the execution of Apex tests.
 #' 
-#' @usage rforcecom.deployRecentValidation(session, id)
+#' @usage rforcecom.deployRecentValidation(session, validationID)
 #' @concept deploy recent metadata salesforce api
 #' @importFrom plyr ldply
-#' @importFrom XML newXMLNode
+#' @importFrom XML newXMLNode xmlInternalTreeParse xmlChildren
 #' @include rforcecom.utils.R
 #' @references \url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deployRecentValidation.htm}
 #' @param session a named character vector defining parameters of the api connection as 
@@ -348,10 +293,16 @@ rforcecom.cancelDeployMetadata <- function(session, id) {
 #' @examples
 #' \dontrun{
 #' 
-#' # Before you call rforcecom.deployRecentValidation(), your organization must have a validation that was 
-#' # recently run. You can run a validation on a set of components by calling rforcecom.deployMetadata() 
-#' # with the checkOnly property of the deployOptions parameter set to true. 
-#' deployOptions <- list(allowMissingFiles='true', checkOnly='true', performRetrieve='false')
+#' # Before you call rforcecom.deployRecentValidation(), 
+#' # your organization must have a validation that was 
+#' # recently run. You can run a validation on a set of 
+#' # components by calling rforcecom.deployMetadata() 
+#' # with the checkOnly property of the deployOptions 
+#' # parameter set to true. 
+#' 
+#' deployOptions <- list(allowMissingFiles='true', 
+#'                       checkOnly='true', 
+#'                       performRetrieve='false')
 #' deploy_info <- rforcecom.deployMetadata(session, 'package.zip', deployOptions)
 #' 
 #' # redeploy deployment
@@ -370,33 +321,10 @@ rforcecom.deployRecentValidation <- function(session, validationID) {
                      namespaceDefinitions=c('http://soap.sforce.com/2006/04/metadata'))
   addChildren(root, newXMLNode('validationID', validationID))
   
-  #build soapBody
-  soapBody <- paste0('<?xml version="1.0" encoding="UTF-8"?>
-                     <env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                     <env:Header>
-                     <SessionHeader xmlns="http://soap.sforce.com/2006/04/metadata">
-                     <sessionId>', session['sessionID'], '</sessionId>
-                     </SessionHeader>
-                     </env:Header>
-                     <env:Body>',
-                     as(root, 'character'),
-                     '</env:Body>
-                     </env:Envelope>')
+  URL <- paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion']))
   
-  # perform request
-  # HTTP POST
-  h <- basicHeaderGatherer()
-  t <- basicTextGatherer()
-  httpHeader <- c("SOAPAction"="deployRecentValidation", 'Content-Type'="text/xml")
-  curlPerform(url=paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion'])), 
-              postfields=soapBody, httpheader=httpHeader, headerfunction = h$update, writefunction = t$update, ssl.verifypeer=F)
-  
-  # BEGIN DEBUG
-  if(exists("rforcecom.debug") && rforcecom.debug){ message(URL) }
-  if(exists("rforcecom.debug") && rforcecom.debug){ message(x.root) }
-  # END DEBUG
-  
-  x.root <- xmlRoot(xmlInternalTreeParse(t$value(), asText=T))
+  x.root <- metadata_curl_runner(unname(session['sessionID']), 
+                                 URL, root, SOAPAction='deployRecentValidation')
   
   # Check whether it success or not
   errorcode <- NA

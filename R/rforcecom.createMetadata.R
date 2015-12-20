@@ -4,7 +4,7 @@
 #' to Salesforce for creation
 #'
 #' @usage rforcecom.createMetadata(session, 
-#'                                 metadata_type=c('CustomObject', 'CustomField'), 
+#'                                 metadata_type, 
 #'                                 metadata, verbose=FALSE)
 #' @concept create metadata salesforce api
 #' @importFrom plyr ldply
@@ -74,7 +74,7 @@
 #' @export
 rforcecom.createMetadata <- 
   function(session, 
-           metadata_type=c('CustomObject', 'CustomField'), 
+           metadata_type, 
            metadata, verbose=FALSE){
     
     # run some basic validation on the metadata to see if it conforms to WSDL standards
@@ -86,34 +86,15 @@ rforcecom.createMetadata <-
     # add the metadata to it
     metadataListToXML(root=root, sublist=metadata, metatype=metadata_type)
     
+    URL <- paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion']))
+    
     if(verbose) {
-      print(paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion'])))
+      print(URL)
       print(root)
     }
     
-    #build soapBody
-    soapBody <- paste0('<?xml version="1.0" encoding="UTF-8"?>
-                       <env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                         <env:Header>
-                           <SessionHeader xmlns="http://soap.sforce.com/2006/04/metadata">
-                              <sessionId>', session['sessionID'], '</sessionId>
-                           </SessionHeader>
-                         </env:Header>
-                         <env:Body>',
-                            as(root, 'character'),
-                         '</env:Body>
-                       </env:Envelope>')
-    
-    # perform request
-    # HTTP POST
-    h <- basicHeaderGatherer()
-    t <- basicTextGatherer()
-    httpHeader <- c("SOAPAction"="createMetadata", 'Content-Type'="text/xml")
-    curlPerform(url=paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion'])), 
-                postfields=soapBody, httpheader=httpHeader, headerfunction = h$update, writefunction = t$update, ssl.verifypeer=F)
-    
-    x.root <- xmlRoot(xmlInternalTreeParse(t$value(), asText=T))
-    
+    x.root <- metadata_curl_runner(unname(session['sessionID']), 
+                                   URL, root, SOAPAction='createMetadata')
     
     # Check whether it success or not
     errorcode <- NA

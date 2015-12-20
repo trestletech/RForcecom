@@ -5,9 +5,9 @@
 \title{Delete Object or Field Metadata in Salesforce}
 \usage{
 rforcecom.deleteMetadata(session, 
-                              metadata_type=c('CustomObject', 'CustomField'), 
-                              object_names, 
-                              verbose=FALSE)
+                                metadata_type, 
+                                object_names, 
+                                verbose=FALSE)
 }
 \arguments{
 \item{session}{a named character vector defining parameters of the api connection as returned by \link{rforcecom.login}}
@@ -16,7 +16,7 @@ rforcecom.deleteMetadata(session,
 
 \item{object_names}{a character vector of names that we wish to read metadata for}
 
-\item{verbose}{a boolean indicating whether to print messages during metadata creation}
+\item{verbose}{a boolean indicating whether to print the XML request}
 }
 \value{
 A \code{data.frame} containing the creation result for each submitted metadata component
@@ -30,7 +30,7 @@ deletes them
 
 metadata_info <- rforcecom.deleteMetadata(session, 
                                           metadata_type='CustomObject', 
-                                          object_names=c('Custom_Account23__c'))
+                                          object_names=c('Custom_Account1__c'))
 }
 }
 \references{

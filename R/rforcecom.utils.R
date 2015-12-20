@@ -1,8 +1,12 @@
-##################################
-# * Internal Use Only 
-##################################
-
-# Function to parse response from rforcecom.query
+#' A SOQL Response XML Parser
+#' 
+#' This function parses the response from \link{rforcecom.query}
+#'
+#' @usage query_parser(root)
+#' @concept query soql salesforce api
+#' @importFrom XML xpathApply
+#' @param root XML document returned by a response from the curl request in \link{rforcecom.query}
+#' @return A \code{data.frame} containing the query result
 query_parser <- function(root){
   top <- xpathApply(root, "records", xmlToList)
   # if no subelements are lists, then proceed normally and assume not nested
@@ -50,8 +54,17 @@ query_parser <- function(root){
   return(final_recordset)
 }
 
-
-# Helper function that converts a list of metadata to XML
+#' List to XML COnverter
+#' 
+#' This function converts a list of metadata to XML
+#'
+#' @usage metadataListToXML(root, sublist, metatype=NULL)
+#' @concept metadata salesforce api
+#' @importFrom XML newXMLNode xmlValue<-
+#' @param root XML document serving as the basis upon which to add the list
+#' @param sublist a \code{list} containing data to add to the root node
+#' @param metatype a character indicating the element name of each record in the list
+#' @return A XML document with the sublist data added
 metadataListToXML <- function(root, sublist, metatype=NULL){
   for(i in 1:length(sublist)){
     if (!is.null(metatype)){
@@ -60,7 +73,7 @@ metadataListToXML <- function(root, sublist, metatype=NULL){
       this <- newXMLNode(names(sublist)[i], parent=root)
     }
     if (typeof(sublist[[i]]) == "list"){
-      metadataListToXML (this, sublist[[i]], metatype=NULL)
+      metadataListToXML(this, sublist[[i]], metatype=NULL)
     }
     else{
       xmlValue(this) <- sublist[[i]]
@@ -69,6 +82,54 @@ metadataListToXML <- function(root, sublist, metatype=NULL){
   return(root)
 }
 
+
+#' Metadata Curl Runner
+#' 
+#' This function formats and runs requests to the Metadata API
+#'
+#' @usage metadata_curl_runner(sessionID, URL, root, SOAPAction)
+#' @concept metadata salesforce api
+#' @importFrom XML xmlInternalTreeParse xmlRoot
+#' @importFrom RCurl curlPerform basicHeaderGatherer basicTextGatherer 
+#' @param sessionID a character string that is the sessionID element returned by \link{rforcecom.login}
+#' @param URL a character string URL where the curlPerform will send the data
+#' @param root XML document of metadata formatted to submit to the Metadata API
+#' @param SOAPAction a charac indicating the SOAPAction to perform
+#' @return A XML document returned from running \code{curlPerform}
+metadata_curl_runner <- function(sessionID, URL, root, SOAPAction){
+  
+  #build soapBody
+  soapBody <- paste0('<?xml version="1.0" encoding="UTF-8"?>
+                     <env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                     <env:Header>
+                     <SessionHeader xmlns="http://soap.sforce.com/2006/04/metadata">
+                     <sessionId>', sessionID, '</sessionId>
+                     </SessionHeader>
+                     </env:Header>
+                     <env:Body>',
+                     as(root, 'character'),
+                     '</env:Body>
+                     </env:Envelope>')
+  
+  # perform request
+  # HTTP POST
+  h <- basicHeaderGatherer()
+  t <- basicTextGatherer()
+  httpHeader <- c("SOAPAction"=SOAPAction, 'Content-Type'="text/xml")
+  curlPerform(url=URL, postfields=soapBody, 
+              httpheader=httpHeader, 
+              headerfunction = h$update, writefunction = t$update, 
+              ssl.verifypeer=F)
+  
+  x.root <- xmlRoot(xmlInternalTreeParse(t$value(), asText=T))
+  
+  # BEGIN DEBUG
+  if(exists("rforcecom.debug") && rforcecom.debug){ message(URL) }
+  if(exists("rforcecom.debug") && rforcecom.debug){ message(x.root) }
+  # END DEBUG
+  
+  return(x.root)
+}
 
 
 #' Metadata Data Type Validator
@@ -8251,7 +8312,7 @@ metadataListToXML <- function(root, sublist, metatype=NULL){
 #'  \item{name}{a character}
 #' }
 #' 
-#' @usage rforcecom.Metadatametadata_type_validator(obj_type, obj_data)
+#' @usage rforcecom.metadata_type_validator(obj_type, obj_data)
 #' @param obj_type a string from one of the object types described above
 #' @param obj_data a \code{list} of \code{lists} or a \code{data.frame} with the required inputs to create the
 #' the obj_type specified.

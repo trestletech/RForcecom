@@ -4,8 +4,8 @@
 \alias{rforcecom.renameMetadata}
 \title{Rename Metadata Elements in Salesforce}
 \usage{
-rforcecom.updateMetadata(session, 
-                                metadata_type=c('CustomObject', 'CustomField'), 
+rforcecom.renameMetadata(session, 
+                                metadata_type, 
                                 oldFullname, newFullname, verbose=FALSE)
 }
 \arguments{
@@ -19,7 +19,7 @@ like to rename}
 \item{newFullname}{a character string corresponding to the new fullName you would like 
 to apply the targeted element}
 
-\item{verbose}{a boolean indicating whether to print messages during metadata creation}
+\item{verbose}{a boolean indicating whether to print the XML request}
 }
 \value{
 A \code{data.frame} containing the creation result for each submitted metadata component
@@ -34,7 +34,7 @@ metadata element in Salesforce and applies the new name
 renamed_custom_object <- rforcecom.renameMetadata(session, 
                                                   metadata_type='CustomObject', 
                                                   oldFullname='Custom_Account23__c', 
-                                                  newFullname='Custom_Account24__c')
+                                                  newFullname='Custom_Account24__c', verbose=FALSE)
 
 }
 }

@@ -4,10 +4,12 @@
 \alias{rforcecom.describeMetadata}
 \title{Describe the Metadata in an Organization}
 \usage{
-rforcecom.describeMetadata(session)
+rforcecom.describeMetadata(session, verbose=FALSE)
 }
 \arguments{
 \item{session}{a named character vector defining parameters of the api connection as returned by \link{rforcecom.login}}
+
+\item{verbose}{a boolean indicating whether to print the XML request}
 }
 \value{
 A \code{data.frame}

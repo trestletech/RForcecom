@@ -4,7 +4,7 @@
 \alias{rforcecom.metadata_type_validator}
 \title{Metadata Data Type Validator}
 \usage{
-rforcecom.Metadatametadata_type_validator(obj_type, obj_data)
+rforcecom.metadata_type_validator(obj_type, obj_data)
 }
 \arguments{
 \item{obj_type}{a string from one of the object types described above}

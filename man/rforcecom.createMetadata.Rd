@@ -5,7 +5,7 @@
 \title{Create Object or Field Metadata in Salesforce}
 \usage{
 rforcecom.createMetadata(session, 
-                                metadata_type=c('CustomObject', 'CustomField'), 
+                                metadata_type, 
                                 metadata, verbose=FALSE)
 }
 \arguments{

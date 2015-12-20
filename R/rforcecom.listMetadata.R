@@ -9,7 +9,7 @@
 #'                               verbose=FALSE)
 #' @concept list metadata salesforce api
 #' @importFrom plyr ldply
-#' @importFrom XML newXMLNode
+#' @importFrom XML newXMLNode xmlInternalTreeParse xmlChildren
 #' @include rforcecom.utils.R
 #' @references \url{https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/}
 #' @param session a named character vector defining parameters of the api connection as returned by \link{rforcecom.login}
@@ -21,7 +21,7 @@
 #' version specified when you logged in. This field allows you to override the default 
 #' and set another API version so that, for example, you could list the metadata for a 
 #' metadata type that was added in a later version than the API version specified when you logged in. 
-#' @param verbose a boolean indicating whether to print messages during metadata creation
+#' @param verbose a boolean indicating whether to print the XML request
 #' @return A \code{data.frame} containing the queried metadata types
 #' @note Only 3 queries can be specifed at one time, so the list length must not exceed 3.
 #' @examples
@@ -52,33 +52,15 @@ rforcecom.listMetadata <-
       addChildren(root, newXMLNode('asOfVersion', asOfVersion))
     }
     
-    #build soapBody
-    soapBody <- paste0('<?xml version="1.0" encoding="UTF-8"?>
-                       <env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                       <env:Header>
-                       <SessionHeader xmlns="http://soap.sforce.com/2006/04/metadata">
-                       <sessionId>', session['sessionID'], '</sessionId>
-                       </SessionHeader>
-                       </env:Header>
-                       <env:Body>',
-                       as(root, 'character'),
-                       '</env:Body>
-                       </env:Envelope>')
+    URL <- paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion']))
     
-    # perform request
-    # HTTP POST
-    h <- basicHeaderGatherer()
-    t <- basicTextGatherer()
-    httpHeader <- c("SOAPAction"="listMetadata", 'Content-Type'="text/xml")
-    curlPerform(url=paste0(session['instanceURL'], rforcecom.api.getMetadataEndpoint(session['apiVersion'])), 
-                postfields=soapBody, httpheader=httpHeader, headerfunction = h$update, writefunction = t$update, ssl.verifypeer=F)
+    if(verbose) {
+      print(URL)
+      print(root)
+    }
     
-    # BEGIN DEBUG
-    if(exists("rforcecom.debug") && rforcecom.debug){ message(URL) }
-    if(exists("rforcecom.debug") && rforcecom.debug){ message(x.root) }
-    # END DEBUG
-    
-    x.root <- xmlRoot(xmlInternalTreeParse(t$value(), asText=T))
+    x.root <- metadata_curl_runner(unname(session['sessionID']), 
+                                   URL, root, SOAPAction='listMetadata')
     
     # Check whether it success or not
     errorcode <- NA

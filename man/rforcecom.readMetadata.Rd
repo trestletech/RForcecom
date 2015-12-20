@@ -5,7 +5,7 @@
 \title{Read Object or Field Metadata from Salesforce}
 \usage{
 rforcecom.readMetadata(session, 
-                              metadata_type=c('CustomObject', 'CustomField'), 
+                              metadata_type, 
                               object_names, 
                               verbose=FALSE)
 }
@@ -16,7 +16,7 @@ rforcecom.readMetadata(session,
 
 \item{object_names}{a character vector of names that we wish to read metadata for}
 
-\item{verbose}{a boolean indicating whether to print messages during metadata creation}
+\item{verbose}{a boolean indicating whether to print the XML request}
 }
 \value{
 A \code{list} containing a response for each requested object

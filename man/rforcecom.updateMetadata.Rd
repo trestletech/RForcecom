@@ -5,7 +5,7 @@
 \title{Update Object or Field Metadata in Salesforce}
 \usage{
 rforcecom.updateMetadata(session, 
-                                metadata_type=c('CustomObject', 'CustomField'), 
+                                metadata_type, 
                                 metadata, verbose=FALSE)
 }
 \arguments{
@@ -71,7 +71,7 @@ update_metadata <- list(list(fullName='Custom_Account23__c',
                              sharingModel='ReadWrite'))
 updated_custom_object <- rforcecom.updateMetadata(session, 
                                                    metadata_type='CustomObject', 
-                                                   metadata=upsert_metadata)
+                                                   metadata=update_metadata)
 
 }
 }

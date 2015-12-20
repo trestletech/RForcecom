@@ -4,7 +4,7 @@
 \alias{rforcecom.deployRecentValidation}
 \title{ReDeploy a Prior Call to Deploy Metadata}
 \usage{
-rforcecom.deployRecentValidation(session, id)
+rforcecom.deployRecentValidation(session, validationID)
 }
 \arguments{
 \item{session}{a named character vector defining parameters of the api connection as 
@@ -24,10 +24,16 @@ with the checkOnly property of the deployOptions parameter set to true.
 \examples{
 \dontrun{
 
-# Before you call rforcecom.deployRecentValidation(), your organization must have a validation that was 
-# recently run. You can run a validation on a set of components by calling rforcecom.deployMetadata() 
-# with the checkOnly property of the deployOptions parameter set to true. 
-deployOptions <- list(allowMissingFiles='true', checkOnly='true', performRetrieve='false')
+# Before you call rforcecom.deployRecentValidation(), 
+# your organization must have a validation that was 
+# recently run. You can run a validation on a set of 
+# components by calling rforcecom.deployMetadata() 
+# with the checkOnly property of the deployOptions 
+# parameter set to true. 
+
+deployOptions <- list(allowMissingFiles='true', 
+                      checkOnly='true', 
+                      performRetrieve='false')
 deploy_info <- rforcecom.deployMetadata(session, 'package.zip', deployOptions)
 
 # redeploy deployment

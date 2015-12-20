@@ -22,7 +22,7 @@ version specified when you logged in. This field allows you to override the defa
 and set another API version so that, for example, you could list the metadata for a 
 metadata type that was added in a later version than the API version specified when you logged in.}
 
-\item{verbose}{a boolean indicating whether to print messages during metadata creation}
+\item{verbose}{a boolean indicating whether to print the XML request}
 }
 \value{
 A \code{data.frame} containing the queried metadata types

@@ -13,7 +13,7 @@ returned by \link{rforcecom.login}}
 \item{retrieveRequest}{a \code{list} of parameters defining what XML file representations
 should be returned}
 
-\item{verbose}{a boolean indicating whether to print the XML request used}
+\item{verbose}{a boolean indicating whether to print the XML request}
 }
 \value{
 A \code{list} of details from the created retrieve request
