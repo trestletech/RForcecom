@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Build Status](https://travis-ci.org/hiratake55/RForcecom.svg?branch=master)](https://travis-ci.org/hiratake55/RForcecom)
+[![Build Status](https://travis-ci.org/hiratake55/RForcecom.svg?branch=master)](https://travis-ci.org/hiratake55/RForcecom) [![Code Coverage](https://codecov.io/github/ReportMort/RForcecom/coverage.svg?branch=metadata-api)](https://codecov.io/github/ReportMort/RForcecom?branch=metadata-api)
 
 RForcecom
 ---------
