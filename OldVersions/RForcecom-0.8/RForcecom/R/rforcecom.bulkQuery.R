@@ -1,7 +1,7 @@
 #' Run Bulk Query 
 #' 
-#' This function is a convenience wrapper for 
-#' submitting and retrieving bulk query API jobs
+#' This function is a convenience wrapper for submitting and retrieving 
+#' bulk query API jobs
 #'
 #' @usage rforcecom.bulkQuery(session, 
 #'                            soqlQuery,

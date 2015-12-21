@@ -2,11 +2,11 @@
 #' 
 #' This function retrives a session ID from Salesforce.com.
 #'
-#' @usage rforcecom.login(username, password, loginURL, apiVersion)
+#' @usage rforcecom.login(username, password, instanceURL, apiVersion)
 #' @param username Your username for login to the Salesforce.com. In many cases, username is your E-mail address.
 #' @param password Your password for login to the Salesforce.com. Note: DO NOT FORGET your Security Token. (Ex.) If your password is "Pass1234" and your security token is "XYZXYZXYZXYZ", you should set "Pass1234XYZXYZXYZXYZ".
-#' @param loginURL (optional) Login URL. If your environment is sandbox specify (ex:) "https://test.salesforce.com/".
-#' @param apiVersion (optional) Version of the REST API and SOAP API that you want to use. (ex:) "35.0" Supported versions from v20.0 and up.
+#' @param instanceURL Instance URL. It is shown in your Salesforce.com page. (ex: https://na14.salesforce.com/)
+#' @param apiVersion Version of the REST API and SOAP API that you want to use. Supported versions from v20.0 and up.
 #' @return 
 #' \item{sessionID}{Session ID.}
 #' \item{instanceURL}{Instance URL.}
@@ -16,7 +16,9 @@
 #' # Sign in to the Force.com
 #' username <- "yourname@@yourcompany.com"
 #' password <- "YourPasswordSECURITY_TOKEN"
-#' session <- rforcecom.login(username, password)
+#' instanceURL <- "https://xx99.salesforce.com/"
+#' apiVersion <- "34.0"
+#' session <- rforcecom.login(username, password, instanceURL, apiVersion)
 #' }
 #' @seealso
 #'  \code{\link{rforcecom.query}}
@@ -33,9 +35,9 @@
 #' @keywords connection
 #' @export
 rforcecom.login <-
-  function(username, password, loginURL="https://login.salesforce.com/", apiVersion="35.0"){
+  function(username, password, instanceURL, apiVersion){
     
-    if(as.numeric(apiVersion) < 20) stop("The earliest supported API version is 20.0")
+    if(as.numeric(apiVersion) < 20) stop("the earliest supported API version is 20.0")
     
     # Soap Body
     soapBody <- paste0('<?xml version="1.0" encoding="utf-8" ?> \
@@ -53,7 +55,7 @@ rforcecom.login <-
     # HTTP POST
     h <- basicHeaderGatherer()
     t <- basicTextGatherer()
-    URL <- paste(loginURL, rforcecom.api.getSoapEndpoint(apiVersion), sep="")
+    URL <- paste("https://login.salesforce.com/", rforcecom.api.getSoapEndpoint(apiVersion), sep="")
     httpHeader <- c("SOAPAction"="login","Content-Type"="text/xml")
     curlPerform(url=URL, httpheader=httpHeader, postfields=soapBody, headerfunction = h$update, writefunction = t$update, ssl.verifypeer=F)
     
@@ -76,6 +78,4 @@ rforcecom.login <-
     sessionID <- xmlValue(x.root[['Body']][['loginResponse']][['result']][['sessionId']])
     instanceURL <- sub('(https://[^/]+/).*', '\\1', xmlValue(x.root[['Body']][['loginResponse']][['result']][['serverUrl']]))
     return(c(sessionID=sessionID, instanceURL=instanceURL, apiVersion=apiVersion))
-
   }
-
