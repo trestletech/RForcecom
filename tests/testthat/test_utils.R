@@ -1,4 +1,3 @@
-library(RForcecom)
 
 context("Testing Utility Functions")
 
