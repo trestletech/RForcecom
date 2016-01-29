@@ -10,7 +10,8 @@ Upsert a record
 }
 
 \usage{
-rforcecom.upsert(session, objectName, externalIdField, externalId, fields)
+rforcecom.upsert(session, objectName, externalIdField, 
+                 externalId, fields, applyAssignmentRules=TRUE)
 }
 
 \arguments{
@@ -19,6 +20,7 @@ rforcecom.upsert(session, objectName, externalIdField, externalId, fields)
   \item{externalIdField}{ An external Key's field name. (ex: "AccountMaster__c") }
   \item{externalId}{ An external Key's ID. (ex: "999x000000xxxxxZZZ") }
   \item{fields}{ Sets of field name and its value. (ex: Name="CompanyName", Phone="000-000-000" ) }
+  \item{applyAssignmentRules}{ A logical value or a valid AssignmentRule Id applied for created or updated Cases or Leads. If TRUE, the existing active assignment rules will fire. }
 }
 
 

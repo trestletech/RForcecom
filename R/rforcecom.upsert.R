@@ -1,6 +1,6 @@
 #' @export
 rforcecom.upsert <-
-function(session, objectName, externalIdField, externalId, fields){
+function(session, objectName, externalIdField, externalId, fields, applyAssignmentRules=TRUE){
 
  # Create XML
  xmlElem <- ""
@@ -16,7 +16,10 @@ function(session, objectName, externalIdField, externalId, fields){
  endpointPath <- rforcecom.api.getExternalIdFieldEndpoint(session['apiVersion'], objectName, externalIdField, externalId)
  URL <- paste(session['instanceURL'], endpointPath, sep="")
  OAuthString <- paste("Bearer", session['sessionID'])
- httpHeader <- c("Authorization"=OAuthString, "Accept"="application/xml", 'Content-Type'="application/xml")
+ httpHeader <- c("Authorization"=OAuthString, 
+                 "Accept"="application/xml", 
+                 "Content-Type"="application/xml", 
+                 "Sforce-Auto-Assign"=as.character(applyAssignmentRules))
  resultSet <- curlPerform(url=URL, httpheader=httpHeader, headerfunction = h$update, writefunction = t$update, ssl.verifypeer=F, postfields=xmlBody, customrequest="PATCH")
  
  # BEGIN DEBUG

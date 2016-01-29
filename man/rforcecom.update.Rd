@@ -10,7 +10,8 @@ Update a record
 }
 
 \usage{
-rforcecom.update(session, objectName, id, fields)
+rforcecom.update(session, objectName, id, 
+                 fields, applyAssignmentRules=TRUE)
 }
 
 \arguments{
@@ -18,6 +19,7 @@ rforcecom.update(session, objectName, id, fields)
   \item{objectName}{ An object name. (ex: "Account", "Contact", "CustomObject__c") }
   \item{id}{ Record ID to update. (ex: "999x000000xxxxxZZZ") }
   \item{fields}{ Sets of field name and its value. (ex: Name="CompanyName", Phone="000-000-000" ) }
+  \item{applyAssignmentRules}{ A logical value or a valid AssignmentRule Id applied for created or updated Cases or Leads. If TRUE, the existing active assignment rules will fire. }
 }
 
 \value{

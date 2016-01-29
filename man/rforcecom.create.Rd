@@ -10,13 +10,15 @@ Create a record
 }
 
 \usage{
-rforcecom.create(session, objectName, fields)
+rforcecom.create(session, objectName, 
+                 fields, applyAssignmentRules=TRUE)
 }
 
 \arguments{
   \item{session}{ Session data. It can be retrieve from \code{\link{rforcecom.login}}. }
   \item{objectName}{ An object name. (ex: "Account", "Contact", "CustomObject__c") }
   \item{fields}{ Field names and values. (ex: Name="CompanyName", Phone="000-000-000" ) }
+  \item{applyAssignmentRules}{ A logical value or a valid AssignmentRule Id applied for created or updated Cases or Leads. If TRUE, the existing active assignment rules will fire. }
 }
 
 \value{

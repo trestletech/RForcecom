@@ -1,6 +1,6 @@
 #' @export
 rforcecom.create <- 
-function(session, objectName, fields){
+function(session, objectName, fields, applyAssignmentRules=TRUE){
 
  # Create XML node set
  rforcecom.create.createXmlNodeSet <- function(nodelist){
@@ -30,7 +30,10 @@ function(session, objectName, fields){
  endpointPath <- rforcecom.api.getObjectEndpoint(session['apiVersion'], objectName)
  URL <- paste(session['instanceURL'], endpointPath, sep="")
  OAuthString <- paste("Bearer", session['sessionID'])
- httpHeader <- c("Authorization"=OAuthString, "Accept"="application/xml", 'Content-Type'="application/xml")
+ httpHeader <- c("Authorization"=OAuthString, 
+                 "Accept"="application/xml", 
+                 "Content-Type"="application/xml", 
+                 "Sforce-Auto-Assign"=as.character(applyAssignmentRules))
  curlPerform(url=URL, httpheader=httpHeader, headerfunction = h$update, writefunction = t$update, ssl.verifypeer=F, postfields=xmlBody)
  
  # BEGIN DEBUG
