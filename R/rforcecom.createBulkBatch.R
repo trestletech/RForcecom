@@ -74,7 +74,7 @@ rforcecom.createBulkBatch <-
       }, silent = TRUE)
       
       # Parse XML 
-      x.root <- xmlRoot(content(res, as='parsed'))
+      x.root <- xmlParse(httr::content(res, as='text', encoding='UTF-8'))
       
       # BEGIN DEBUG
       if(exists("rforcecom.debug") && rforcecom.debug){ message(URL) }
